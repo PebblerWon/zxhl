@@ -1,70 +1,90 @@
 import React from 'react'
-import {Menu,Icon,Row,Col} from 'antd'
+import {Menu,Icon,Row,Col,Popover} from 'antd'
+import HeaderMenu from './HeaderMenu'
 import styles from './index.less'
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
-const Header = ()=> {
-  const state = {
-    current: 'map',
-  }
-  const handleClick = (e) => {
-    console.log('click ', e);
-  }
+const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopover})=> {
   const smalColProps={
   	xs:2,
   	sm:4,
-  	md:3,
-  	lg:3,
+  	md:5,
+  	lg:5,
   }
   const bigColProps={
   	 xs:20,
   	 sm:16,
-  	 md:18,
-  	 lg:18
+  	 md:14,
+  	 lg:14
   }
+  const menuProps={
+    current,
+    menuClick,
+    isHorizontal:!isNavbar
+  }
+  const popoverProps={
+    visible:menuPopoverVisible,
+    onVisibleChange:switchMenuPopover
+  }
+  console.log(isNavbar)
     return (
     	<div className={styles.content}>
-    		<Row align="bottom" type='flex'>
-    			<Col {...smalColProps}>
-    				<h1>小河流</h1>
-    			</Col>
-    			<Col {...bigColProps}>
-    				<Menu className={styles.menu}
-				        onClick={handleClick}
-				        selectedKeys={[state.current]}
-				        mode="horizontal"
-			      	>
-				        <Menu.Item key="map" className={styles.menuItem}>
-				          <Icon type="mail" />地图浏览
-				        </Menu.Item>
-				        <Menu.Item key="data" className={styles.menuItem}>
-				          <Icon type="appstore" />数据中心
-				        </Menu.Item>
-				        <Menu.Item key="tj" className={styles.menuItem}>
-				          <Icon type="appstore" />信息统计
-				        </Menu.Item>
-				     	<Menu.Item key="userManage" className={styles.menuItem}>
-				          <Icon type="appstore" />用户管理
-				        </Menu.Item>
-			      	</Menu>
-    			</Col>
-    			<Col {...smalColProps}>
-    				<Menu mode="horizontal" style={{float: 'right',}} >
-				          <SubMenu title={<span> <Icon type="user" />
-				            admin </span>}
-				          >
-				            <Menu.Item key="logout">
-				              退出
-				            </Menu.Item>
-				          </SubMenu>
-			        </Menu>
-    			</Col>
-    		</Row>
-	      	
-      	</div>
+        {isNavbar?
+          <div>
+            <Row  align="bottom" type='flex'>
+            <Col span={12}>
+             <Popover 
+              placement='bottomLeft'
+              {...popoverProps}
+              overlayClassName={styles.popovermenu}
+              trigger='click'
+              content={<HeaderMenu {...menuProps}></HeaderMenu>}
+            >
+              <div className={styles.button}>
+                <Icon type='bars'></Icon>
+              </div>
+            </Popover>
+            </Col>
+            <Col span={12}>
+              <Menu mode="horizontal" style={{float: 'right'}} className={styles.menuItem}>
+                    <SubMenu title={<span> <Icon type="user" />
+                      admin </span>}
+                    >
+                      <Menu.Item key="logout">
+                        退出
+                      </Menu.Item>
+                    </SubMenu>
+                </Menu>
+            </Col>
+            </Row>
+          </div>
+         
+      		:<div>
+          <Row align="bottom" type='flex'>
+      			<Col {...smalColProps}>
+      				<h1>中小河流</h1>
+      				<h1>信息管理</h1>
+      			</Col>
+      			<Col {...bigColProps}>
+      				<HeaderMenu {...menuProps}></HeaderMenu>
+      			</Col>
+      			<Col {...smalColProps}>
+      				<Menu mode="horizontal" style={{float: 'right'}} className={styles.menuItem}>
+  				          <SubMenu title={<span> <Icon type="user" />
+  				            admin </span>}
+  				          >
+  				            <Menu.Item key="logout">
+  				              退出
+  				            </Menu.Item>
+  				          </SubMenu>
+  			        </Menu>
+      			</Col>
+      		</Row></div>
+        }
+      </div>
       )
-}
+  }
 
-export default Header;
+export default HeaderC;
