@@ -1,12 +1,13 @@
 import React from 'react'
 import { Modal, Button ,Table,Card,Row,Col,Form,Collapse,Carousel} from 'antd';
+
 import styles from './RiverDetail.less'
 
 const FormItem = Form.Item;
 const Panel = Collapse.Panel
 const RiverDetail=({visible,maskClosable,onOk,onCancel,item,columns})=>{
-	console.log(item)
-  console.log(columns)
+	//console.log(item)
+  //console.log(columns)
 	const modalProps = {visible,maskClosable,onOk,onCancel}
 	const showModal = () => {
 
@@ -55,6 +56,8 @@ const RiverDetail=({visible,maskClosable,onOk,onCancel,item,columns})=>{
         <Modal
           title={`${item['he_liu_ming_cheng']}详细信息`}
           {...modalProps}
+          width={'700px'}
+          style={{width:'700px'}}
         >
           
           <Collapse defaultActiveKey={['1']} accordion>
@@ -64,12 +67,13 @@ const RiverDetail=({visible,maskClosable,onOk,onCancel,item,columns})=>{
               </Row>
             </Panel>
             <Panel header="照片及视频" key="picInfo">
-              <Carousel autoplay arrows={true} className={styles.carousel} dotsClass={styles.dots}>
+              <Carousel autoplay arrows={true} className={styles.carousel}>
                 {picInfo}
               </Carousel>
             </Panel>
-            <Panel header="空间位置" key="spaceInfo">
-              
+            <Panel header="空间位置" key="spaceInfo" className={styles.spaceInfo}>
+              <iframe src="http://ditu.amap.com/" >
+              </iframe>
             </Panel>
           </Collapse>
         </Modal>

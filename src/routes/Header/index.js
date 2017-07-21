@@ -1,7 +1,7 @@
 import React from 'react'
 import HeaderC from '../../components/Header'
 import {Menu,Icon,Row,Col} from 'antd'
-import styles from './index.less'
+//import styles from './index.less'
 import {connect} from 'dva'
 
 const SubMenu = Menu.SubMenu;

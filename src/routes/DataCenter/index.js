@@ -10,11 +10,11 @@ const DataCenter=()=>{
       tabPosition='left'
       className={styles.container}
     >
-      <TabPane tab="河流信息" key="1" style={{paddingRight:'20px'}}>
+      <TabPane tab="河流信息" key="1">
         <RiverInfo />
       </TabPane>
       <TabPane tab="项目信息" key="2"><ProjectInfo /></TabPane>
-      <TabPane tab="资金信息" key="3">资金信息</TabPane>
+      <TabPane tab="资金信息1231rw1f3w1" key="3">资金信息</TabPane>
     </Tabs>)
 }
 

@@ -22,19 +22,19 @@ export default  modelExtend(pageModel,{
   },
 
   reducers: {
-    showModal(state,{payload}){
+    showDetailModal(state,{payload}){
       return{
         ...state,
         ...payload,
         modalVisible:true,
       }
     },
-    hideModal(state){
+    hideDetailModal(state){
       return {
         ...state,
         modalVisible:false
       }
-    },
+    }
   },
 
 })

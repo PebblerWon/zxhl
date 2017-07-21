@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'dva'
-import { Form, Button, Row, Col,Input,Table,Card,Dropdown} from 'antd'
-import styles from './riverInfo.less'
-import DropOption from '../../components/DropOptions'
-import RiverDetail from './RiverDetail'
+import { Form, Button, Row, Col,Input,Table,Card,Dropdown,Select,Cascader} from 'antd'
+import city from '../../../utils/city'
+import styles from './index.less'
+import DropOption from '../../../components/DropOptions'
+import RiverDetail from '../RiverInfo/RiverDetail'
 
 const FormItem = Form.Item;
 const Search = Input.Search;
@@ -68,7 +69,7 @@ for (let i = 0; i < 100; i++) {
     he_liu_liu_jing_di:`无`
   });
 }
-const RiverInfo = ({river,dispatch})=>{
+const ProjectInfo = ({river,dispatch})=>{
 	const colProps={
 		xl:4,
 		md:8,
@@ -116,26 +117,34 @@ const RiverInfo = ({river,dispatch})=>{
 		}
 	}
 	return(
-		<div>
+		<div className={styles.projectInfo}>
 			<Form
-				className={styles.searchForm}
+				className={"searchForm"}
 				onSubmit={handleSearch}
 			>
 				<Row gutter={40}>
 					<Row gutter={24}>
 						<Col {...colProps}>
-							<FormItem {...formItemLayout} label="河流名称">
-								<Input placeholder="请输入河流名称查询"></Input>
+							<FormItem {...formItemLayout} label="所在地市">
+								<Cascader 
+									placeholder="请输所在地市"
+									options={city('河南省')}>
+								</Cascader>
 							</FormItem>
 						</Col>
 						<Col {...colProps}>
 							<FormItem {...formItemLayout} label="所在流域">
-								<Input placeholder="所在流域"></Input>
+								<Select placeholder="所在流域">
+									<Option value="淮河流域">淮河流域</Option>
+									<Option value="海河流域">海河流域</Option>
+									<Option value="黄河流域">黄河流域</Option>
+									<Option value="长江流域">长江流域</Option>
+								</Select>
 							</FormItem>
 						</Col>
 						<Col {...colProps}>
-							<FormItem {...formItemLayout} label="所在地市">
-								<Input placeholder="请输所在地市"></Input>
+							<FormItem {...formItemLayout} label="河流名称">
+								<Input placeholder="请输入河流名称查询"></Input>
 							</FormItem>
 						</Col>
 		    		</Row>
@@ -147,8 +156,8 @@ const RiverInfo = ({river,dispatch})=>{
 		          </Col>
 		        </Row>
 	    	</Form>
-	    	<div className={styles.searchResult}>
-		    	<Card title="查询结果" extra={<Button>导出</Button>}>
+	    	<div className={"searchResult"}>
+		    	<Card title="查询结果" extra={<Button type="primary">导出</Button>}>
 	    			<Table {...tableProps}/>
 	  			</Card>
 	    	</div>
@@ -159,4 +168,4 @@ const RiverInfo = ({river,dispatch})=>{
 
 export default connect(
 	({river})=>({river})
-)(RiverInfo);
+)(ProjectInfo);

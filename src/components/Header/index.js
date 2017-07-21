@@ -1,5 +1,6 @@
 import React from 'react'
 import {Menu,Icon,Row,Col,Popover} from 'antd'
+import Logo from '../Logo'
 import HeaderMenu from './HeaderMenu'
 import styles from './index.less'
 
@@ -48,7 +49,7 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
             </Popover>
             </Col>
             <Col span={12}>
-              <Menu mode="horizontal" style={{float: 'right'}} className={styles.menuItem}>
+              <Menu mode="horizontal" style={{float: 'right'}}>
                     <SubMenu title={<span> <Icon type="user" />
                       admin </span>}
                     >
@@ -61,17 +62,16 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
             </Row>
           </div>
          
-      		:<div>
-          <Row align="bottom" type='flex'>
+      		:<div className='header'>
+          <Row align="bottom" type='flex' style={{height:'100%'}}>
       			<Col {...smalColProps}>
-      				<h1>中小河流</h1>
-      				<h1>信息管理</h1>
+      				<Logo></Logo>
       			</Col>
-      			<Col {...bigColProps}>
+      			<Col {...bigColProps} style={{height:'100%'}}>
       				<HeaderMenu {...menuProps}></HeaderMenu>
       			</Col>
       			<Col {...smalColProps}>
-      				<Menu mode="horizontal" style={{float: 'right'}} className={styles.menuItem}>
+      				<Menu mode="horizontal" style={{float: 'right'}}>
   				          <SubMenu title={<span> <Icon type="user" />
   				            admin </span>}
   				          >
