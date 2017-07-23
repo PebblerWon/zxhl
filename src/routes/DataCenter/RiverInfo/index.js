@@ -14,6 +14,7 @@ const Search = Input.Search;
 
 const RiverInfo = ({river,dispatch})=>{
 	let carousel;//保存对走马灯的引用
+	console.log(carousel)
 	const columns = [
 	  { title: '河流名称',  dataIndex: 'he_liu_ming_cheng', key: 'he_liu_ming_cheng', width: 100,fixed: 'left' },
 	  { title: '所属流域',  dataIndex: 'suo_shu_liu_yu', key: 'suo_shu_liu_yu',width: 100,},
@@ -178,10 +179,10 @@ const RiverInfo = ({river,dispatch})=>{
 		    	<RiverDetail {...detailModalProps}/>
     		</div>
     		<div>
-    			<RiverInput />
+    			<Button onClick={e=>{carousel.refs.slick.innerSlider.slickPrev()}}>退出新建</Button>
+    			<RiverInput/>
     		</div>
 		</Carousel>
-		
 		)
 }
 

@@ -4,6 +4,7 @@ import {
 			Form,Input,Row,Col,
 			Steps,Cascader,
 } from 'antd';
+import {connect} from 'dva'
 import city from '../../../utils/city'
 import styles from './RiverInput.less'
 
@@ -13,7 +14,141 @@ const Step = Steps.Step;
 const FormItem = Form.Item;
 
 const areaData = city('河南省');
-class ProjectInfoForm1 extends React.Component{
+
+const ProjectInfoForm1 = ({form})=>{
+	console.log(form)
+	var {getFieldDecorator,getFieldError,isFieldValidating} = form;
+		var requiredRules={
+			rules: [
+     				{required: true, message: '不能为空' },
+     			]
+		};
+	const handleReset=(e)=>{
+
+	}
+	const handleSubmit=(e)=>{
+
+	}
+	return(
+		<Form layout="horizontal">
+			<FormItem
+			 label="项目编号"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+			 	{
+			 		getFieldDecorator('项目编号',requiredRules)(
+			 			<Input
+						id="项目编号"
+						placeholder="请输入项目编号"></Input>
+				 )}
+				
+			</FormItem>
+			<FormItem
+			 label="项目名称"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+			 	{
+			 		getFieldDecorator('项目名称',requiredRules)(
+			 			<Input
+						 id="项目名称"
+						 placeholder="请输入项目名称" />
+			 	)}
+			</FormItem>
+			<FormItem
+			 label="所在河流"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+			 	{
+			 		getFieldDecorator('所在河流',requiredRules)(
+			 			<Input
+						 id="所在河流"
+						 placeholder="请输入所在河流" />
+			 	)}
+			</FormItem>
+			<FormItem
+			 label="市/县行政区"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+			 	{
+			 		getFieldDecorator('行政区',requiredRules)(
+			 			<Cascader
+						 options={areaData}
+						 placeholder="请选择行政区" />
+			 	)}
+				
+			</FormItem>
+			<FormItem
+			 label="前期工作"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+			 	{
+			 		getFieldDecorator('前期工作',requiredRules)(
+			 			<Input
+							 id="前期工作"
+							 placeholder="前期工作进展" />
+			 	)}
+				
+			</FormItem>
+			<FormItem
+			 label="规划投资"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+			 	{
+			 		getFieldDecorator('规划投资')(
+			 			<Input
+							 id="规划投资"
+							 placeholder="规划投资"></Input>
+			 	)}
+				
+			</FormItem>
+			<FormItem
+			 label="初设单位"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+			 	{
+			 		getFieldDecorator('初设单位')(
+			 			<Input
+							 id="初设单位"
+							 placeholder="初设单位"></Input>
+			 	)}
+				
+			</FormItem>
+			<FormItem
+			 label="初设进展"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+			 	{
+			 		getFieldDecorator('初设进展')(
+			 			<Input
+							 id="初设进展"
+							 placeholder="初设进展" />
+			 	)}
+				
+			</FormItem>
+			<FormItem
+			 label="批复情况"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+			 	{
+			 		getFieldDecorator('批复情况')(
+			 			<Input
+							 id="批复情况"
+							 placeholder="批复情况"></Input>
+			 	)}
+				
+			</FormItem>
+			<FormItem 
+			 wrapperCol={{ span: 12, offset: 8 }}
+			 style={{textAlign:'center'}}
+			 >
+					<Button type="default" style={{marginLeft:'-140px'}}onClick={handleReset}>重置</Button>
+					<Button type="primary" style={{marginLeft:'20px'}}onClick={handleSubmit}>下一项</Button>
+			</FormItem>
+		</Form>
+	)
+}
+
+/*class ProjectInfoForm1 extends React.Component{
 	constructor() {
     	super();
   	}
@@ -130,36 +265,32 @@ class ProjectInfoForm1 extends React.Component{
 			</Form>
 		)
 	}
-}
-class ProjectInfoForm2 extends React.Component{
-	constructor() {
-    	super();
-  	}
-
-	handleSubmit(e){
+}*/
+const ProjectInfoForm2 =({form})=>{
+	
+	const handleSubmit=(e)=>{
 		e.preventDefault();
-		this.props.form.validateFields((errors,values)=>{
+		form.validateFields((errors,values)=>{
 			if(!errors){
 				console.log("no error")
-				DATA.push(this.props.form.getFieldsValue());
-				var nextForm = this.props.nextForm;
-				this.props.submitClick(nextForm);
+				DATA.push(form.getFieldsValue());
+				//var nextForm = this.props.nextForm;
+				//this.props.submitClick(nextForm);
 			}
 		})
 	}
-	handleReset(e) {
+	const handleReset =(e)=> {
     	e.preventDefault();
-    	this.props.form.resetFields();
+    	form.resetFields();
   	}
-	render(){
-		var {getFieldProps,getFieldError,isFieldValidating} = this.props.form;
-		var requiredRules={
-			rules: [
-      				{required: true, message: '不能为空' },
-      			]
-		};
-		return(
-			<Form horizontal form={this.props.form}>
+  	var {getFieldProps,getFieldError,isFieldValidating} = form;
+	var requiredRules={
+		rules: [
+  				{required: true, message: '不能为空' },
+  			]
+	};
+	return(
+			<Form layout='horizontal'>
 				<FormItem
 				 label="治理长度"
 				 labelCol={{span:8}}
@@ -234,25 +365,21 @@ class ProjectInfoForm2 extends React.Component{
 				</FormItem>
 				<FormItem 
 				 wrapperCol={{ span: 12, offset: 8 }}>
-						<Button type="default" className="resetBtn" onClick={this.handleReset}>重置</Button>
-						<Button type="primary" className="submitBtn" onClick={this.handleSubmit}>确定</Button>
+						<Button type="default" className="resetBtn" onClick={handleReset}>重置</Button>
+						<Button type="primary" className="submitBtn" onClick={handleSubmit}>确定</Button>
 				</FormItem>
 			</Form>
 		)
-	}
 }
-class ProjectInfoForm3 extends React.Component{
-	constructor() {
-    	super();
-  	}
-
-	handleSubmit(e){
+const ProjectInfoForm3=({form})=>{
+	
+	const handleSubmit=(e)=>{
 		e.preventDefault();
 		//console.log(this.props.form.getFieldsValue());
-		this.props.form.validateFields((errors,values)=>{
+		form.validateFields((errors,values)=>{
 			if(!errors){
 				console.log("no error")
-				DATA.push(this.props.form.getFieldsValue());
+				DATA.push(form.getFieldsValue());
 				$.ajax({
 					url:"",
 					method:"",
@@ -266,68 +393,63 @@ class ProjectInfoForm3 extends React.Component{
 			}
 		})
 	}
-	handleReset(e) {
+	const handleReset=(e) =>{
     	e.preventDefault();
-    	this.props.form.resetFields();
+    	form.resetFields();
   	}
-	render(){
-		var {getFieldProps,getFieldError,isFieldValidating} = this.props.form;
-		var requiredRules={
-			rules: [
-        			{required: true, message: '不能为空' },
-      			]
-		};
-		return(
-			<Form horizontal form={this.props.form}>
-				<FormItem
-				 label="保护城镇"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="保护城镇"
-					 placeholder="请输入保护城镇"
-					 {...getFieldProps('保护城镇',requiredRules)}></Input>
-				</FormItem>
-				<FormItem
-				 label="保护人口"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="保护人口"
-					 {...getFieldProps('保护人口',requiredRules)}
-					 placeholder="请输入保护人口"></Input>
-				</FormItem>
-				<FormItem
-				 label="保护耕地"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="保护耕地"
-					 {...getFieldProps('保护耕地',requiredRules)}
-					 placeholder="请输入保护耕地"></Input>
-				</FormItem>
-				<FormItem
-				 label="排涝收益"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="排涝收益"
-					 {...getFieldProps('排涝收益')}
-					 placeholder="排涝收益"></Input>
-				</FormItem>
-				<FormItem 
-				 wrapperCol={{ span: 12, offset: 8 }}>
-						<Button type="default" className="resetBtn" onClick={this.handleReset}>重置</Button>
-						<Button type="primary" className="submitBtn" onClick={this.handleSubmit}>完成</Button>
-				</FormItem>
-			</Form>
-		)
-	}
+	var {getFieldProps,getFieldError,isFieldValidating} = this.props.form;
+	var requiredRules={
+		rules: [
+    			{required: true, message: '不能为空' },
+  			]
+	};
+	return(
+		<Form horizontal form={this.props.form}>
+			<FormItem
+			 label="保护城镇"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+				<Input
+				 id="保护城镇"
+				 placeholder="请输入保护城镇"
+				 {...getFieldProps('保护城镇',requiredRules)}></Input>
+			</FormItem>
+			<FormItem
+			 label="保护人口"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+				<Input
+				 id="保护人口"
+				 {...getFieldProps('保护人口',requiredRules)}
+				 placeholder="请输入保护人口"></Input>
+			</FormItem>
+			<FormItem
+			 label="保护耕地"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+				<Input
+				 id="保护耕地"
+				 {...getFieldProps('保护耕地',requiredRules)}
+				 placeholder="请输入保护耕地"></Input>
+			</FormItem>
+			<FormItem
+			 label="排涝收益"
+			 labelCol={{span:8}}
+			 wrapperCol={{span:10}}>
+				<Input
+				 id="排涝收益"
+				 {...getFieldProps('排涝收益')}
+				 placeholder="排涝收益"></Input>
+			</FormItem>
+			<FormItem 
+			 wrapperCol={{ span: 12, offset: 8 }}>
+					<Button type="default" className="resetBtn" onClick={this.handleReset}>重置</Button>
+					<Button type="primary" className="submitBtn" onClick={this.handleSubmit}>完成</Button>
+			</FormItem>
+		</Form>
+	)
 }
-ProjectInfoForm1 = Form.create()(ProjectInfoForm1);
-ProjectInfoForm2 = Form.create()(ProjectInfoForm2);
-ProjectInfoForm3 = Form.create()(ProjectInfoForm3);
-export default class RiverInput extends React.Component{
+/*export default class RiverInput extends React.Component{
 	constructor() {
     	super();
     	this.state = {
@@ -434,4 +556,14 @@ export default class RiverInput extends React.Component{
 				</Col>
 			</Row></div>)
 	}
+}*/
+const RiverInput=({form,back})=>{
+	return(
+		<div>
+			<ProjectInfoForm1 form={form}/>
+		</div>
+	)
 }
+export default connect(
+	({river})=>({})
+)(Form.create()(RiverInput)) 
