@@ -10,18 +10,18 @@ import RiverDetail from '../RiverInfo/RiverDetail'
 const FormItem = Form.Item;
 const Search = Input.Search;
 const columns = [
-  { title: '河流名称',  dataIndex: 'he_liu_ming_cheng', key: 'he_liu_ming_cheng', width: 100,fixed: 'left' },
-  { title: '所属流域',  dataIndex: 'suo_shu_liu_yu', key: 'suo_shu_liu_yu',width: 100,},
-  { title: '所在水系', dataIndex: 'suo_zai_shui_xi', key: 'suo_zai_shui_xi', width: 150 },
-  { title: '流域面积', dataIndex: 'liu_yu_mian_ji', key: 'liu_yu_mian_ji', width: 150 },
-  { title: '河流长度', dataIndex: 'he_liu_chang_du', key: 'he_liu_chang_du', width: 150 },
-  { title: '河流分类', dataIndex: 'he_liu_fen_lei', key: 'he_liu_fen_lei', width: 150 },
-  { title: '防洪标准', dataIndex: 'fang_hong_biao_zhun', key: 'fang_hong_biao_zhun', width: 150 },
-  { title: '除涝标准', dataIndex: 'chu_lao_biao_zhun', key: 'chu_lao_biao_zhun', width: 150 },
-  { title: '已治理河长', dataIndex: 'yi_zhi_li_he_chang', key: 'yi_zhi_li_he_chang', width: 150 },
-  { title: '规划治理河长', dataIndex: 'gui_hua_zhi_li_he_chang', key: 'gui_hua_zhi_li_he_chang',width:150 },
-  { title: '未治理河长', dataIndex: 'wei_zhi_li_he_chang', key: 'wei_zhi_li_he_chang', width: 150 },
-  { title: '河流流经地', dataIndex: 'he_liu_liu_jing_di', key: 'he_liu_liu_jing_di',width:150 },
+ { title: '项目名称',  dataIndex: 'he_liu_ming_cheng', key: 'he_liu_ming_cheng', width: 100,fixed: 'left' },
+	  { title: '所属流域',  dataIndex: 'suo_shu_liu_yu', key: 'suo_shu_liu_yu',width: 100,},
+	  { title: '所在河流', dataIndex: 'suo_zai_shui_xi', key: 'suo_zai_shui_xi', width: 150 },
+	  { title: '所在地市', dataIndex: 'liu_yu_mian_ji', key: 'liu_yu_mian_ji', width: 150 },
+	  { title: '所在县区', dataIndex: 'he_liu_chang_du', key: 'he_liu_chang_du', width: 150 },
+	  { title: '批复文号', dataIndex: 'he_liu_fen_lei', key: 'he_liu_fen_lei', width: 150 },
+	  { title: '批复工程总投资(万)', dataIndex: 'fang_hong_biao_zhun', key: 'fang_hong_biao_zhun', width: 150 },
+	  { title: '保护人口(万)', dataIndex: 'chu_lao_biao_zhun', key: 'chu_lao_biao_zhun', width: 150 },
+	  { title: '保护耕地(Km²)', dataIndex: 'yi_zhi_li_he_chang', key: 'yi_zhi_li_he_chang', width: 150 },
+	  { title: '保护城镇', dataIndex: 'gui_hua_zhi_li_he_chang', key: 'gui_hua_zhi_li_he_chang',width:150 },
+	  { title: '设计防洪标准', dataIndex: 'wei_zhi_li_he_chang', key: 'wei_zhi_li_he_chang', width: 150 },
+	  { title: '设计除涝标准', dataIndex: 'he_liu_liu_jing_di', key: 'he_liu_liu_jing_di',width:150 },
   {
     title: '操作',
     key: 'operation',
@@ -54,19 +54,20 @@ const columns = [
 const data = [];
 for (let i = 0; i < 100; i++) {
   data.push({
-    key: i,
-    he_liu_ming_cheng: `东沙河 ${i}`,
-    suo_shu_liu_yu: `淮河`,
-    suo_zai_shui_xi: `淮河干流`,
-    liu_yu_mian_ji:248.10,
-    he_liu_chang_du:31.60,
-    he_liu_fen_lei:`内陆`,
-    fang_hong_biao_zhun:`无`,
-    chu_lao_biao_zhun:`无`,
-    yi_zhi_li_he_chang:`无`,
-    gui_hua_zhi_li_he_chang:`无`,
-    wei_zhi_li_he_chang:`无`,
-    he_liu_liu_jing_di:`无`
+  	key: i,
+	    he_liu_ming_cheng: `郑州市中牟县丈八沟许家闸~贾鲁河口段治理工程 ${i}`,
+	    suo_shu_liu_yu: `淮河`,
+	    suo_zai_shui_xi: `丈八沟`,
+	    liu_yu_mian_ji:`郑州市`,
+	    he_liu_chang_du:`中牟县`,
+	    he_liu_fen_lei:`豫水行许字[2009]99号`,
+	    fang_hong_biao_zhun:`2605`,
+	    chu_lao_biao_zhun:`5.2`,
+	    yi_zhi_li_he_chang:`8.86`,
+	    gui_hua_zhi_li_he_chang:`中牟县,韩寺,姚家`,
+	    wei_zhi_li_he_chang:`20年一遇`,
+	    he_liu_liu_jing_di:`5年一遇`
+   
   });
 }
 const ProjectInfo = ({river,dispatch})=>{

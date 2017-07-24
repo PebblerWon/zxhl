@@ -23,7 +23,7 @@ const HeaderMenu=({isHorizontal,menuClick,current})=>{
           <Link to="/dataCenter"><Icon type="appstore" />数据中心</Link>
         </Menu.Item>
         <Menu.Item key="tj" className={styles.menuItem}>
-          <Icon type="appstore" />信息统计
+          <Link to="/infoStastic"><Icon type="appstore" />项目统计</Link>
         </Menu.Item>
         <Menu.Item key="userManage" className={styles.menuItem}>
           <Icon type="appstore" />用户管理

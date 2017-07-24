@@ -2,7 +2,7 @@ import React from 'react';
 import {
 			Menu,Icon,Collapse,Button,Checkbox,QueueAnim,Tooltip,Badge,Tree,
 			Form,Input,Row,Col,
-			Steps,Cascader,
+			Steps,Cascader,Select
 } from 'antd';
 import {connect} from 'dva'
 import city from '../../../utils/city'
@@ -15,7 +15,7 @@ const FormItem = Form.Item;
 
 const areaData = city('河南省');
 
-const ProjectInfoForm1 = ({form})=>{
+const ProjectInfoForm1 = ({form,submitClick})=>{
 	console.log(form)
 	var {getFieldDecorator,getFieldError,isFieldValidating} = form;
 		var requiredRules={
@@ -32,425 +32,116 @@ const ProjectInfoForm1 = ({form})=>{
 	return(
 		<Form layout="horizontal">
 			<FormItem
-			 label="项目编号"
+			 label="河流名称"
 			 labelCol={{span:8}}
 			 wrapperCol={{span:10}}>
 			 	{
-			 		getFieldDecorator('项目编号',requiredRules)(
+			 		getFieldDecorator('河流名称',requiredRules)(
 			 			<Input
-						id="项目编号"
-						placeholder="请输入项目编号"></Input>
+						id="河流名称"
+						placeholder="请输入河流名称"></Input>
 				 )}
 				
 			</FormItem>
 			<FormItem
-			 label="项目名称"
+			 label="水利普查序号"
 			 labelCol={{span:8}}
 			 wrapperCol={{span:10}}>
 			 	{
-			 		getFieldDecorator('项目名称',requiredRules)(
+			 		getFieldDecorator('水利普查序号',requiredRules)(
 			 			<Input
-						 id="项目名称"
-						 placeholder="请输入项目名称" />
+						 id="水利普查序号"
+						 placeholder="请输入水利普查序号" />
 			 	)}
 			</FormItem>
 			<FormItem
-			 label="所在河流"
+			 label="所在水系"
 			 labelCol={{span:8}}
 			 wrapperCol={{span:10}}>
 			 	{
-			 		getFieldDecorator('所在河流',requiredRules)(
+			 		getFieldDecorator('所在水系',requiredRules)(
 			 			<Input
-						 id="所在河流"
-						 placeholder="请输入所在河流" />
+						 id="所在水系"
+						 placeholder="请输入所在水系" />
 			 	)}
 			</FormItem>
 			<FormItem
-			 label="市/县行政区"
+			 label="流经地"
 			 labelCol={{span:8}}
 			 wrapperCol={{span:10}}>
 			 	{
-			 		getFieldDecorator('行政区',requiredRules)(
+			 		getFieldDecorator('流经地',requiredRules)(
 			 			<Cascader
 						 options={areaData}
-						 placeholder="请选择行政区" />
+						 placeholder="请选择流经地" />
 			 	)}
 				
 			</FormItem>
 			<FormItem
-			 label="前期工作"
+			 label="河流长度"
 			 labelCol={{span:8}}
 			 wrapperCol={{span:10}}>
 			 	{
-			 		getFieldDecorator('前期工作',requiredRules)(
+			 		getFieldDecorator('河流长度',requiredRules)(
 			 			<Input
-							 id="前期工作"
-							 placeholder="前期工作进展" />
+							 id="河流长度"
+							 placeholder="河流长度" />
 			 	)}
 				
 			</FormItem>
 			<FormItem
-			 label="规划投资"
+			 label="流域面积"
 			 labelCol={{span:8}}
 			 wrapperCol={{span:10}}>
 			 	{
-			 		getFieldDecorator('规划投资')(
+			 		getFieldDecorator('流域面积')(
 			 			<Input
-							 id="规划投资"
-							 placeholder="规划投资"></Input>
+							 id="流域面积"
+							 placeholder="流域面积"></Input>
 			 	)}
 				
 			</FormItem>
 			<FormItem
-			 label="初设单位"
+			 label="所属流域"
 			 labelCol={{span:8}}
 			 wrapperCol={{span:10}}>
 			 	{
-			 		getFieldDecorator('初设单位')(
-			 			<Input
-							 id="初设单位"
-							 placeholder="初设单位"></Input>
+			 		getFieldDecorator('所属流域')(
+			 			<Select placeholder="所在流域">
+							<Option value="淮河流域">淮河流域</Option>
+							<Option value="海河流域">海河流域</Option>
+							<Option value="黄河流域">黄河流域</Option>
+							<Option value="长江流域">长江流域</Option>
+						</Select>
 			 	)}
 				
 			</FormItem>
-			<FormItem
-			 label="初设进展"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
-			 	{
-			 		getFieldDecorator('初设进展')(
-			 			<Input
-							 id="初设进展"
-							 placeholder="初设进展" />
-			 	)}
-				
-			</FormItem>
-			<FormItem
-			 label="批复情况"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
-			 	{
-			 		getFieldDecorator('批复情况')(
-			 			<Input
-							 id="批复情况"
-							 placeholder="批复情况"></Input>
-			 	)}
-				
-			</FormItem>
+			
 			<FormItem 
 			 wrapperCol={{ span: 12, offset: 8 }}
 			 style={{textAlign:'center'}}
 			 >
 					<Button type="default" style={{marginLeft:'-140px'}}onClick={handleReset}>重置</Button>
-					<Button type="primary" style={{marginLeft:'20px'}}onClick={handleSubmit}>下一项</Button>
+					<Button type="primary" style={{marginLeft:'20px'}}onClick={submitClick}>下一项</Button>
 			</FormItem>
 		</Form>
 	)
 }
 
-/*class ProjectInfoForm1 extends React.Component{
-	constructor() {
-    	super();
-  	}
-	handleSubmit(e){
-		e.preventDefault();
-		this.props.form.validateFields((errors,values)=>{
-			if(!errors){
-				console.log("no error")
-				DATA.push(this.props.form.getFieldsValue());
-				var nextForm = this.props.nextForm;
-				this.props.submitClick(nextForm);
-			}
-		})
-	}
-	handleReset(e) {
-    	e.preventDefault();
-    	this.props.form.resetFields();
-  	}
-	render(){
-		var {getFieldProps,getFieldError,isFieldValidating} = this.props.form;
-		var requiredRules={
-			rules: [
-     				{required: true, message: '不能为空' },
-     			]
-		};
-		return(
-			<Form horizontal form={this.props.form}>
-				<FormItem
-				 label="项目编号"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="项目编号"
-					 placeholder="请输入项目编号"
-					 {...getFieldProps('项目编号',requiredRules)}></Input>
-				</FormItem>
-				<FormItem
-				 label="项目名称"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="项目名称"
-					 {...getFieldProps('项目名称',requiredRules)}
-					 placeholder="请输入项目名称"></Input>
-				</FormItem>
-				<FormItem
-				 label="所在河流"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="所在河流"
-					 {...getFieldProps('所在河流',requiredRules)}
-					 placeholder="请输入所在河流"></Input>
-				</FormItem>
-				<FormItem
-				 label="市/县行政区"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Cascader
-					 options={areaData}
-					 placeholder="请选择行政区"
-					 {...getFieldProps('行政区')}></Cascader>
-				</FormItem>
-				<FormItem
-				 label="前期工作"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="前期工作"
-					 {...getFieldProps('前期工作')}
-					 placeholder="前期工作进展"></Input>
-				</FormItem>
-				<FormItem
-				 label="规划投资"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="规划投资"
-					 {...getFieldProps('规划投资')}
-					 placeholder="规划投资"></Input>
-				</FormItem>
-				<FormItem
-				 label="初设单位"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="初设单位"
-					 {...getFieldProps('初设单位')}
-					 placeholder="初设单位"></Input>
-				</FormItem>
-				<FormItem
-				 label="初设进展"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="初设进展"
-					 {...getFieldProps('初设进展')}
-					 placeholder="初设进展"></Input>
-				</FormItem>
-				<FormItem
-				 label="批复情况"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="批复情况"
-					 {...getFieldProps('批复情况')}
-					 placeholder="批复情况"></Input>
-				</FormItem>
-				<FormItem 
-				 wrapperCol={{ span: 12, offset: 8 }}>
-						<Button type="default" className="resetBtn" onClick={this.handleReset}>重置</Button>
-						<Button type="primary" className="submitBtn" onClick={this.handleSubmit}>确定</Button>
-				</FormItem>
-			</Form>
-		)
-	}
-}*/
-const ProjectInfoForm2 =({form})=>{
-	
-	const handleSubmit=(e)=>{
-		e.preventDefault();
-		form.validateFields((errors,values)=>{
-			if(!errors){
-				console.log("no error")
-				DATA.push(form.getFieldsValue());
-				//var nextForm = this.props.nextForm;
-				//this.props.submitClick(nextForm);
-			}
-		})
-	}
-	const handleReset =(e)=> {
-    	e.preventDefault();
-    	form.resetFields();
-  	}
-  	var {getFieldProps,getFieldError,isFieldValidating} = form;
-	var requiredRules={
-		rules: [
-  				{required: true, message: '不能为空' },
-  			]
-	};
+const AddFeatureOnMap=()=>{
 	return(
-			<Form layout='horizontal'>
-				<FormItem
-				 label="治理长度"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="治理长度"
-					 placeholder="请输入治理长度"
-					 {...getFieldProps('治理长度',requiredRules)}></Input>
-				</FormItem>
-				<FormItem
-				 label="新建堤防"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="新建堤防"
-					 {...getFieldProps('新建堤防',requiredRules)}
-					 placeholder="请输入新建堤防"></Input>
-				</FormItem>
-				<FormItem
-				 label="加固堤防"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="加固堤防"
-					 {...getFieldProps('加固堤防',requiredRules)}
-					 placeholder="请输入加固堤防"></Input>
-				</FormItem>
-				<FormItem
-				 label="清淤工程"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="清淤工程"
-					 {...getFieldProps('清淤工程')}
-					 placeholder="清淤工程"></Input>
-				</FormItem>
-				<FormItem
-				 label="护坡护岸"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="护坡护岸"
-					 {...getFieldProps('护坡护岸')}
-					 placeholder="护坡护岸"></Input>
-				</FormItem>
-				<FormItem
-				 label="其他工作"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="其他工作"
-					 {...getFieldProps('其他工作')}
-					 placeholder="其他工作"></Input>
-				</FormItem>
-				<FormItem
-				 label="防洪标准"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="防洪标准"
-					 {...getFieldProps('防洪标准')}
-					 placeholder="防洪标准"></Input>
-				</FormItem>
-				<FormItem
-				 label="除涝标准"
-				 labelCol={{span:8}}
-				 wrapperCol={{span:10}}>
-					<Input
-					 id="除涝标准"
-					 {...getFieldProps('除涝标准')}
-					 placeholder="除涝标准"></Input>
-				</FormItem>
-				<FormItem 
-				 wrapperCol={{ span: 12, offset: 8 }}>
-						<Button type="default" className="resetBtn" onClick={handleReset}>重置</Button>
-						<Button type="primary" className="submitBtn" onClick={handleSubmit}>确定</Button>
-				</FormItem>
-			</Form>
-		)
-}
-const ProjectInfoForm3=({form})=>{
-	
-	const handleSubmit=(e)=>{
-		e.preventDefault();
-		//console.log(this.props.form.getFieldsValue());
-		form.validateFields((errors,values)=>{
-			if(!errors){
-				console.log("no error")
-				DATA.push(form.getFieldsValue());
-				$.ajax({
-					url:"",
-					method:"",
-					data:{
-						data:JSON.stringify(DATA),
-						userid:""
-					},
-					success:function(data){},
-					error:function(){},
-				})
-			}
-		})
-	}
-	const handleReset=(e) =>{
-    	e.preventDefault();
-    	form.resetFields();
-  	}
-	var {getFieldProps,getFieldError,isFieldValidating} = this.props.form;
-	var requiredRules={
-		rules: [
-    			{required: true, message: '不能为空' },
-  			]
-	};
-	return(
-		<Form horizontal form={this.props.form}>
-			<FormItem
-			 label="保护城镇"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
-				<Input
-				 id="保护城镇"
-				 placeholder="请输入保护城镇"
-				 {...getFieldProps('保护城镇',requiredRules)}></Input>
-			</FormItem>
-			<FormItem
-			 label="保护人口"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
-				<Input
-				 id="保护人口"
-				 {...getFieldProps('保护人口',requiredRules)}
-				 placeholder="请输入保护人口"></Input>
-			</FormItem>
-			<FormItem
-			 label="保护耕地"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
-				<Input
-				 id="保护耕地"
-				 {...getFieldProps('保护耕地',requiredRules)}
-				 placeholder="请输入保护耕地"></Input>
-			</FormItem>
-			<FormItem
-			 label="排涝收益"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
-				<Input
-				 id="排涝收益"
-				 {...getFieldProps('排涝收益')}
-				 placeholder="排涝收益"></Input>
-			</FormItem>
-			<FormItem 
-			 wrapperCol={{ span: 12, offset: 8 }}>
-					<Button type="default" className="resetBtn" onClick={this.handleReset}>重置</Button>
-					<Button type="primary" className="submitBtn" onClick={this.handleSubmit}>完成</Button>
-			</FormItem>
-		</Form>
+		<div>
+			<iframe src="http://ditu.amap.com/" frameborder="0" style={{
+				width:'100%',
+				height:'500px'
+			}}></iframe>
+		</div>
 	)
+	
 }
-/*export default class RiverInput extends React.Component{
-	constructor() {
+
+/*const RiverInput=()=>{
+	const constructor()=> {
     	super();
     	this.state = {
 					stepState:{
@@ -473,9 +164,9 @@ const ProjectInfoForm3=({form})=>{
 					currentForm:"ProjectInfoForm1"
 				};
   	}	
-	handelSubmit(e){
+	const handelSubmit=(e)=>{
 	}
-	changeForm(nextForm){
+	const changeForm=(nextForm)=>{
 		//currentForm表示当前表单已经被填写完毕 可以切换下一个表单
 		if(nextForm == "ProjectInfoForm2"){
 					this.setState({
@@ -524,46 +215,93 @@ const ProjectInfoForm3=({form})=>{
 		}
 		//console.log("changeForm");
 	}
-	render(){
-		var _state = this.state;
-		var changeForm = this.changeForm;
-		var currentForm = _state.currentForm;
-		var currentFormCom; 
-		if(currentForm=="ProjectInfoForm1"){
-			currentFormCom = <ProjectInfoForm1 submitClick={changeForm} nextForm="ProjectInfoForm2" key="ProjectInfoForm1"/>
-		}else if(currentForm=="ProjectInfoForm2"){
-			currentFormCom =  <ProjectInfoForm2  submitClick={changeForm}  nextForm="ProjectInfoForm3" key="ProjectInfoForm2"/>
-		}else if(currentForm=="ProjectInfoForm3"){
-			currentFormCom =  <ProjectInfoForm3  submitClick={changeForm} key="ProjectInfoForm3"/>
-		}else{
-			currentFormCom = null;
-		}
-		
-		return(
-			<div className={styles.riverInput}>
-				
-			
-			<Row>
-				<Col span={12} offset={6}>
-					<Steps current={_state.stepState.current}>
-    					{_state.stepState.items.map(
-    					(item,index)=> <Step title = {item.title} description={item.description} key={index}/>)
-						}
-  					</Steps>
-				</Col>
-				<Col span={12} offset={6}>
-						{currentFormCom}
-				</Col>
-			</Row></div>)
+	
+	var _state = this.state;
+	var changeForm = this.changeForm;
+	var currentForm = _state.currentForm;
+	var currentFormCom; 
+	if(currentForm=="ProjectInfoForm1"){
+		currentFormCom = <ProjectInfoForm1 submitClick={changeForm} nextForm="ProjectInfoForm2" key="ProjectInfoForm1"/>
+	}else if(currentForm=="ProjectInfoForm2"){
+		currentFormCom =  <ProjectInfoForm2  submitClick={changeForm}  nextForm="ProjectInfoForm3" key="ProjectInfoForm2"/>
+	}else if(currentForm=="ProjectInfoForm3"){
+		currentFormCom =  <ProjectInfoForm3  submitClick={changeForm} key="ProjectInfoForm3"/>
+	}else{
+		currentFormCom = null;
 	}
-}*/
-const RiverInput=({form,back})=>{
+	
 	return(
-		<div>
-			<ProjectInfoForm1 form={form}/>
+		<div className={styles.riverInput}>
+			
+		
+		<Row>
+			<Col span={12} offset={6}>
+				<Steps current={_state.stepState.current}>
+					{_state.stepState.items.map(
+					(item,index)=> <Step title = {item.title} description={item.description} key={index}/>)
+					}
+					</Steps>
+			</Col>
+			<Col span={12} offset={6}>
+					{currentFormCom}
+			</Col>
+		</Row></div>)
+}*/
+const RiverInput=({form,river,dispatch})=>{
+	var _state = river.riverInput;
+	console.log(_state)
+	//var changeForm = this.changeForm;
+	var currentForm = _state.currentForm;
+	const changeToForm2=()=>{
+		dispatch({
+			type:'river/changeInputForm',
+			payload:{
+				currentForm:1,
+				stepState:{
+					current:1,
+					items:[
+			          {
+			            description:"河流基本信息",
+			            title:"已填写"
+			          },
+			          {
+			            description:"编辑河流位置",
+			            title:"填写中"
+			          }
+			        ],
+				}
+			}
+		})
+	}
+	var currentFormCom; 
+	if(currentForm==0){
+		currentFormCom =
+		<Col span={16}>
+			<ProjectInfoForm1 form={form} submitClick={changeToForm2}  key="ProjectInfoForm1"/>
+		</Col> 
+	}else if(currentForm==1){
+		currentFormCom =
+		<Col span={24}>
+			<AddFeatureOnMap />
+		</Col> 
+	}else{
+		currentFormCom = null;
+	}
+	return(
+		<div className={styles.riverInput}>
+			<Row type='flex' justify='center'>
+				<Col span={16}>
+					<Steps current={_state.stepState.current}>
+						{_state.stepState.items.map(
+						(item,index)=> <Step title = {item.title} description={item.description} key={index}/>)
+						}
+						</Steps>
+				</Col>
+					{currentFormCom}
+			</Row>
 		</div>
 	)
 }
 export default connect(
-	({river})=>({})
+	({river})=>({river})
 )(Form.create()(RiverInput)) 

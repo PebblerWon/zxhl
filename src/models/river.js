@@ -8,6 +8,22 @@ export default  modelExtend(pageModel,{
   state: {
     currentItem:{},
     modalVisible:false,
+    riverInput:{
+      currentForm:0,
+      stepState:{
+        current:0,
+        items:[
+          {
+            description:"河流基本信息",
+            title:"填写中"
+          },
+          {
+            description:"编辑河流位置",
+            title:"未填写"
+          }
+        ],
+      }
+    }
   },
 
   subscriptions: {
@@ -33,6 +49,17 @@ export default  modelExtend(pageModel,{
       return {
         ...state,
         modalVisible:false
+      }
+    },
+    changeInputForm(state,{payload}){
+      console.log('changeForm')
+      console.log(state)
+      console.log(payload)
+      return{
+        ...state,
+        riverInput:{
+          ...payload
+        }
       }
     }
   },
