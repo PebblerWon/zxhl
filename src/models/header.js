@@ -11,6 +11,14 @@ export default {
 
   subscriptions: {
     setup({ dispatch, history }) {
+      let getFromReg = new RegExp(/^#\/(\w+)\?/,'i')
+      const current =getFromReg.exec(location.hash)
+      dispatch({
+        type:'test',
+        action:{
+          key:current?current[1]:'map'
+        }
+      })
       let tid
       window.onresize=()=>{
         clearTimeout(tid)
@@ -28,7 +36,6 @@ export default {
     *changeNavbar ({
       payload,
     }, { put, select }) {
-      console.log('changeNavbar')
       const { header } = yield(select(_ => _))
       const isNavbar = document.body.clientWidth < 769
       console.log(header)

@@ -252,13 +252,13 @@ const subTableProps={
 }
 const StasticByArea=({dataSource})=>(
 	<div className={styles.table}>
-		<div style={{textAlign:'right',marginBottom:'10px'}}>
+		<div className={styles.export}>
 			<Button type="primary">导出</Button>
 		</div>
 		
 		<Table
 		  	bordered
-		  	scroll={{x:'1700px'}}
+		  	scroll={{x:'1700px',y:'400px'}}
 		  	pagination={false}
 		    columns={columns}
 		    expandedRowRender={

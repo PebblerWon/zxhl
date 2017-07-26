@@ -14,16 +14,19 @@ const HeaderMenu=({isHorizontal,menuClick,current})=>{
         selectedKeys={[current]}
         mode={mode}
       >
-        <SubMenu title={<span><Icon type='mail'/>地图浏览</span>}  className={styles.menuItem}>
+        {/*<SubMenu title={<span><Icon type='mail'/>地图浏览</span>}  className={styles.menuItem}>
          <Menu.Item>地图浏览1</Menu.Item>
          <Menu.Item>地图浏览2</Menu.Item>
          <Menu.Item>地图浏览3</Menu.Item>
-        </SubMenu>
-        <Menu.Item key="data" className={styles.menuItem}>
+        </SubMenu>*/}
+        <Menu.Item key="map" className={styles.menuItem}>
+          <Link to="/map"><Icon type="laptop" />地图浏览</Link>
+        </Menu.Item>
+        <Menu.Item key="dataCenter" className={styles.menuItem}>
           <Link to="/dataCenter"><Icon type="appstore" />数据中心</Link>
         </Menu.Item>
-        <Menu.Item key="tj" className={styles.menuItem}>
-          <Link to="/infoStastic"><Icon type="appstore" />项目统计</Link>
+        <Menu.Item key="infoStastic" className={styles.menuItem}>
+          <Link to="/infoStastic"><Icon type="appstore" />信息统计</Link>
         </Menu.Item>
         <Menu.Item key="userManage" className={styles.menuItem}>
           <Icon type="appstore" />用户管理

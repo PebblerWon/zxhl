@@ -1,6 +1,7 @@
 import React from 'react'
 import {Table,Tabs, Button } from 'antd'
 import StasticByArea from './StasticByArea'
+import StasticByRiver from './StasticByRiver'
 const TabPane = Tabs.TabPane;
 
 
@@ -75,7 +76,7 @@ const ProjectAll = ()=>{
 				<StasticByArea dataSource={byAreaData}/>
 			</TabPane>
 			<TabPane tab='按项目河流' key='2'>
-
+				<StasticByRiver />
 			</TabPane>
 		</Tabs>
 	)

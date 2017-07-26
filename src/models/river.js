@@ -1,5 +1,6 @@
 import modelExtend from 'dva-model-extend'
 import {pageModel} from './common'
+import {query} from '../services/river'
 
 export default  modelExtend(pageModel,{
 
@@ -20,14 +21,23 @@ export default  modelExtend(pageModel,{
           {
             description:"编辑河流位置",
             title:"未填写"
+          },
+          {
+            description:"预览并提交",
+            title:"未填写"
           }
         ],
       }
     }
   },
-
+  //获取河流数据
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
+      //console.log(query)
+      /*dispatch({
+        type:'query',
+        payload:{}
+      })*/
     },
   },
 
@@ -35,6 +45,18 @@ export default  modelExtend(pageModel,{
     *fetch({ payload }, { call, put }) {  // eslint-disable-line
       yield put({ type: 'save' });
     },
+    *query({payload={}},{call,put}){
+      console.log(payload)
+      const data = yield call(query, payload)
+      if (data) {
+        yield put({
+          type: 'querySuccess',
+          payload: {
+            list: data.data,
+          },
+        })
+      }
+    }
   },
 
   reducers: {
@@ -61,7 +83,7 @@ export default  modelExtend(pageModel,{
           ...payload
         }
       }
-    }
+    },
   },
 
 })

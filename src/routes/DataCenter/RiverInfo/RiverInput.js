@@ -16,25 +16,28 @@ const FormItem = Form.Item;
 const areaData = city('河南省');
 
 const ProjectInfoForm1 = ({form,submitClick})=>{
-	console.log(form)
-	var {getFieldDecorator,getFieldError,isFieldValidating} = form;
-		var requiredRules={
-			rules: [
-     				{required: true, message: '不能为空' },
-     			]
-		};
+	//console.log(form)
+	var {getFieldDecorator,getFieldError,isFieldValidating,resetFields} = form;
+	var requiredRules={
+		rules: [
+ 				{required: true, message: '不能为空' },
+ 			]
+	};
 	const handleReset=(e)=>{
-
+		form.resetFields()
 	}
 	const handleSubmit=(e)=>{
-
+		e.preventDefault()
+	}
+	const formItemProps={
+		labelCol:{span:8},
+		wrapperCol:{span:10}
 	}
 	return(
 		<Form layout="horizontal">
 			<FormItem
 			 label="河流名称"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
+			 {...formItemProps}>
 			 	{
 			 		getFieldDecorator('河流名称',requiredRules)(
 			 			<Input
@@ -45,8 +48,7 @@ const ProjectInfoForm1 = ({form,submitClick})=>{
 			</FormItem>
 			<FormItem
 			 label="水利普查序号"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
+			 {...formItemProps}>
 			 	{
 			 		getFieldDecorator('水利普查序号',requiredRules)(
 			 			<Input
@@ -56,8 +58,7 @@ const ProjectInfoForm1 = ({form,submitClick})=>{
 			</FormItem>
 			<FormItem
 			 label="所在水系"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
+			 {...formItemProps}>
 			 	{
 			 		getFieldDecorator('所在水系',requiredRules)(
 			 			<Input
@@ -67,8 +68,7 @@ const ProjectInfoForm1 = ({form,submitClick})=>{
 			</FormItem>
 			<FormItem
 			 label="流经地"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
+			 {...formItemProps}>
 			 	{
 			 		getFieldDecorator('流经地',requiredRules)(
 			 			<Cascader
@@ -79,8 +79,7 @@ const ProjectInfoForm1 = ({form,submitClick})=>{
 			</FormItem>
 			<FormItem
 			 label="河流长度"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
+			 {...formItemProps}>
 			 	{
 			 		getFieldDecorator('河流长度',requiredRules)(
 			 			<Input
@@ -91,8 +90,7 @@ const ProjectInfoForm1 = ({form,submitClick})=>{
 			</FormItem>
 			<FormItem
 			 label="流域面积"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
+			 {...formItemProps}>
 			 	{
 			 		getFieldDecorator('流域面积')(
 			 			<Input
@@ -103,8 +101,7 @@ const ProjectInfoForm1 = ({form,submitClick})=>{
 			</FormItem>
 			<FormItem
 			 label="所属流域"
-			 labelCol={{span:8}}
-			 wrapperCol={{span:10}}>
+			 {...formItemProps}>
 			 	{
 			 		getFieldDecorator('所属流域')(
 			 			<Select placeholder="所在流域">
@@ -128,13 +125,14 @@ const ProjectInfoForm1 = ({form,submitClick})=>{
 	)
 }
 
-const AddFeatureOnMap=()=>{
+const AddFeatureOnMap=({submitClick})=>{
 	return(
 		<div>
 			<iframe src="http://ditu.amap.com/" frameborder="0" style={{
 				width:'100%',
-				height:'500px'
+				height:'450px'
 			}}></iframe>
+			<Button type="primary" style={{marginLeft:'20px'}}onClick={submitClick}>下一项</Button>
 		</div>
 	)
 	
@@ -249,7 +247,7 @@ const AddFeatureOnMap=()=>{
 }*/
 const RiverInput=({form,river,dispatch})=>{
 	var _state = river.riverInput;
-	console.log(_state)
+	//console.log(_state)
 	//var changeForm = this.changeForm;
 	var currentForm = _state.currentForm;
 	const changeToForm2=()=>{
@@ -267,6 +265,35 @@ const RiverInput=({form,river,dispatch})=>{
 			          {
 			            description:"编辑河流位置",
 			            title:"填写中"
+			          },
+			          {
+			            description:"预览并提交",
+			            title:"未填写"
+			          }
+			        ],
+				}
+			}
+		})
+	}
+	const changeToForm3=()=>{
+		dispatch({
+			type:'river/changeInputForm',
+			payload:{
+				currentForm:2,
+				stepState:{
+					current:2,
+					items:[
+			          {
+			            description:"河流基本信息",
+			            title:"已填写"
+			          },
+			          {
+			            description:"编辑河流位置",
+			            title:"已填写"
+			          },
+			          {
+			            description:"预览并提交",
+			            title:"填写中"
 			          }
 			        ],
 				}
@@ -282,8 +309,14 @@ const RiverInput=({form,river,dispatch})=>{
 	}else if(currentForm==1){
 		currentFormCom =
 		<Col span={24}>
-			<AddFeatureOnMap />
+			<AddFeatureOnMap submitClick={changeToForm3}/>
 		</Col> 
+	}else if(currentForm ==2){
+		currentFormCom=
+		<Col span={24}>
+			{'预览并提交'}
+			<Button type='primary'>确认提交</Button>
+		</Col>
 	}else{
 		currentFormCom = null;
 	}

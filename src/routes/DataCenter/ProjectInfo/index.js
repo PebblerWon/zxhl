@@ -70,7 +70,9 @@ for (let i = 0; i < 100; i++) {
    
   });
 }
-const ProjectInfo = ({river,dispatch})=>{
+const ProjectInfo = ({project,dispatch,form})=>{
+	const {getFieldDecorator,validateFields,resetFields,getFieldsValue} = form
+
 	const colProps={
 		xl:4,
 		md:8,
@@ -82,26 +84,31 @@ const ProjectInfo = ({river,dispatch})=>{
 		wrapperCol:{span:19}
 	}
 	const detailProps={
-		item:river.currentItem,
-		visible:river.modalVisible,
+		item:project.currentItem,
+		visible:project.modalVisible,
 		maskClosable:false,
 		columns:columns,
 		onOk(){
 			dispatch({
-				type:'river/hideModal'
+				type:'project/hideModal'
 			})
 		},
 		onCancel(){
 			dispatch({
-				type:'river/hideModal',
+				type:'project/hideModal',
 			})
 		}
 	}
 	const handleReset= (e)=>{
-
+		resetFields()
 	}
 	const handleSearch = (e)=>{
-
+		e.preventDefault();
+		let values = getFieldsValue();
+		dispatch({
+			type:'project/query',
+			payload:values
+		})
 	}
 
 	const tableProps={
@@ -110,7 +117,7 @@ const ProjectInfo = ({river,dispatch})=>{
 		scroll:{ x: 1700, y: 300 },
 		onRowDoubleClick(e){
 			dispatch({
-				type:'river/showModal',
+				type:'project/showModal',
 				payload:{
 					currentItem:e
 				}
@@ -144,15 +151,15 @@ const ProjectInfo = ({river,dispatch})=>{
 							</FormItem>
 						</Col>
 						<Col {...colProps}>
-							<FormItem {...formItemLayout} label="河流名称">
-								<Input placeholder="请输入河流名称查询"></Input>
+							<FormItem {...formItemLayout} label="项目名称">
+								<Input placeholder="请输入项目名称查询"></Input>
 							</FormItem>
 						</Col>
 		    		</Row>
 	    		</Row>
 	    		<Row>
 		          	<Col span={24} style={{ textAlign: 'right' }}>
-		            	<Button type="primary" htmlType="submit">查询</Button>
+		            	<Button type="primary" onClick={handleSearch} htmlType="submit">查询</Button>
 		            	<Button style={{ marginLeft: 8 }} onClick={handleReset}>清空</Button>
 		          </Col>
 		        </Row>
@@ -168,5 +175,5 @@ const ProjectInfo = ({river,dispatch})=>{
 }
 
 export default connect(
-	({river})=>({river})
-)(ProjectInfo);
+	({project})=>({project})
+)(Form.create()(ProjectInfo));
