@@ -1,0 +1,57 @@
+.tabsContainer {
+  height: 100%;
+  overflow-y: hidden;
+   :global {
+    .ant-tabs {
+      height: 100%;
+    }
+    .ant-tabs-vertical>.ant-tabs-bar {
+      border-right:none;
+      .ant-tabs-tab {
+        background: #daebff;
+        margin-bottom: 0px;
+        padding: 20px 60px 20px 20px;
+        color: #0158a6;
+        font-size: 16px;
+      }
+      .ant-tabs-tab-active {
+        color: #0083f9;
+        background-color: #6493af;
+        color: #fff;
+      }
+      .ant-tabs-ink-bar {
+        width:0px;height:0px !important;
+        top:12px;
+        background-color: transparent;
+        border-top:20px transparent solid;
+        border-left:20px transparent solid;
+        border-bottom:20px transparent solid;
+        border-right:20px #fff solid;
+
+      }
+    }
+    .ant-tabs-vertical.ant-tabs-left>.ant-tabs-content {
+      height: 100%;
+      overflow-y: auto;
+      padding-left: 0px;
+      background-color: #fff;
+    }
+    .ant-breadcrumb {
+      padding: 10px 0px 10px 20px;
+      font-size: 14px;
+    }
+
+  }
+}
+
+.tree{
+  :global{
+    .ant-tree li{
+      padding:0px 0px 4px 0px;
+    }
+    .ant-tree li .ant-tree-node-content-wrapper{
+      padding:0px 5px;
+      font-size:14px;
+    }
+  }
+}

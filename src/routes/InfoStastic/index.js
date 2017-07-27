@@ -1,22 +1,24 @@
 import { Tabs, Radio ,Button} from 'antd';
 import ProjectAll from './ProjectAll'
 import StasticGraph from './StasticGraph'
-import styles from './index.less'
+import coStyle from '../common.less'
+
 const TabPane = Tabs.TabPane;
 
 const DataCenter=()=>{
   return(
-    <Tabs
-      tabPosition='left'
-      className={styles.container}
-    >
-      <TabPane tab="项目汇总" key="1">
-        <ProjectAll />
-      </TabPane>
-      <TabPane tab="统计图表" key="2">
-        <StasticGraph />
-      </TabPane>
-    </Tabs>)
+     <div className={coStyle.tabsContainer}>
+      <Tabs
+        tabPosition='left'
+      >
+        <TabPane tab="项目汇总" key="1">
+          <ProjectAll />
+        </TabPane>
+        <TabPane tab="统计图表" key="2">
+          <StasticGraph />
+        </TabPane>
+      </Tabs> 
+    </div>)
 }
 
 export default DataCenter;

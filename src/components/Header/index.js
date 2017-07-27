@@ -8,17 +8,23 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopover})=> {
+  const xsColProps={
+    xs:2,
+    sm:4,
+    md:3,
+    lg:3,
+  }
   const smalColProps={
   	xs:2,
   	sm:4,
-  	md:5,
-  	lg:5,
+  	md:10,
+  	lg:10,
   }
   const bigColProps={
   	 xs:20,
   	 sm:16,
-  	 md:14,
-  	 lg:14
+  	 md:11,
+  	 lg:11
   }
   const menuProps={
     current,
@@ -29,9 +35,8 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
     visible:menuPopoverVisible,
     onVisibleChange:switchMenuPopover
   }
-  console.log(isNavbar)
     return (
-    	<div className={styles.content}>
+    	<div className={styles.headerContent}>
         {isNavbar?
           <div>
             <Row  align="bottom" type='flex'>
@@ -49,10 +54,13 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
             </Popover>
             </Col>
             <Col span={12}>
-              <Menu mode="horizontal" style={{float: 'right'}}>
+              <Menu mode="horizontal" className={styles.menu} style={{float: 'right'}}>
                     <SubMenu title={<span> <Icon type="user" />
                       admin </span>}
                     >
+                      <Menu.Item key="userManage">
+                        用户管理
+                      </Menu.Item>
                       <Menu.Item key="logout">
                         退出
                       </Menu.Item>
@@ -70,11 +78,14 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
       			<Col {...bigColProps} style={{height:'100%'}}>
       				<HeaderMenu {...menuProps}></HeaderMenu>
       			</Col>
-      			<Col {...smalColProps}>
-      				<Menu mode="horizontal" style={{float: 'right'}}>
+      			<Col {...xsColProps}>
+      				<Menu mode="horizontal" className={styles.menu}>
   				          <SubMenu title={<span> <Icon type="user" />
   				            admin </span>}
   				          >
+                      <Menu.Item key="userManage">
+                        用户管理
+                      </Menu.Item>
   				            <Menu.Item key="logout">
   				              退出
   				            </Menu.Item>

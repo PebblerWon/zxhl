@@ -4,7 +4,7 @@ export default {
   namespace: 'header',
 
   state: {
-    current:'map',
+    current:'home',
     isNavbar: document.body.clientWidth<769,
     menuPopoverVisible:false,
   },
@@ -16,7 +16,7 @@ export default {
       dispatch({
         type:'test',
         action:{
-          key:current?current[1]:'map'
+          key:current?current[1]:'home'
         }
       })
       let tid
