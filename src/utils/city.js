@@ -4102,4 +4102,11 @@ let DICT_FIXED_BY_PROVINCE = function(provinceName){
   return tree(fixed)
 }
 
-module.exports = DICT_FIXED_BY_PROVINCE
+let HNCity=['郑州市','开封市','洛阳市','平顶山市','安阳市','鹤壁市','新乡市','焦作市','濮阳市','许昌市',
+  '漯河市','三门峡市','商丘市','周口市','驻马店市','南阳市','信阳市','济源市','巩义市','兰考县',
+  '长垣县','永城市','滑县','邓州市','汝州市','固始县','鹿邑县','新蔡县'
+]
+module.exports = {
+  DICT_FIXED_BY_PROVINCE,
+  HNCity,
+}

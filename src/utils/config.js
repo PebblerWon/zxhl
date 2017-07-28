@@ -1,6 +1,5 @@
 const APIV1 = '/api/v1'
 const APIV2 = '/api/v2'
-
 module.exports = {
   name: 'AntD Admin',
   prefix: 'antdAdmin',

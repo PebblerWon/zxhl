@@ -4,6 +4,7 @@ import { Form, Button, Row, Col,Input,Table,Card,
 } from 'antd'
 import {Table1,Table2} from './Table'
 import styles from './index.less'
+import conStyle from '../../common.less'
 const FormItem = Form.Item;
 const {Header,Content,Footer,Sider} = Layout
 const TreeNode = Tree.TreeNode;
@@ -12,13 +13,15 @@ const TabPane = Tabs.TabPane
 const PlanProject = ({river,dispatch,form})=>{
 	
 	return(
-		<div className={styles.planProject}>
+		<div className={conStyle.layout}>
 			<Layout className='layout1'>
-				<Content>
+				<Header>
 					<Breadcrumb separator=">">
 						<Breadcrumb.Item className="Item">首页</Breadcrumb.Item>
 						<Breadcrumb.Item className="Item">规划项目</Breadcrumb.Item>
 					</Breadcrumb>
+
+				</Header>
 					<Layout className='layout2'>
 						<Content>
 							<Tabs>
@@ -31,7 +34,6 @@ const PlanProject = ({river,dispatch,form})=>{
 							</Tabs>
 						</Content>
 					</Layout>
-				</Content>
 			</Layout>
 		</div>
 	)

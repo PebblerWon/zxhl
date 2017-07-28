@@ -3,7 +3,7 @@ import {Table} from 'antd'
 const Table1 = ()=>{
 	return(
 		<div>
-			<img src="resource/效果图/image009.png" alt=""/>
+			<img src="resource/效果图/image002.gif" alt=""/>
 		</div>
 	)
 }
