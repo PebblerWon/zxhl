@@ -2,17 +2,19 @@ import React from 'react'
 import { Form, Button, Row, Col,Input,Table,Card,
 	Breadcrumb,Tree,Layout,Tabs
 } from 'antd'
-import HuaiHeProject from './HuaiHeProject'
-import ChangJiangProject from './ChangJiangProject'
+//import HuaiHeProject from './HuaiHeProject'
+//import ChangJiangProject from './ChangJiangProject'
 import {HNCity} from '../../../utils/city'
+//import styles from './index.less'
 import conStyle from '../../common.less'
+
 
 const FormItem = Form.Item;
 const {Header,Content,Footer,Sider} = Layout
 const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
-const ProjectByWZ = ({river,dispatch,form})=>{
+const RiverByWZ = ({river,dispatch,form})=>{
 	
 	return(
 		<div className={conStyle.layout}>
@@ -20,7 +22,7 @@ const ProjectByWZ = ({river,dispatch,form})=>{
 				<Header>
 					<Breadcrumb separator=">">
 						<Breadcrumb.Item className="Item">查询信息</Breadcrumb.Item>
-						<Breadcrumb.Item className="Item">规划项目</Breadcrumb.Item>
+						<Breadcrumb.Item className="Item">河流信息</Breadcrumb.Item>
 					</Breadcrumb>
 				</Header>
 				<Layout className='layout2'>
@@ -37,10 +39,10 @@ const ProjectByWZ = ({river,dispatch,form})=>{
 					<Content>
 						<Tabs>
 							<TabPane tab='淮河流域' key='1'>
-								<HuaiHeProject />
+								淮河流域
 							</TabPane>
 							<TabPane tab='长江流域' key='2'>
-								<ChangJiangProject />
+								长江流域
 							</TabPane>
 							<TabPane tab='黄河流域' key='3'>
 								黄河流域
@@ -59,4 +61,4 @@ const ProjectByWZ = ({river,dispatch,form})=>{
 	)
 }
 
-export default ProjectByWZ;
+export default RiverByWZ;
