@@ -141,7 +141,7 @@ const Table1 = ()=>{
 		size:'small',
 	}
 	return(
-		<div className={coStyle.table}  style={{width:'700px'}}>
+		<div className={coStyle.table}  style={{width:'700px',marginLeft:'150px'}}>
 			<Table {...tableProps}></Table>
 		</div>
 	)
@@ -241,7 +241,7 @@ const Table2 = ()=>{
 		columns:columns,
 	}
 	return(
-		<div className={coStyle.table} style={{width:'880px'}}>
+		<div className={coStyle.table} style={{width:'880px',marginLeft:'100px'}}>
 			<Table {...tableProps}></Table>
 		</div>
 	)

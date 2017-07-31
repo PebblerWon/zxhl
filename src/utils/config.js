@@ -22,6 +22,8 @@ module.exports = {
     v1test: `${APIV1}/test`,
     v2test: `${APIV2}/test`,
     riverQuery:`${APIV1}/river/query`,
-    projectQuery:`${APIV1}/river/query`
+    projectQuery:`${APIV1}/river/query`,
+    baseSituation:``,
+
   },
 }

@@ -4,6 +4,7 @@ import { Form, Button, Row, Col,Input,Table,Card,
 } from 'antd'
 import HuaiHeProject from './HuaiHeProject'
 import ChangJiangProject from './ChangJiangProject'
+import AllProject from './AllProject'
 import {HNCity} from '../../../utils/city'
 import conStyle from '../../common.less'
 
@@ -37,19 +38,19 @@ const ProjectByWZ = ({river,dispatch,form})=>{
 					<Content>
 						<Tabs>
 							<TabPane tab='淮河流域' key='1'>
-								<HuaiHeProject />
+								<AllProject />
 							</TabPane>
 							<TabPane tab='长江流域' key='2'>
-								<ChangJiangProject />
+								<AllProject />
 							</TabPane>
 							<TabPane tab='黄河流域' key='3'>
-								黄河流域
+								<AllProject />
 							</TabPane>
 							<TabPane tab='海河流域' key='4'>
-								海河流域
+								<AllProject />
 							</TabPane>
 							<TabPane tab='全部' key='5'>
-								全部
+								<AllProject />
 							</TabPane>
 						</Tabs>
 					</Content>

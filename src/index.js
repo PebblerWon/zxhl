@@ -11,6 +11,7 @@ const app = dva();
 app.model(require('./models/header'));
 app.model(require('./models/river'));
 app.model(require('./models/project'));
+app.model(require('./models/baseSituation'));
 
 // 4. Router
 app.router(require('./router'));

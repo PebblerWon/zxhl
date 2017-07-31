@@ -1,7 +1,9 @@
 import React from 'react'
+//import props from
 import {Table} from 'antd'
 import TableTitle from '../../../components/Common/TableTitle'
 import coStyle from '../../common.less'
+import {HNCity} from '../../../utils/city'
 
 //处理数据源的函数
 const proDs = (ds)=>{
@@ -24,7 +26,7 @@ const proDs = (ds)=>{
 		}
 		return dataSource;
 	}
-const Table1 = ()=>{
+const Table1 = ({ds,filter,loading})=>{
 	const columns=[{
 		  title:'序号',
 		  key:'序号',
@@ -37,7 +39,6 @@ const Table1 = ()=>{
 		  	}
 		  	if(index==0){
 		  		obj.props.colSpan=2
-		  		console.log(obj)
 		  	}
 		  	return obj;
 		  }
@@ -74,40 +75,6 @@ const Table1 = ()=>{
 			width:100,
 		}
 	]
-	const ds = {
-		'total':{
-			'条数':'242',
-			'所占百分比':'100.00',
-			'总河长':'15886'
-		},
-		'data':[
-			{
-			'所在流域':'淮河流域',
-			'条数':'134',
-			'所占百分比':'55.37',
-			'总河长':'9332'
-			},
-			{
-			'所在流域':'黄河流域',
-			'条数':'38',
-			'所占百分比':'15.70',
-			'总河长':'2056'
-			},{
-			'所在流域':'长江流域',
-			'条数':'46',
-			'所占百分比':'19.01',
-			'总河长':'3026'
-			},{
-			'所在流域':'海河流域',
-			'条数':'24',
-			'所占百分比':'9.92',
-			'总河长':'1472'
-			},
-		],
-		'tableTitle':'全省河流流域面积在200~3000平方公里河流汇总表(按流域划分)'
-	}
-	
-	
 	const tableProps={
 		title:()=><TableTitle text={ds.tableTitle} />,
 		bordered:true,
@@ -115,15 +82,16 @@ const Table1 = ()=>{
 		dataSource:proDs(ds),
 		columns:columns,
 		size:'small',
+		loading:loading
 	}
 	return(
-		<div className={coStyle.table}  style={{width:'700px'}}>
+		<div className={coStyle.table}  style={{width:'700px',marginLeft:'100px'}}>
 			<Table {...tableProps}></Table>
 		</div>
 	)
 }
 
-const Table2 = ()=>{
+const Table2 = ({ds,filter,loading})=>{
 	const columns=[{
 		  title:'序号',
 		  key:'序号',
@@ -136,7 +104,7 @@ const Table2 = ()=>{
 		  	}
 		  	if(index==0){
 		  		obj.props.colSpan=2
-		  		console.log(obj)
+		  		//console.log(obj)
 		  	}
 		  	return obj;
 		  }
@@ -190,58 +158,7 @@ const Table2 = ()=>{
 			width:150,
 		}
 	]
-	const ds = {
-		'total':{
-			'总计河流条数':'242',
-			'已治理河流数':'221',
-			'已治理项目数':'376',
-			'总河长':'15886',
-			'已治理长度':'3365.73',
-			'已治理河长占总河长的比例':'21.19',
-			'未治理长度':'12520.27'
-		},
-		'data':[
-			{
-			'所在流域':'淮河流域',
-			'总计河流条数':'134',
-			'已治理河流数':'107',
-			'已治理项目数':'176',
-			'总河长':'9332',
-			'已治理长度':'1866.35',
-			'已治理河长占总河长的比例':'20.00',
-			'未治理长度':'7465.64'
-			},
-			{
-			'所在流域':'黄河流域',
-			'总计河流条数':'242',
-			'已治理河流数':'221',
-			'已治理项目数':'376',
-			'总河长':'15886',
-			'已治理长度':'3365.73',
-			'已治理河长占总河长的比例':'21.19',
-			'未治理长度':'12520.27'
-			},{
-			'所在流域':'长江流域',
-			'总计河流条数':'242',
-			'已治理河流数':'221',
-			'已治理项目数':'376',
-			'总河长':'15886',
-			'已治理长度':'3365.73',
-			'已治理河长占总河长的比例':'21.19',
-			'未治理长度':'12520.27'
-			},{
-			'所在流域':'海河流域',
-			'总计河流条数':'242',
-			'已治理河流数':'221',
-			'已治理项目数':'376',
-			'总河长':'15886',
-			'已治理长度':'3365.73',
-			'已治理河长占总河长的比例':'21.19',
-			'未治理长度':'12520.27'
-			},
-		],
-		'tableTitle':'全省河流流域面积在200~3000平方公里河流治理情况统计表(按流域汇总)'
-	}
+	
 	const proDs = (ds)=>{
 		let dataSource=[];
 		if(ds&&ds.total){
@@ -269,14 +186,15 @@ const Table2 = ()=>{
 		pagination:false,
 		dataSource:proDs(ds),
 		columns:columns,
+		loading:loading,
 	}
 	return(
-		<div className={coStyle.table} style={{width:'880px'}}>
+		<div className={coStyle.table} style={{width:'880px',marginLeft:'50px'}}>
 			<Table {...tableProps}></Table>
 		</div>
 	)
 }
-const Table3 = ()=>{
+const Table3 = ({ds,filter,loading})=>{
 	const columns=[{
 		  title:'序号',
 		  key:'序号',
@@ -289,7 +207,7 @@ const Table3 = ()=>{
 		  	}
 		  	if(index==0){
 		  		obj.props.colSpan=2
-		  		console.log(obj)
+		  		//console.log(obj)
 		  	}
 		  	return obj;
 		  }
@@ -326,48 +244,7 @@ const Table3 = ()=>{
 			width:100,
 		}
 	]
-	const ds = {
-		'total':{
-			'项目个数':'376',
-			'治理长度':'4330.62',
-			'投资':'837861.43'
-		},
-		'data':[
-			{
-			'所在地市':'郑州市',
-			'项目个数':'25',
-			'治理长度':'249.273',
-			'投资':'56238'
-			},
-			{
-			'所在地市':'郑州市',
-			'项目个数':'25',
-			'治理长度':'249.273',
-			'投资':'56238'
-			},{
-			'所在地市':'郑州市',
-			'项目个数':'25',
-			'治理长度':'249.273',
-			'投资':'56238'
-			},{
-			'所在地市':'郑州市',
-			'项目个数':'25',
-			'治理长度':'249.273',
-			'投资':'56238'
-			},{
-			'所在地市':'郑州市',
-			'项目个数':'25',
-			'治理长度':'249.273',
-			'投资':'56238'
-			},{
-			'所在地市':'郑州市',
-			'项目个数':'25',
-			'治理长度':'249.273',
-			'投资':'56238'
-			},
-		],
-		'tableTitle':'河南省中小河流治理项目已批复项目情况统计表'
-	}
+	
 	const tableProps={
 		title:()=><TableTitle text={ds.tableTitle} />,
 		bordered:true,
@@ -375,9 +252,10 @@ const Table3 = ()=>{
 		dataSource:proDs(ds),
 		columns:columns,
 		size:'small',
+		loading:loading
 	}
 	return(
-		<div className={coStyle.table} style={{width:'880px'}}>
+		<div className={coStyle.table} style={{width:'880px',marginLeft:'50px'}}>
 			<Table {...tableProps}/>
 		</div>
 	)

@@ -2,10 +2,9 @@ import React from 'react'
 import { Form, Button, Row, Col,Input,Table,Card,
 	Breadcrumb,Tree,Layout,Tabs
 } from 'antd'
-//import HuaiHeProject from './HuaiHeProject'
-//import ChangJiangProject from './ChangJiangProject'
+import {connect} from 'dva'
+import RiverInfo from './RiverInfo'
 import {HNCity} from '../../../utils/city'
-//import styles from './index.less'
 import conStyle from '../../common.less'
 
 
@@ -15,7 +14,36 @@ const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
 const RiverByWZ = ({river,dispatch,form})=>{
-	
+	const tabsProps={
+		activeKey:river.tabs,
+		onChange(activeKey){
+			dispatch({
+				type:'river/query',
+				payload:{
+					tree:river.tree,
+					tabs:activeKey
+				}
+			})
+		},
+	}
+	const treeProps={
+		showLine:true,
+		defaultExpandAll:true,
+		selectedKeys:river.tree,
+		onSelect(selectedKeys){
+			dispatch({
+				type:'river/query',
+				payload:{
+					tree:selectedKeys,
+					tabs:river.tabs
+				}
+			})
+		},
+	}
+	const riverInfoProps={
+		ds:river.data,
+		loading:river.loading
+	}
 	return(
 		<div className={conStyle.layout}>
 			<Layout className='layout1'>
@@ -28,7 +56,7 @@ const RiverByWZ = ({river,dispatch,form})=>{
 				<Layout className='layout2'>
 					<Sider width={130} className='sider'>
 						<div className={conStyle.tree}>
-							<Tree showLine defaultExpandAll={true} defaultSelectedKeys={['河南省']}>
+							<Tree {...treeProps}>
 								<TreeNode title='河南省' key='河南省'>
 									{HNCity.map(item=><TreeNode title={item} key={item}/>)}
 								</TreeNode>
@@ -37,21 +65,26 @@ const RiverByWZ = ({river,dispatch,form})=>{
 						
 					</Sider>
 					<Content>
-						<Tabs>
-							<TabPane tab='淮河流域' key='1'>
-								淮河流域
+						<Tabs {...tabsProps}>
+							<TabPane tab='淮河流域' key='淮河流域'>
+								<RiverInfo {...riverInfoProps} />
+								{/*<RiverInfo  ds={{'所属流域':'淮河流域','河流名称':'东沙河'}}/>*/}
 							</TabPane>
-							<TabPane tab='长江流域' key='2'>
-								长江流域
+							<TabPane tab='长江流域' key='长江流域'>
+								<RiverInfo {...riverInfoProps} />
+								{/*<RiverInfo  ds={{'所属流域':'长江流域','河流名称':'湍河'}} />*/}
 							</TabPane>
-							<TabPane tab='黄河流域' key='3'>
-								黄河流域
+							<TabPane tab='黄河流域' key='黄河流域'>
+								<RiverInfo {...riverInfoProps} />
+								{/*<RiverInfo  ds={{'所属流域':'黄河流域','河流名称':'洪阳河'}} />*/}
 							</TabPane>
-							<TabPane tab='海河流域' key='4'>
-								海河流域
+							<TabPane tab='海河流域' key='海河流域'>
+								<RiverInfo {...riverInfoProps} />
+								{/*<RiverInfo  ds={{'所属流域':'海河流域','河流名称':'山门河'}} />*/}
 							</TabPane>
-							<TabPane tab='全部' key='5'>
-								全部
+							<TabPane tab='全部' key='全部'>
+								<RiverInfo {...riverInfoProps} />
+								{/*<RiverInfo  ds={{}} />*/}
 							</TabPane>
 						</Tabs>
 					</Content>
@@ -61,4 +94,6 @@ const RiverByWZ = ({river,dispatch,form})=>{
 	)
 }
 
-export default RiverByWZ;
+export default connect(
+	({river})=>({river})
+)(RiverByWZ);
