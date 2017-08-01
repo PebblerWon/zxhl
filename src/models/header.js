@@ -4,15 +4,16 @@ export default {
   namespace: 'header',
 
   state: {
-    current:'home',
+    current:'',
     isNavbar: document.body.clientWidth<769,
     menuPopoverVisible:false,
   },
 
   subscriptions: {
     setup({ dispatch, history }) {
-      let getFromReg = new RegExp(/^#\/(\w+)\?/,'i')
+      let getFromReg = /^#\/(\w+)\?/i;
       const current =getFromReg.exec(location.hash)
+      console.log(current)
       dispatch({
         type:'test',
         action:{

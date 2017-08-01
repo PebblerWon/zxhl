@@ -1,4 +1,5 @@
 import React from 'react'
+import {connect} from 'dva'
 import { Form, Button, Row, Col,Input,Table,Card,
 	Breadcrumb,Tree,Layout,Tabs
 } from 'antd'
@@ -10,8 +11,15 @@ const {Header,Content,Footer,Sider} = Layout
 const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
-const PlanProject = ({river,dispatch,form})=>{
-	
+const PlanProject = ({planProject,dispatch})=>{
+	const table1Props={
+		loading:planProject.loading,
+		ds:planProject.table1.ds,
+	}
+	const table2Props={
+		loading:planProject.loading,
+		ds:planProject.table2.ds,
+	}
 	return(
 		<div className={conStyle.layout}>
 			<Layout className='layout1'>
@@ -26,10 +34,10 @@ const PlanProject = ({river,dispatch,form})=>{
 						<Content>
 							<Tabs>
 								<TabPane tab='按流域划分' key='1'>
-									<Table1></Table1>
+									<Table1 {...table1Props} />
 								</TabPane>
 								<TabPane tab='按政区划分' key='2'>
-									<Table2></Table2>
+									<Table2  {...table2Props} />
 								</TabPane>
 							</Tabs>
 						</Content>
@@ -39,4 +47,6 @@ const PlanProject = ({river,dispatch,form})=>{
 	)
 }
 
-export default PlanProject;
+export default connect(
+	({planProject})=>({planProject})
+)(PlanProject);

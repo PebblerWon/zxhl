@@ -1,10 +1,12 @@
 import React from 'react'
 import { Row, Col,Table,Modal} from 'antd'
-
+import classnames from 'classnames'
 import TableTitle from '../../../components/Common/TableTitle'
-import coStyle from '../../common.less'
 import {HNCity} from '../../../utils/city'
 import DropOption from '../../../components/DropOptions'
+
+import coStyle from '../../common.less'
+import styles from './index.less'
 
 const RiverInfo = ({ds,loading})=>{
 	
@@ -29,7 +31,11 @@ const RiverInfo = ({ds,loading})=>{
 				    } else if (e.key === 'delete') {
 				      Modal.confirm({
 				        title: '你真的想删除该条记录吗?',
-				        onOk () {
+				        onOk (e) {
+				        	
+				        },
+				        onCancel(e){
+
 				        },
 				      })
 				    }
@@ -63,7 +69,11 @@ const RiverInfo = ({ds,loading})=>{
 	
 	return(
 		
-		<div className={coStyle.table}>
+		<div className={
+			classnames(
+				{[coStyle.table]:true,[styles.riverTable]:true}
+			)
+		}>
 	    	<Table {...tableProps}/>
 	    </div>
 	)

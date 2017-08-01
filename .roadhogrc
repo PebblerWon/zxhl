@@ -14,5 +14,12 @@
         ["import",{"libraryName":"antd","style":"css"}]
       ]
     }
+  },
+  "proxy": {
+    "/api": {
+      "target": "http://172.66.16.190:6500/",
+      "changeOrigin": true,
+      "pathRewrite": { "^/api/v1" : "" }
+    }
   }
 }

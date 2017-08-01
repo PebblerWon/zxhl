@@ -2,8 +2,7 @@ import React from 'react'
 import { Form, Button, Row, Col,Input,Table,Card,
 	Breadcrumb,Tree,Layout,Tabs
 } from 'antd'
-import HuaiHeProject from './HuaiHeProject'
-import ChangJiangProject from './ChangJiangProject'
+import {connect} from 'dva'
 import AllProject from './AllProject'
 import {HNCity} from '../../../utils/city'
 import conStyle from '../../common.less'
@@ -13,8 +12,37 @@ const {Header,Content,Footer,Sider} = Layout
 const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
-const ProjectByWZ = ({river,dispatch,form})=>{
-	
+const ProjectByWZ = ({project,dispatch,form})=>{
+	const tabsProps={
+		activeKey:project.tabs,
+		onChange(activeKey){
+			dispatch({
+				type:'project/query',
+				payload:{
+					tree:project.tree,
+					tabs:activeKey
+				}
+			})
+		},
+	}
+	const treeProps={
+		showLine:true,
+		defaultExpandAll:true,
+		selectedKeys:project.tree,
+		onSelect(selectedKeys){
+			dispatch({
+				type:'project/query',
+				payload:{
+					tree:selectedKeys,
+					tabs:project.tabs
+				}
+			})
+		},
+	}
+	const allProjectProps={
+		ds:project.data,
+		loading:project.loading
+	}
 	return(
 		<div className={conStyle.layout}>
 			<Layout className='layout1'>
@@ -27,7 +55,7 @@ const ProjectByWZ = ({river,dispatch,form})=>{
 				<Layout className='layout2'>
 					<Sider width={130} className='sider'>
 						<div className={conStyle.tree}>
-							<Tree showLine defaultExpandAll={true} defaultSelectedKeys={['河南省']}>
+							<Tree {...treeProps}>
 								<TreeNode title='河南省' key='河南省'>
 									{HNCity.map(item=><TreeNode title={item} key={item}/>)}
 								</TreeNode>
@@ -36,21 +64,21 @@ const ProjectByWZ = ({river,dispatch,form})=>{
 						
 					</Sider>
 					<Content>
-						<Tabs>
-							<TabPane tab='淮河流域' key='1'>
-								<AllProject />
+						<Tabs {...tabsProps}>
+							<TabPane tab='淮河流域' key='淮河流域'>
+								<AllProject  {...allProjectProps}/>
 							</TabPane>
-							<TabPane tab='长江流域' key='2'>
-								<AllProject />
+							<TabPane tab='长江流域' key='长江流域'>
+								<AllProject  {...allProjectProps}/>
 							</TabPane>
-							<TabPane tab='黄河流域' key='3'>
-								<AllProject />
+							<TabPane tab='黄河流域' key='黄河流域'>
+								<AllProject  {...allProjectProps}/>
 							</TabPane>
-							<TabPane tab='海河流域' key='4'>
-								<AllProject />
+							<TabPane tab='海河流域' key='海河流域'>
+								<AllProject  {...allProjectProps}/>
 							</TabPane>
-							<TabPane tab='全部' key='5'>
-								<AllProject />
+							<TabPane tab='全部' key='全部'>
+								<AllProject  {...allProjectProps}/>
 							</TabPane>
 						</Tabs>
 					</Content>
@@ -60,4 +88,6 @@ const ProjectByWZ = ({river,dispatch,form})=>{
 	)
 }
 
-export default ProjectByWZ;
+export default connect(
+	({project})=>({project})
+)(ProjectByWZ);

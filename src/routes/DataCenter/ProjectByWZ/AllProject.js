@@ -1,12 +1,13 @@
 import React from 'react'
 import { Row, Col,Table,Modal} from 'antd'
-
+import classnames from 'classnames'
 import TableTitle from '../../../components/Common/TableTitle'
 import coStyle from '../../common.less'
+import styles from './index.less'
 import {HNCity} from '../../../utils/city'
 import DropOption from '../../../components/DropOptions'
 
-const RiverInfo = ({ds})=>{
+const RiverInfo = ({ds,loading})=>{
 	
 	const columns = [
 		{ title: '项目名称',  dataIndex: '项目名称', key: '编码', width: 150,},
@@ -42,25 +43,16 @@ const RiverInfo = ({ds})=>{
 			}
 		},
 	];
-	const data = [];
-	for (let i = 0; i < 20; i++) {
-		data.push({
-			key: i,
-			'项目名称':`伊源河新南至汤营段河道治理工程${i}`,
-			'所在市': `洛阳`,
-			'所在县': '栾川',
-			'所属流域': `黄河`,
-			'所在河流':'伊源河',
-		});
-	}
+	
 	
 
 	const tableProps={
 		columns:columns, 
-		dataSource:data,
+		dataSource:ds,
 		pagination:false,
 		size:'small',
 		bordered:true,
+		loading,
 		onRowDoubleClick(e){
 			dispatch({
 				type:'river/showDetailModal',
@@ -73,7 +65,11 @@ const RiverInfo = ({ds})=>{
 	
 	return(
 		
-		<div className={coStyle.table}  style={{}}>
+		<div className={
+			classnames(
+				{[coStyle.table]:true,[styles.allProject]:true}
+			)
+		}>
 	    	<Table {...tableProps}/>
 	    </div>
 	)

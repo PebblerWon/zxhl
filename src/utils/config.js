@@ -21,7 +21,7 @@ module.exports = {
     dashboard: `${APIV1}/dashboard`,
     v1test: `${APIV1}/test`,
     v2test: `${APIV2}/test`,
-    riverQuery:`${APIV1}/river/query`,
+    riverQuery:`${APIV1}/RiverInfo.ashx`,
     projectQuery:`${APIV1}/river/query`,
     baseSituation:``,
 

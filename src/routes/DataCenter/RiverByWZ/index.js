@@ -7,7 +7,6 @@ import RiverInfo from './RiverInfo'
 import {HNCity} from '../../../utils/city'
 import conStyle from '../../common.less'
 
-
 const FormItem = Form.Item;
 const {Header,Content,Footer,Sider} = Layout
 const TreeNode = Tree.TreeNode;

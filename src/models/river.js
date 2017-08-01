@@ -1,4 +1,3 @@
-
 import {query} from '../services/riverServices'
 
 export default {
@@ -42,6 +41,14 @@ export default {
           type: 'data',
           payload: data,
         })
+      }
+    },
+    *deleteItem({payload},{call,put}){
+      if(payload){
+        const res = yield call(deleteItem,{...payload})
+        if(res){
+          
+        }
       }
     }
   },
