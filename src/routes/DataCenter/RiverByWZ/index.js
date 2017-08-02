@@ -1,9 +1,9 @@
 import React from 'react'
 import { Form, Button, Row, Col,Input,Table,Card,
-	Breadcrumb,Tree,Layout,Tabs
+	Breadcrumb,Tree,Layout,Tabs,
 } from 'antd'
 import {connect} from 'dva'
-import RiverInfo from './RiverInfo'
+import {HuaiHeTable,ChangJiangTable,HuangHeTable,HaiHeTable,AllTable} from './RiverInfo'
 import {HNCity} from '../../../utils/city'
 import conStyle from '../../common.less'
 
@@ -13,34 +13,58 @@ const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
 const RiverByWZ = ({river,dispatch,form})=>{
+	let searchRef ;
+	const map={'淮河流域':'huaiHeTable','黄河流域':'huangHeTable','长江流域':'changJiangTable','海河流域':'haiHeTable','全部':'allTable'}
 	const tabsProps={
 		activeKey:river.tabs,
 		onChange(activeKey){
+			searchRef.input.refs.input.value=''
+			if(river[map[activeKey]].ds.length==0){
+				dispatch({
+					type:'river/query',
+					payload:{
+						tabs:activeKey,
+						filter:''
+					}
+				})
+			}else{
+				dispatch({
+					type:'river/tabs',
+					payload:activeKey
+				})
+			}
+			
+		},
+	}
+	const searchProps={
+		onSearch(value){
 			dispatch({
 				type:'river/query',
 				payload:{
-					tree:river.tree,
-					tabs:activeKey
+					tabs:river.tabs,
+					filter:value
 				}
 			})
 		},
 	}
-	const treeProps={
-		showLine:true,
-		defaultExpandAll:true,
-		selectedKeys:river.tree,
-		onSelect(selectedKeys){
-			dispatch({
-				type:'river/query',
-				payload:{
-					tree:selectedKeys,
-					tabs:river.tabs
-				}
-			})
-		},
+	const huaiHeTableProps={
+		ds:river.huaiHeTable.ds,
+		loading:river.loading
 	}
-	const riverInfoProps={
-		ds:river.data,
+	const changJiangTableProps={
+		ds:river.changJiangTable.ds,
+		loading:river.loading
+	}
+	const huangHeTableProps={
+		ds:river.huangHeTable.ds,
+		loading:river.loading
+	}
+	const haiHeTableProps={
+		ds:river.haiHeTable.ds,
+		loading:river.loading
+	}
+	const allTableProps={
+		ds:river.allTable.ds,
 		loading:river.loading
 	}
 	return(
@@ -53,37 +77,24 @@ const RiverByWZ = ({river,dispatch,form})=>{
 					</Breadcrumb>
 				</Header>
 				<Layout className='layout2'>
-					<Sider width={130} className='sider'>
-						<div className={conStyle.tree}>
-							<Tree {...treeProps}>
-								<TreeNode title='河南省' key='河南省'>
-									{HNCity.map(item=><TreeNode title={item} key={item}/>)}
-								</TreeNode>
-							</Tree>
-						</div>
-						
-					</Sider>
 					<Content>
-						<Tabs {...tabsProps}>
+						<Tabs {...tabsProps} tabBarExtraContent={
+							<div style={{paddingRight:'50px'}} ><Input.Search {...searchProps} ref={c=>searchRef=c}/></div>
+						}>
 							<TabPane tab='淮河流域' key='淮河流域'>
-								<RiverInfo {...riverInfoProps} />
-								{/*<RiverInfo  ds={{'所属流域':'淮河流域','河流名称':'东沙河'}}/>*/}
+								<HuaiHeTable {...huaiHeTableProps}></HuaiHeTable>
 							</TabPane>
 							<TabPane tab='长江流域' key='长江流域'>
-								<RiverInfo {...riverInfoProps} />
-								{/*<RiverInfo  ds={{'所属流域':'长江流域','河流名称':'湍河'}} />*/}
+								<ChangJiangTable {...changJiangTableProps}></ChangJiangTable>
 							</TabPane>
 							<TabPane tab='黄河流域' key='黄河流域'>
-								<RiverInfo {...riverInfoProps} />
-								{/*<RiverInfo  ds={{'所属流域':'黄河流域','河流名称':'洪阳河'}} />*/}
+								<HuangHeTable {...huangHeTableProps}></HuangHeTable>
 							</TabPane>
 							<TabPane tab='海河流域' key='海河流域'>
-								<RiverInfo {...riverInfoProps} />
-								{/*<RiverInfo  ds={{'所属流域':'海河流域','河流名称':'山门河'}} />*/}
+								<HaiHeTable {...haiHeTableProps}></HaiHeTable>
 							</TabPane>
 							<TabPane tab='全部' key='全部'>
-								<RiverInfo {...riverInfoProps} />
-								{/*<RiverInfo  ds={{}} />*/}
+								<AllTable {...allTableProps}></AllTable>
 							</TabPane>
 						</Tabs>
 					</Content>

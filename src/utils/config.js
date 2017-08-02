@@ -12,18 +12,16 @@ module.exports = {
   openPages: ['/login'],
   apiPrefix: '/api/v1',
   api: {
-    userLogin: `${APIV1}/user/login`,
-    userLogout: `${APIV1}/user/logout`,
-    userInfo: `${APIV1}/userInfo`,
-    users: `${APIV1}/users`,
-    posts: `${APIV1}/posts`,
-    user: `${APIV1}/user/:id`,
-    dashboard: `${APIV1}/dashboard`,
-    v1test: `${APIV1}/test`,
-    v2test: `${APIV2}/test`,
-    riverQuery:`${APIV1}/RiverInfo.ashx`,
-    projectQuery:`${APIV1}/river/query`,
-    baseSituation:``,
-
+    baseSituation:{
+      //http://172.66.16.190:6500/RiverInfoWS.asmx/RiverStatistics
+      table1:`${APIV1}/RiverInfoWS.asmx/RiverStatistics`,
+      //http://172.66.16.190:6500/RiverInfoWS.asmx/Government125
+      table2:`${APIV1}/RiverInfoWS.asmx/Government125`,
+      table3:`${APIV1}/RiverInfoWS.asmx/RiverStatistics`,
+    },
+    dataCenter:{
+      river:`${APIV1}/baseSituation/table1.asmx`,
+      project:`${APIV1}/baseSituation/table1.asmx`,
+    }
   },
 }

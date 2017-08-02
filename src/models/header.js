@@ -13,7 +13,7 @@ export default {
     setup({ dispatch, history }) {
       let getFromReg = /^#\/(\w+)\?/i;
       const current =getFromReg.exec(location.hash)
-      console.log(current)
+     /* console.log(current)*/
       dispatch({
         type:'test',
         action:{

@@ -101,7 +101,7 @@ const Table1 = ({ds,loading})=>{
 		loading,
 	}
 	return(
-		<div className={coStyle.table}  style={{width:'700px',marginLeft:'150px'}}>
+		<div className={coStyle.table}  style={{/*width:'700px',marginLeft:'150px'*/overflowY:'scroll'}}>
 			<Table {...tableProps}></Table>
 		</div>
 	)
@@ -180,7 +180,7 @@ const Table2 = ({ds,loading})=>{
 		loading
 	}
 	return(
-		<div className={coStyle.table} style={{width:'880px',marginLeft:'100px'}}>
+		<div className={coStyle.table} style={{/*width:'880px',marginLeft:'100px'*/}}>
 			<Table {...tableProps}></Table>
 		</div>
 	)

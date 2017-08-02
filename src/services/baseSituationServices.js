@@ -7,7 +7,6 @@ const { baseSituation } = api
 
 
 export async function query (params) {
-  //console.log(params)
   const ds1 = {
         'total':{
           '条数':'242',
@@ -37,8 +36,7 @@ export async function query (params) {
           '所占百分比':'9.92',
           '总河长':'1472'
           },
-        ],
-        'tableTitle':`${params[0]}河流流域面积在200~3000平方公里河流汇总表(按流域划分)`
+        ]
   }
   const ds2 = {
     'total':{
@@ -89,8 +87,7 @@ export async function query (params) {
       '已治理河长占总河长的比例':'21.19',
       '未治理长度':'12520.27'
       },
-    ],
-    'tableTitle':`${params[0]}河流流域面积在200~3000平方公里河流治理情况统计表(按流域汇总)`
+    ]
   }
   const ds3 = {
     'total':{
@@ -99,7 +96,7 @@ export async function query (params) {
       '投资':'837861.43'
     },
     'data':[],
-    'tableTitle':`${params[0]}中小河流治理项目已批复项目情况统计表`
+    'tableTitle':``
   }
   HNCity.map(item=>{
     ds3.data.push({
@@ -109,13 +106,49 @@ export async function query (params) {
       '投资':'56238'
     })
   })
-  const fakeData = {ds1:ds1,ds2:ds2,ds3:ds3};
-  const data =await fakeRequest({
-    url: baseSituation,
-    method: 'get',
-    data: params,
-  },fakeData)
-  return data;
+  switch(params.table){
+    case 'table1':{
+      const data = await request(`${baseSituation.table1}`)
+      // const data =await fakeRequest({
+      //   url: baseSituation.table1,
+      //   method: 'get',
+      //   data: params,
+      // },ds1)
+      return data;
+      break;
+    }
+    case 'table2':{
+      const data = await request(`${baseSituation.table2}`)
+     /* const data =await fakeRequest({
+        url: baseSituation.table2,
+        method: 'get',
+        data: params,
+      },ds2)*/
+      return data;
+      break;
+    }
+    case 'table3':{
+      /*const data = await request(`${baseSituation.table3}?${qs.stringify({id:1})}`)*/
+      /*console.log(params)*/
+      const area = params.payload[0];
+      const data =await fakeRequest({
+        url: baseSituation,
+        method: 'get',
+        data: params,
+      },ds3)
+      return data;
+      break;
+    }
+    default:{
+      const fakeData = {ds1:ds1,ds2:ds2,ds3:ds3};
+      const data =await fakeRequest({
+        url: baseSituation,
+        method: 'get',
+        data: params,
+      },fakeData)
+      return data;
+    }
+  }
 }
 
 /*export async function remove (params) {

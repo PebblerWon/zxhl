@@ -27,7 +27,7 @@ const SimplePieChart1 = React.createClass({
     let myChart = echarts.init(document.getElementById(this.state.id));
     // 绘制图表
     myChart.setOption({
-        title: { text: '各流域河流数量占比',bottom:'0px',left:'170px'},
+        title: { text: '各流域河流数量占比',bottom:'0px',left:'50%'},
         tooltip: {
           trigger:'item',
           formatter:"{a} <br/>{b} : {c} ({d}%)"
@@ -63,7 +63,7 @@ const SimplePieChart1 = React.createClass({
 })
 
 const PieChart = () => (
-  <div className="content-inner" style={{marginLeft:'150px'}}> 
+  <div className="content-inner" style={{marginLeft:'28%'}}> 
     <SimplePieChart1/>
   </div>
 )

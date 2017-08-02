@@ -1,10 +1,12 @@
 import React from 'react'
 //import props from
-import {Table} from 'antd'
+import {Table,Layout,Tree} from 'antd'
 import TableTitle from '../../../components/Common/TableTitle'
 import coStyle from '../../common.less'
 import {HNCity} from '../../../utils/city'
 
+const {Header,Content,Footer,Sider} = Layout
+const TreeNode = Tree.TreeNode;
 //处理数据源的函数
 const proDs = (ds)=>{
 		let dataSource=[];
@@ -15,7 +17,7 @@ const proDs = (ds)=>{
 				...ds.total
 			})
 		}
-		if(ds.data&&ds.data.length>0){
+		if(ds&&ds.data&&ds.data.length>0){
 			ds.data.map((item,index)=>{
 				dataSource.push({
 					'序号':index+1,
@@ -27,6 +29,7 @@ const proDs = (ds)=>{
 		return dataSource;
 	}
 const Table1 = ({ds,filter,loading})=>{
+	/*console.log(ds)*/
 	const columns=[{
 		  title:'序号',
 		  key:'序号',
@@ -67,7 +70,7 @@ const Table1 = ({ds,filter,loading})=>{
 			key:'所占百分比',
 			dataIndex:'所占百分比',
 			width:100,
-			render:(text)=>`${text}%`
+			render:(text)=>`${text}`
 		},{
 			title:'总河长(Km)',
 			key:'总河长',
@@ -76,7 +79,7 @@ const Table1 = ({ds,filter,loading})=>{
 		}
 	]
 	const tableProps={
-		title:()=><TableTitle text={ds.tableTitle} />,
+		title:()=><TableTitle text={`河南省河流流域面积在200~3000平方公里河流汇总表(按流域划分)`} />,
 		bordered:true,
 		pagination:false,
 		dataSource:proDs(ds),
@@ -85,7 +88,7 @@ const Table1 = ({ds,filter,loading})=>{
 		loading:loading
 	}
 	return(
-		<div className={coStyle.table}  style={{width:'700px',marginLeft:'100px'}}>
+		<div className={coStyle.table}  style={{/*width:'700px',marginLeft:'100px'*/}}>
 			<Table {...tableProps}></Table>
 		</div>
 	)
@@ -96,7 +99,7 @@ const Table2 = ({ds,filter,loading})=>{
 		  title:'序号',
 		  key:'序号',
 		  dataIndex:'序号',
-		  width:10,
+		  /*width:10,*/
 		  render:(text,record,index)=>{
 		  	let obj={
 		  		children:text,
@@ -125,32 +128,31 @@ const Table2 = ({ds,filter,loading})=>{
 			}
 		},{
 			title:'河流条数',
-			width:220,
 			children:[
 				{
-					title:'总计',key:'总计',dataIndex:'总计河流条数',widht:60,
+					title:'总计',key:'总计',dataIndex:'总计河流条数',widht:50,
 				},{
-					title:'已治理河流数(条)',key:'已治理河流数',dataIndex:'已治理河流数',width:80,
+					title:'已治理河流数(条)',key:'已治理河流数',dataIndex:'已治理河流数',/*width:80,*/
 				},{
-					title:'已治理项目数(个)',key:'已治理项目数',dataIndex:'已治理项目数',width:80,
+					title:'已治理项目数(个)',key:'已治理项目数',dataIndex:'已治理项目数',/*width:80,*/
 				},
 			]
 		},{
 			title:'总河长(Km)',
 			key:'总河长',
 			dataIndex:'总河长',
-			width:100,
+			/*width:100,*/
 		},{
 			title:'200~3000平方公里已治理河流总长(Km)',
 			key:'已治理长度',
 			dataIndex:'已治理长度',
-			width:130,
+			width:150,
 		},{
 			title:'已治理河长占总河长的比例',
 			key:'已治理河长占总河长的比例',
 			dataIndex:'已治理河长占总河长的比例',
-			width:150,
-			render:(text)=>`${text}%`
+			/*width:150,*/
+			render:(text)=>`${text}`
 		},{
 			title:'200~3000平方公里河流未治理长度(Km)',
 			key:'未治理长度',
@@ -179,9 +181,8 @@ const Table2 = ({ds,filter,loading})=>{
 		}
 		return dataSource;
 	}
-	
 	const tableProps={
-		title:()=><TableTitle text={ds.tableTitle} />,
+		title:()=><TableTitle text={`河南省河流流域面积在200~3000平方公里河流治理情况统计表(按流域汇总)`} />,
 		bordered:true,
 		pagination:false,
 		dataSource:proDs(ds),
@@ -189,12 +190,12 @@ const Table2 = ({ds,filter,loading})=>{
 		loading:loading,
 	}
 	return(
-		<div className={coStyle.table} style={{width:'880px',marginLeft:'50px'}}>
+		<div className={coStyle.table} style={{}}>
 			<Table {...tableProps}></Table>
 		</div>
 	)
 }
-const Table3 = ({ds,filter,loading})=>{
+const Table3 = ({ds,treeProps,loading})=>{
 	const columns=[{
 		  title:'序号',
 		  key:'序号',
@@ -236,7 +237,7 @@ const Table3 = ({ds,filter,loading})=>{
 			key:'治理长度',
 			dataIndex:'治理长度',
 			width:100,
-			render:(text)=>`${text}%`
+			render:(text)=>`${text}`
 		},{
 			title:'投资(万元)',
 			key:'投资',
@@ -246,7 +247,7 @@ const Table3 = ({ds,filter,loading})=>{
 	]
 	
 	const tableProps={
-		title:()=><TableTitle text={ds.tableTitle} />,
+		title:()=><TableTitle text={`${treeProps['selectedKeys'][0]}中小河流治理项目已批复项目情况统计表`} />,
 		bordered:true,
 		pagination:false,
 		dataSource:proDs(ds),
@@ -255,9 +256,26 @@ const Table3 = ({ds,filter,loading})=>{
 		loading:loading
 	}
 	return(
-		<div className={coStyle.table} style={{width:'880px',marginLeft:'50px'}}>
-			<Table {...tableProps}/>
-		</div>
+		<Layout className='layout2'>
+			<Sider width={130} className='sider'>
+				<div className={coStyle.tree}>
+					<Tree {...treeProps}>
+						<TreeNode title='河南省' key='河南省'>
+							{HNCity.map(item=><TreeNode title={item} key={item}/>)}
+						</TreeNode>
+					</Tree>
+				</div>
+				
+			</Sider>
+			<Content>
+				<div className={coStyle.table} style={{/*width:'880px'*/}}>
+
+					<Table {...tableProps}/>
+				</div>
+				
+			</Content>
+		</Layout>
+		
 	)
 }
 

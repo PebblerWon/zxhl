@@ -6,9 +6,6 @@ export default {
 
   state: {
     loading:true,
-    tree:{
-      selectedKeys:[]
-    },
     table1:{
       ds:{}  
     },
@@ -16,17 +13,19 @@ export default {
       ds:{}  
     },
     table3:{
-      ds:{}
+      ds:{},
+      tree:{
+        selectedKeys:[]
+      },
     },
     test:''
   },
 
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
-      dispatch({
-        type:'getDataByArea',
-        payload:['河南省']
-      })
+     
+      dispatch({type:'fetchAllTable'})
+      
     },
   },
 
@@ -34,20 +33,58 @@ export default {
     *fetch({ payload }, { call, put }) {  // eslint-disable-line
       yield put({ type: 'save' });
     },
-    *getDataByArea({payload},{call,put}){
-      //payload保存点击的树节点信息
-      yield put({
-        type:'tree',
-        payload:payload
-      })
-      //data为根据树节点查询到的数据
+    *fetchAllTable({payload},{call,put}){
       yield put({type:'isLoading'})
-      const data = yield call(query,payload);
+      //const data = yield call(query,{table:`all`});
+      const data1 = yield call(query,{table:`table1`});
+      const data2 = yield call(query,{table:`table2`});
+      const data3 = yield call(query,{table:`table3`,payload:['河南省']});
       yield put({type:'notLoading'})
       //console.log(data);
       yield put({
         type:'table',
-        payload:data
+        payload:{
+          ds1:data1,
+          ds2:data2,
+          ds3:data3,
+          selectedKeys:['河南省']
+        }
+      })
+    },
+    *fetchTable1({payload},{call,put}){
+      yield put({type:'isLoading'})
+      const data = yield call(query,{table:`table1`});
+      yield put({type:'notLoading'})
+      //console.log(data);
+      yield put({
+        type:'table1',
+        payload:data,
+      })
+    },
+    *fetchTable2({payload},{call,put}){
+      yield put({type:'isLoading'})
+      const data = yield call(query,{table:`table2`});
+      yield put({type:'notLoading'})
+      //console.log(data);
+      yield put({
+        type:'table2',
+        payload:data,
+      })
+    },
+    *fetchTable3({payload},{call,put}){
+      //payload保存点击的树节点信息
+      yield put({type:'isLoading'})
+      const data = yield call(query,{table:`table3`,payload:payload});
+      yield put({type:'notLoading'})
+      //console.log(data);
+      yield put({
+        type:'table3',
+        payload:{
+          ds:data,
+          tree:{
+            selectedKeys:payload
+          }
+        }
       })
 
     }
@@ -57,23 +94,42 @@ export default {
     tree(state,{payload}){
       return{
         ...state,
-        tree:{
-          selectedKeys:payload
+        table3:{
+          ...state.table3,
+          tree:{
+             selectedKeys:payload
+          }
         }
       }
     },
     table(state,{payload}){
+      return {
+        ...state,
+        table1:{ds:payload.ds1},
+        table2:{ds:payload.ds2},
+        table3:{ds:payload.ds3,tree:{selectedKeys:payload.selectedKeys}},
+      }
+    },
+    table1(state,{payload}){
       return{
         ...state,
         table1:{
-          ds:payload.ds1,
+          ds:payload,
         },
+      }
+    },
+    table2(state,{payload}){
+      return{
+        ...state,
         table2:{
-          ds:payload.ds2,
-        },
-        table3:{
-          ds:payload.ds3,
+          ds:payload,
         }
+      }
+    },
+    table3(state,{payload}){
+      return{
+        ...state,
+        table3:payload
       }
     },
     test(state, {payload}) {

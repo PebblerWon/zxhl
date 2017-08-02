@@ -15,32 +15,29 @@ const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
 const BaseSituation = ({baseSituation,dispatch})=>{
-	console.log('basesituation');
 	const treeProps={
 		showLine:true,
 		defaultExpandAll:true,
-		selectedKeys:baseSituation.tree.selectedKeys,
+		selectedKeys:baseSituation?baseSituation.table3.tree.selectedKeys:['河南省'],
 		onSelect(selectedKeys){
-			dispatch({
-				type:'baseSituation/getDataByArea',
+			/*dispatch({
+				type:'baseSituation/fetchTable3',
 				payload:selectedKeys
-			})
+			})*/
 		},
 	}
 	const table1Props={
 		loading:baseSituation.loading,
 		ds:baseSituation.table1.ds,
-		filter:baseSituation.tree.selectedKeys
 	}
 	const table2Props={
 		loading:baseSituation.loading,
 		ds:baseSituation.table2.ds,
-		filter:baseSituation.tree.selectedKeys
 	}
 	const table3Props={
 		loading:baseSituation.loading,
 		ds:baseSituation.table3.ds,
-		filter:baseSituation.tree.selectedKeys
+		treeProps:treeProps
 	}
 	return(
 		<div className={conStyle.layout}>
@@ -53,16 +50,6 @@ const BaseSituation = ({baseSituation,dispatch})=>{
 
 				</Header>
 					<Layout className='layout2'>
-						<Sider width={130} className='sider'>
-							<div className={conStyle.tree}>
-								<Tree {...treeProps}>
-									<TreeNode title='河南省' key='河南省'>
-										{HNCity.map(item=><TreeNode title={item} key={item}/>)}
-									</TreeNode>
-								</Tree>
-							</div>
-							
-						</Sider>
 						<Content>
 							<Tabs>
 								<TabPane tab='中小河流统计' key='1'>

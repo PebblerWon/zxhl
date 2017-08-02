@@ -6,9 +6,33 @@ export default {
 
   state: {
     loading:true,
-    tree:[],
     tabs:'',
-    data:[],
+    huaiHeTable:{
+      ds:[],
+      fliter:''
+    },
+    changJiangTable:{
+      ds:[],
+      fliter:''
+    },
+    huangHeTable:{
+      ds:[],
+      fliter:''
+    },
+    haiHeTable:{
+      ds:[],
+      fliter:''
+    },
+    allTable:{
+      ds:[],
+      filter:''
+    },
+    updateModal:{
+      visible:false,
+    },
+    deleteModal:{
+      visible:false,
+    }
   },
   //获取河流数据
   subscriptions: {
@@ -21,25 +45,27 @@ export default {
     *fetch({ payload }, { call, put }) {  // eslint-disable-line
       yield put({ type: 'save' });
     },
-    *query({payload={tree:['河南省'],tabs:'淮河流域'}},{call,put}){
+    *query({payload={tabs:'淮河流域',fliter:''}},{call,put}){
+      const map={'淮河流域':'huaiHeTable','黄河流域':'huangHeTable','长江流域':'changJiangTable','海河流域':'haiHeTable','全部':'allTable'}
       yield put({type:'isLoading'})
-      yield put({
-        type:'tree',
-        payload:payload.tree
-      })
+      
       yield put({
         type:'tabs',
         payload:payload.tabs
       })
       const data = yield call(query, {
-        '行政区':payload.tree,
-        '所在流域':payload.tabs
+        '查询字段':payload.fliter,
+        '所属流域':payload.tabs
       })
+      yield put({type:'notLoading'})
+
       if (data) {
-        yield put({type:'notLoading'})
         yield put({
-          type: 'data',
-          payload: data,
+          type: map[payload.tabs],
+          payload: {
+            ds:data,
+            filter:payload.fliter
+          },
         })
       }
     },
@@ -54,22 +80,55 @@ export default {
   },
 
   reducers: {
-    tree(state,{payload}){
-      return{
-        ...state,
-        tree:payload,
-      }
-    },
     tabs(state,{payload}){
       return{
         ...state,
         tabs:payload
       }
     },
-    data(state,{payload}){
+    huaiHeTable(state,{payload}){
       return{
         ...state,
-        data:payload
+        huaiHeTable:{
+          ds:payload.ds,
+          filter:payload.filter
+        }
+      }
+    },
+    changJiangTable(state,{payload}){
+      return{
+        ...state,
+        changJiangTable:{
+          ds:payload.ds,
+          filter:payload.filter
+        }
+      }
+    },
+    huangHeTable(state,{payload}){
+      return{
+        ...state,
+        huangHeTable:{
+          ds:payload.ds,
+          filter:payload.filter
+        }
+      }
+    },
+    haiHeTable(state,{payload}){
+      return{
+        ...state,
+        haiHeTable:{
+          ds:payload.ds,
+          filter:payload.filter
+        }
+      }
+    },
+    allTable(state,{payload}){
+      return{
+        ...state,
+        allTable:{
+          ds:payload.ds,
+          filter:payload.filter
+        }
       }
     },
     isLoading(state){
