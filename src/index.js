@@ -17,14 +17,14 @@ const app = dva({
 
 // 3. Model
 app.model(require('./models/header'));
-app.model(require('./models/river'));
-app.model(require('./models/project'));
-app.model(require('./models/baseSituation'));
-app.model(require('./models/planProject'));
+// app.model(require('./models/river'));
+// app.model(require('./models/project'));
+// app.model(require('./models/baseSituation'));
+// app.model(require('./models/planProject'));
 
 
 // 4. Router
-app.router(require('./router'));
+app.router(require('./router2'));
 
 // 5. Start
 app.start('#root');

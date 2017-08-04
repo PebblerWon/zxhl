@@ -1,4 +1,4 @@
-
+//标题栏model
 export default {
 
   namespace: 'header',

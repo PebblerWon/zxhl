@@ -4,7 +4,7 @@ import {query} from '../services/projectServices'
 
 export default {
 
-  namespace: 'project',
+  namespace: 'shiErWuProject',
 
   state: {
     loading:true,

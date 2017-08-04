@@ -1,8 +1,10 @@
+//首页规划项目
+
 import { request, config } from '../utils'
 import {HNCity} from '../utils/city'
 import fakeRequest from '../utils/fakeRequest'
 const { api } = config
-const { baseSituation } = api
+const { homeGuiHuaXiangMu } = api
 
 
 
@@ -74,8 +76,11 @@ export async function query (params) {
 		})
 	})
   const fakeData = {ds1:ds1,ds2:ds2};
+  /*const data1 = await request(`${homeGuiHuaXiangMu.table1}`);
+  const data2 = await request(`${homeGuiHuaXiangMu.table2}`);
+  const data = {ds1:data1,ds2:data2};*/
   const data =await fakeRequest({
-    url: baseSituation,
+    url: '',
     method: 'get',
     data: params,
   },fakeData)

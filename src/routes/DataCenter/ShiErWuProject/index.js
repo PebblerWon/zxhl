@@ -3,7 +3,7 @@ import { Form, Button, Row, Col,Input,Table,Card,
 	Breadcrumb,Tree,Layout,Tabs
 } from 'antd'
 import {connect} from 'dva'
-import {HuaiHeTable,ChangJiangTable,HuangHeTable,HaiHeTable,AllTable} from './ProjectInfo'
+import {HuaiHeTable,ChangJiangTable,HuangHeTable,HaiHeTable,AllTable} from '../ProjectByWZ/ProjectInfo'
 import {HNCity} from '../../../utils/city'
 import conStyle from '../../common.less'
 
@@ -12,23 +12,23 @@ const {Header,Content,Footer,Sider} = Layout
 const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
-const ProjectByWZ = (prop)=>{
-	const {projectType,project,dispatch} = prop;
+const ShiErWuProject = (prop)=>{
+	const {projectType,shiErWuProject,dispatch} = prop;
 	let searchRef ;
 	const map={'淮河流域':'huaiHeTable','黄河流域':'huangHeTable','长江流域':'changJiangTable','海河流域':'haiHeTable','全部':'allTable'}
 
 	const tabsProps={
-		activeKey:project.tabs,
+		activeKey:shiErWuProject.tabs,
 		onChange(activeKey){
 			searchRef.input.refs.input.value=''
 			
 			dispatch({
-				type:'project/query',
+				type:'shiErWuProject/query',
 				payload:{
 					tabs:activeKey,
 					filter:'',
-					tree:project.tree.selectedKeys,
-					type:projectType
+					tree:shiErWuProject.tree.selectedKeys,
+					type:shiErWuProjectType
 				}
 			})
 			
@@ -37,16 +37,16 @@ const ProjectByWZ = (prop)=>{
 	const treeProps={
 		showLine:true,
 		defaultExpandAll:true,
-		selectedKeys:project.tree.selectedKeys,
+		selectedKeys:shiErWuProject.tree.selectedKeys,
 		onSelect(selectedKeys){
 			searchRef.input.refs.input.value=''
 			dispatch({
-				type:'project/query',
+				type:'shiErWuProject/query',
 				payload:{
-					tabs:project.tabs,
+					tabs:shiErWuProject.tabs,
 					filter:'',
 					tree:selectedKeys,
-					type:projectType
+					type:shiErWuProjectType
 				}
 			})
 		},
@@ -55,35 +55,35 @@ const ProjectByWZ = (prop)=>{
 	const searchProps={
 		onSearch(value){
 			dispatch({
-				type:'project/query',
+				type:'shiErWuProject/query',
 				payload:{
-					tabs:project.tabs,
+					tabs:shiErWuProject.tabs,
 					filter:value,
-					tree:project.tree.selectedKeys,
+					tree:shiErWuProject.tree.selectedKeys,
 					type:projectType
 				}
 			})
 		},
 	}
 	const huaiHeTableProps={
-		ds:project.huaiHeTable.ds,
-		loading:project.loading
+		ds:shiErWuProject.huaiHeTable.ds,
+		loading:shiErWuProject.loading
 	}
 	const changJiangTableProps={
-		ds:project.changJiangTable.ds,
-		loading:project.loading
+		ds:shiErWuProject.changJiangTable.ds,
+		loading:shiErWuProject.loading
 	}
 	const huangHeTableProps={
-		ds:project.huangHeTable.ds,
-		loading:project.loading
+		ds:shiErWuProject.huangHeTable.ds,
+		loading:shiErWuProject.loading
 	}
 	const haiHeTableProps={
-		ds:project.haiHeTable.ds,
-		loading:project.loading
+		ds:shiErWuProject.haiHeTable.ds,
+		loading:shiErWuProject.loading
 	}
 	const allTableProps={
-		ds:project.allTable.ds,
-		loading:project.loading
+		ds:shiErWuProject.allTable.ds,
+		loading:shiErWuProject.loading
 	}
 	return(
 		<div className={conStyle.layout}>
@@ -133,5 +133,5 @@ const ProjectByWZ = (prop)=>{
 }
 
 export default connect(
-	({project})=>({project})
-)(ProjectByWZ);
+	({shiErWuProject})=>({shiErWuProject})
+)(ShiErWuProject);

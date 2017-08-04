@@ -1,12 +1,19 @@
+//数据中心（查询信息）规划项目、十二五项目
 import { request, config } from '../utils'
 import {HNCity} from '../utils/city'
 import fakeRequest from '../utils/fakeRequest'
 const { api } = config
-const { baseSituation } = api
+const { dataCenter } = api
 
 
 
 export async function query (params) {
+ /* params= {
+        '查询字段':'',
+        '所属流域':'',
+        '所属地市':'',
+        '项目类型':''
+  }*/
   const fakeData1 = [];
 	for (let i = 0; i < 20; i++) {
 		fakeData1.push({
@@ -18,8 +25,9 @@ export async function query (params) {
 			'所在河流':'伊源河',
 		});
 	}
+  /* const data = await request(`${dataCenter.project}?`)*/
   const data =await fakeRequest({
-    url: baseSituation,
+    url: dataCenter.project,
     method: 'get',
     data: params,
   },fakeData1)

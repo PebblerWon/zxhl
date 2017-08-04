@@ -144,7 +144,7 @@ export async function query (params) {
     default:{
       const fakeData = {ds1:ds1,ds2:ds2,ds3:ds3};
       const data =await fakeRequest({
-        url: baseSituation,
+        url: '',
         method: 'get',
         data: params,
       },fakeData)

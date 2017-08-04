@@ -1,3 +1,5 @@
+//查询信息 中小河流 MODEL
+
 import {query} from '../services/riverServices'
 
 export default {

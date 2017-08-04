@@ -19,6 +19,10 @@ module.exports = {
       table2:`${APIV1}/RiverInfoWS.asmx/Government125`,
       table3:`${APIV1}/RiverInfoWS.asmx/IsGovernPro`,
     },
+    homeGuiHuaXiangMu:{
+      table1:`${APIV1}/RiverInfoWS.asmx/RiverStatistics`,
+      table2:`${APIV1}/RiverInfoWS.asmx/Government125`,
+    },
     dataCenter:{
       river:`${APIV1}/baseSituation/table1.asmx`,
       project:`${APIV1}/baseSituation/table1.asmx`,

@@ -275,7 +275,6 @@ const Table3 = ({ds,treeProps,loading})=>{
 				
 			</Content>
 		</Layout>
-		
 	)
 }
 

@@ -1,3 +1,4 @@
+//首页基本情况model
 import {HNCity} from '../utils/city'
 import download from '../utils/download'
 import {query,exportExcel} from '../services/baseSituationServices.js'
