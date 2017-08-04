@@ -1,0 +1,59 @@
+import React from 'react'
+import {connect} from 'dva'
+import { Form, Button, Row, Col,Input,Table,Card,
+	Breadcrumb,Tree,Layout,Tabs
+} from 'antd'
+import Table1 from './table1' 
+import Table2 from './table2'
+import {HNCity} from '../../../utils/city'
+import conStyle from '../../common.less'
+
+const FormItem = Form.Item;
+const {Header,Content,Footer,Sider} = Layout
+const TreeNode = Tree.TreeNode;
+const TabPane = Tabs.TabPane
+
+const GuiHuaXiangMu = ()=>{
+	
+	const table1Props={
+		//loading:baseSituation.loading,
+		//ds:baseSituation.table1.ds,
+	}
+	const table2Props={
+		//loading:baseSituation.loading,
+		//ds:baseSituation.table2.ds,
+	}
+	return(
+		<div className={conStyle.layout}>
+			<Layout className='layout1'>
+				<Header>
+					<Breadcrumb separator=">">
+						<Breadcrumb.Item className="Item">汇总信息</Breadcrumb.Item>
+						<Breadcrumb.Item className="Item">规划项目</Breadcrumb.Item>
+					</Breadcrumb>
+
+				</Header>
+					<Layout className='layout2'>
+						<Content>
+							<Tabs>
+								<TabPane tab='按政区汇总' key='按政区汇总'>
+									<Table1 {...table1Props}/>
+								</TabPane>
+								<TabPane tab='按河流汇总' key='按河流汇总'>
+									<Table2 {...table2Props}/>
+								</TabPane>
+								<TabPane tab='按主要工程措施' key='按主要工程措施'>
+									<Table2 {...table2Props}/>
+								</TabPane>
+							</Tabs>
+						</Content>
+					</Layout>
+			</Layout>
+		</div>
+	)
+}
+
+/*export default connect(
+	({baseSituation})=>({baseSituation})
+)(BaseSituation) ;*/
+export default GuiHuaXiangMu

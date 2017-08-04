@@ -20,10 +20,10 @@ const BaseSituation = ({baseSituation,dispatch})=>{
 		defaultExpandAll:true,
 		selectedKeys:baseSituation?baseSituation.table3.tree.selectedKeys:['河南省'],
 		onSelect(selectedKeys){
-			/*dispatch({
+			dispatch({
 				type:'baseSituation/fetchTable3',
 				payload:selectedKeys
-			})*/
+			})
 		},
 	}
 	const table1Props={

@@ -39,7 +39,7 @@ export default {
     }, { put, select }) {
       const { header } = yield(select(_ => _))
       const isNavbar = document.body.clientWidth < 769
-      console.log(header)
+      // console.log(header)
       if (isNavbar !== header.isNavbar) {
         yield put({ type: 'handleNavbar', payload: isNavbar })
       }
@@ -58,14 +58,14 @@ export default {
       return { ...state, ...action.payload };
     },
     switchMenuPopover (state) {
-      console.log('switchMenuPopver')
+      //console.log('switchMenuPopver')
       return {
         ...state,
         menuPopoverVisible: !state.menuPopoverVisible,
       }
     }, 
     handleNavbar (state, { payload }) {
-      console.log('handleNavbar')
+      // console.log('handleNavbar')
       return {
         ...state,
         isNavbar: payload,

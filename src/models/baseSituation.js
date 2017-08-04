@@ -1,5 +1,6 @@
 import {HNCity} from '../utils/city'
-import {query} from '../services/baseSituationServices.js'
+import download from '../utils/download'
+import {query,exportExcel} from '../services/baseSituationServices.js'
 export default {
 
   namespace: 'baseSituation',
@@ -18,7 +19,9 @@ export default {
         selectedKeys:[]
       },
     },
-    test:''
+    test:'',
+    table1ExcelUrl:'',
+    table2ExcelUrl:''
   },
 
   subscriptions: {
@@ -87,6 +90,18 @@ export default {
         }
       })
 
+    },
+    *exportExcel({payload},{call,put}){
+      yield put({type:'isLoading'})
+      const data = yield call(exportExcel,{table:payload});
+      console.log(data);
+      yield put({type:'notLoading'})
+      if(payload=='table1'){
+        yield put ({type:'table1ExcelUrl',payload:data})
+      }else if(payload=='table2'){
+        yield put({type:'table2ExcelUrl',payload:data})
+      }
+      yield put({type:'downLoadExcel',payload:data})
     }
   },
 
@@ -148,6 +163,24 @@ export default {
       return {
         ...state,
         loading:false,
+      }
+    },
+    table1ExcelUrl(state,{payload}){
+      return {
+        ...state,
+        table1ExcelUrl:payload
+      }
+    },
+    table2ExcelUrl(state,{payload}){
+      return {
+        ...state,
+        table2ExcelUrl:payload
+      }
+    },
+    downLoadExcel(state,{payload}){
+      download(payload);
+      return{
+        ...state
       }
     }
   },

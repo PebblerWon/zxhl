@@ -17,7 +17,7 @@ module.exports = {
       table1:`${APIV1}/RiverInfoWS.asmx/RiverStatistics`,
       //http://172.66.16.190:6500/RiverInfoWS.asmx/Government125
       table2:`${APIV1}/RiverInfoWS.asmx/Government125`,
-      table3:`${APIV1}/RiverInfoWS.asmx/RiverStatistics`,
+      table3:`${APIV1}/RiverInfoWS.asmx/IsGovernPro`,
     },
     dataCenter:{
       river:`${APIV1}/baseSituation/table1.asmx`,

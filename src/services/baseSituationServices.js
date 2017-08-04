@@ -1,3 +1,4 @@
+import qs from 'qs'
 import { request, config } from '../utils'
 import {HNCity} from '../utils/city'
 import fakeRequest from '../utils/fakeRequest'
@@ -128,14 +129,15 @@ export async function query (params) {
       break;
     }
     case 'table3':{
-      /*const data = await request(`${baseSituation.table3}?${qs.stringify({id:1})}`)*/
-      /*console.log(params)*/
+      //console.log(params)
       const area = params.payload[0];
-      const data =await fakeRequest({
+      const data = await request(`${baseSituation.table3}?${qs.stringify({city:area})}`)
+     
+     /* const data =await fakeRequest({
         url: baseSituation,
         method: 'get',
         data: params,
-      },ds3)
+      },ds3)*/
       return data;
       break;
     }
@@ -159,6 +161,25 @@ export async function query (params) {
   })
 }
 */
+
+export async function exportExcel(params){
+  let res;
+  switch(params){
+    case 'table1':{
+      res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
+      break;
+    }
+    case'table2':{
+      res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
+      break;
+    }
+    default:{
+      res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
+      break;
+    }
+  }
+  return res;
+}
 const baseSituationServices = {
   query
 }
