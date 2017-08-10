@@ -16,7 +16,6 @@ const Home=()=>{
         {/*<TabPane tab={<Link to="/home/baseSituation">基本情况</Link>} key="1">*/}
         <TabPane tab="基本情况" key="1">
           <BaseSituation />
-          
         </TabPane>
         {/*<TabPane tab={<Link to="/home/PlanProject">规划项目</Link>} key="2">*/}
         <TabPane tab="规划项目" key="2">

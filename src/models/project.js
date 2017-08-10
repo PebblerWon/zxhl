@@ -37,6 +37,9 @@ export default {
     },
     deleteModal:{
       visible:false,
+    },
+    detailModal:{
+      visible:false,
     }
   },
   //获取项目数据
@@ -155,7 +158,39 @@ export default {
         ...state,
         loading:false
       }
-    }
+    },
+    showDetailModal(state){
+      return{
+        ...state,
+        detailModal:{
+          visible:true
+        }
+      }
+    },
+    hideDetailModal(state){
+      return{
+        ...state,
+        detailModal:{
+          visible:false
+        }
+      }
+    },
+    showUpdateModal(state){
+      return{
+        ...state,
+        updateModal:{
+          visible:true
+        }
+      }
+    },
+    hideUpdateModal(state){
+      return{
+        ...state,
+        updateModal:{
+          visible:false
+        }
+      }
+    },
   },
 
 }

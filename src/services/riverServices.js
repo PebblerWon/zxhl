@@ -6,6 +6,7 @@ import fakeRequest from '../utils/fakeRequest'
 
 const { api } = config
 const { dataCenter } = api
+const {useFakeData} = config;
 
 
 
@@ -14,6 +15,7 @@ export async function query (params) {
     '所属流域':'',
     '查询字段':''
   }*/
+  let resData;
   const fakeData1 = [];
   for (let i = 0; i < 20; i++) {
     fakeData1.push({
@@ -28,12 +30,15 @@ export async function query (params) {
       '流经地':'商丘市梁园区、虞城县、夏邑县、永城县'
     });
   }
-  /* const data = await request(`${dataCenter.river}?`)*/
-  const data = await fakeRequest({
-    url: dataCenter.river,
-    method: 'get',
-  },fakeData1)
-  return data;
+  //if(useFakeData){
+    resData = await fakeRequest({
+      url: dataCenter.river,
+      method: 'get',
+    },fakeData1)
+  //}else{
+  //  resData = await request(`${dataCenter.river}?`)
+  //}
+  return resData;
 }
 
 export async function deleteItem (params) {

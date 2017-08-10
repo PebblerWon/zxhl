@@ -16,7 +16,8 @@ const app = dva({
 // app.use({});
 
 // 3. Model
-app.model(require('./models/header'));
+app.model(require('./models/login'));
+//app.model(require('./models/header'));
 // app.model(require('./models/river'));
 // app.model(require('./models/project'));
 // app.model(require('./models/baseSituation'));

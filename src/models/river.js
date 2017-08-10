@@ -29,7 +29,7 @@ export default {
       ds:[],
       filter:''
     },
-    updateModal:{
+    detailModal:{
       visible:false,
     },
     deleteModal:{
@@ -143,6 +143,38 @@ export default {
       return{
         ...state,
         loading:false
+      }
+    },
+    showDetailModal(state){
+      return{
+        ...state,
+        detailModal:{
+          visible:true
+        }
+      }
+    },
+    hideDetailModal(state){
+      return{
+        ...state,
+        detailModal:{
+          visible:false
+        }
+      }
+    },
+    showDeleteModal(state){
+      return{
+        ...state,
+        deleteModal:{
+          visible:true
+        }
+      }
+    },
+    hideDeleteModal(state){
+      return{
+        ...state,
+        deleteModal:{
+          visible:false
+        }
       }
     }
   },

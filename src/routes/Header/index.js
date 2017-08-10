@@ -11,6 +11,7 @@ const Header = ({dispatch,header})=> {
   const menuProps={
     isNavbar:header.isNavbar,
     current: header.current,
+    user:header.user,
     menuClick(e){
       dispatch({type:'header/test',action:e})
     }

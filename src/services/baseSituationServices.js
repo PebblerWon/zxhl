@@ -4,6 +4,7 @@ import {HNCity} from '../utils/city'
 import fakeRequest from '../utils/fakeRequest'
 const { api } = config
 const { baseSituation } = api
+const {useFakeData} = config;
 
 
 
@@ -107,50 +108,64 @@ export async function query (params) {
       '投资':'56238'
     })
   })
+  let resData;
   switch(params.table){
     case 'table1':{
-      const data = await request(`${baseSituation.table1}`)
-      // const data =await fakeRequest({
-      //   url: baseSituation.table1,
-      //   method: 'get',
-      //   data: params,
-      // },ds1)
-      return data;
+      if(useFakeData){
+       resData =await fakeRequest({
+          url: baseSituation.table1,
+          method: 'get',
+          data: params,
+        },ds1)
+      }else{
+       resData = await request(`${baseSituation.table1}`)
+      }
       break;
     }
     case 'table2':{
-      const data = await request(`${baseSituation.table2}`)
-     /* const data =await fakeRequest({
-        url: baseSituation.table2,
-        method: 'get',
-        data: params,
-      },ds2)*/
-      return data;
+      if(useFakeData){
+       resData =await fakeRequest({
+          url: baseSituation.table2,
+          method: 'get',
+          data: params,
+        },ds2)
+      }else{
+       resData = await request(`${baseSituation.table2}`)
+      }
       break;
     }
     case 'table3':{
       //console.log(params)
-      const area = params.payload[0];
-      const data = await request(`${baseSituation.table3}?${qs.stringify({city:area})}`)
-     
-     /* const data =await fakeRequest({
-        url: baseSituation,
-        method: 'get',
-        data: params,
-      },ds3)*/
-      return data;
+      if(useFakeData){
+        resData =await fakeRequest({
+          url: baseSituation,
+          method: 'get',
+          data: params,
+          },ds3)
+      }else{
+        const area = params.payload[0];
+       resData = await request(`${baseSituation.table3}?${qs.stringify({city:area})}`)
+      }
       break;
     }
     default:{
-      const fakeData = {ds1:ds1,ds2:ds2,ds3:ds3};
-      const data =await fakeRequest({
-        url: '',
-        method: 'get',
-        data: params,
-      },fakeData)
-      return data;
+      if(useFakeData){
+        const fakeData = {ds1:ds1,ds2:ds2,ds3:ds3};
+       resData =await fakeRequest({
+          url: '',
+          method: 'get',
+          data: params,
+        },fakeData)
+      }else{
+       resData =await fakeRequest({
+          url: '',
+          method: 'get',
+          data: params,
+        },fakeData)
+      }
     }
   }
+   return resData;
 }
 
 /*export async function remove (params) {
@@ -164,13 +179,16 @@ export async function query (params) {
 
 export async function exportExcel(params){
   let res;
-  switch(params){
+  console.log(params)
+  switch(params.table){
     case 'table1':{
-      res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
+      //res = await fakeRequest({},`${baseSituation.table1Excel}`)
+      res = `${baseSituation.table1Excel}`
       break;
     }
     case'table2':{
-      res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
+      //res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
+      res = `${baseSituation.table2Excel}`
       break;
     }
     default:{
@@ -181,6 +199,7 @@ export async function exportExcel(params){
   return res;
 }
 const baseSituationServices = {
-  query
+  query,
+  exportExcel
 }
 export default baseSituationServices

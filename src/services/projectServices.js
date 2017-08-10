@@ -4,6 +4,7 @@ import {HNCity} from '../utils/city'
 import fakeRequest from '../utils/fakeRequest'
 const { api } = config
 const { dataCenter } = api
+const {useFakeData} = config;
 
 
 
@@ -14,6 +15,7 @@ export async function query (params) {
         '所属地市':'',
         '项目类型':''
   }*/
+  let resData;
   const fakeData1 = [];
 	for (let i = 0; i < 20; i++) {
 		fakeData1.push({
@@ -25,13 +27,16 @@ export async function query (params) {
 			'所在河流':'伊源河',
 		});
 	}
-  /* const data = await request(`${dataCenter.project}?`)*/
-  const data =await fakeRequest({
-    url: dataCenter.project,
-    method: 'get',
-    data: params,
-  },fakeData1)
-  return data;
+  //if(useFakeData){
+    resData =await fakeRequest({
+      url: dataCenter.project,
+      method: 'get',
+      data: params,
+    },fakeData1)
+  //}else{
+  //  resData = await request(`${dataCenter.project}?`)
+  //}
+  return resData;
 }
 
 /*export async function remove (params) {

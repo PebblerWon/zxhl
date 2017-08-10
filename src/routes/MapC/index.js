@@ -1,17 +1,15 @@
 import React from 'react'
+import MyMap from './MyMap'
+import EsriLoader from 'esri-loader-react'
 
-const MapC = ()=>{
-	return (
-		<div style={{height:'100%',width:'100%',overflow:'hidden'}}>
-			<iframe
-			 src="./map/map.html" 
-			 frameBorder="0"
-			 height='100%'
-			 width='100%'
-			 >
-			</iframe>
-		</div>
-	)
-}
+const esriOptions = {
+    url:'https://js.arcgis.com/3.21/'
+  }
+const MapC = (props) => (
+  <div> 
+    <EsriLoader options={esriOptions}/>
+    <MyMap />
+  </div>
+)
 
-export default MapC;
+export default MapC

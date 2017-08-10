@@ -14,20 +14,24 @@ const data1 = [
   {name:'长江流域',value:46},
 ]
 
-const SimplePieChart1 = React.createClass({
-  getInitialState(){
-    return{
-      id:'SimplePieChart1'
+class SimplePieChart1  extends React.Component{
+  constructor (props) {
+    console.log(props)
+    super(props)
+    this.state = {
+      id:'SimplePieChart1',
+      data:this.props.data?this.props.data:[]
     }
-  },
+  }
+  
   componentDidMount(){
     this.showChart()
-  },
+  }
   showChart(){
     let myChart = echarts.init(document.getElementById(this.state.id));
     // 绘制图表
     myChart.setOption({
-        title: { text: '各流域河流数量占比',bottom:'0px',left:'50%'},
+        title: { text: '各流域河流数量占比',bottom:'0px',left:'35%'},
         tooltip: {
           trigger:'item',
           formatter:"{a} <br/>{b} : {c} ({d}%)"
@@ -36,14 +40,14 @@ const SimplePieChart1 = React.createClass({
           orient:'vertical',
           left:'right',
           top:'50px',
-          data:data1.map((item)=>item.name)
+          data:this.state.data.map((item)=>item.name)
         },
         series: [{
             name: '所占比例',
             type: 'pie',
             radius : '55%',
             center: ['50%', '60%'],
-            data:data1,
+            data:this.state.data,
             itemStyle: {
                 emphasis: {
                     shadowBlur: 10,
@@ -53,18 +57,18 @@ const SimplePieChart1 = React.createClass({
             }
         }]
     });
-  },
+  }
   render(){
     return <div id={this.state.id} style={{
       width:500,
       height:300
     }}></div>
   }
-})
+}
 
-const PieChart = () => (
+const PieChart = (props) => (
   <div className="content-inner" style={{marginLeft:'28%'}}> 
-    <SimplePieChart1/>
+    <SimplePieChart1 {...props}/>
   </div>
 )
 

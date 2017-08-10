@@ -15,6 +15,7 @@ const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
 const BaseSituation = ({baseSituation,dispatch})=>{
+	//console.log(baseSituation);
 	const treeProps={
 		showLine:true,
 		defaultExpandAll:true,
@@ -39,6 +40,17 @@ const BaseSituation = ({baseSituation,dispatch})=>{
 		ds:baseSituation.table3.ds,
 		treeProps:treeProps
 	}
+	const pieData = baseSituation.table1.ds.data;
+	let pieProps;
+	if(pieData&&pieData.length>0){
+		pieProps=[
+			{name:pieData[0]['所在流域'],value:pieData[0]['条数']},
+			{name:pieData[1]['所在流域'],value:pieData[1]['条数']},
+			{name:pieData[2]['所在流域'],value:pieData[2]['条数']},
+			{name:pieData[3]['所在流域'],value:pieData[3]['条数']},
+  		]
+	}
+	
 	return(
 		<div className={conStyle.layout}>
 			<Layout className='layout1'>
@@ -54,7 +66,7 @@ const BaseSituation = ({baseSituation,dispatch})=>{
 							<Tabs>
 								<TabPane tab='中小河流统计' key='1'>
 									<Table1 {...table1Props}/>
-									<PieChart/>
+									{pieProps?<PieChart data={pieProps}/>:null}
 								</TabPane>
 								<TabPane tab='十二五治理情况统计' key='2'>
 									<Table2 {...table2Props}/>

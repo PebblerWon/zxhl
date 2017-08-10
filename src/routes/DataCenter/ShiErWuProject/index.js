@@ -1,8 +1,9 @@
 import React from 'react'
 import { Form, Button, Row, Col,Input,Table,Card,
-	Breadcrumb,Tree,Layout,Tabs
+	Breadcrumb,Tree,Layout,Tabs,Modal
 } from 'antd'
 import {connect} from 'dva'
+import DropOption from '../../../components/DropOptions'
 import {HuaiHeTable,ChangJiangTable,HuangHeTable,HaiHeTable,AllTable} from '../ProjectByWZ/ProjectInfo'
 import {HNCity} from '../../../utils/city'
 import conStyle from '../../common.less'
@@ -13,22 +14,68 @@ const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
 const ShiErWuProject = (prop)=>{
-	const {projectType,shiErWuProject,dispatch} = prop;
+	let deleteModalRef;
+	const columns = [
+		{ title: '项目名称',  dataIndex: '项目名称', key: '编码', width: 150,},
+	   	{ title: '所在市',  dataIndex: '所在市', key: '所在市', width: 70,},
+	   	{ title: '所在县',  dataIndex: '所在县', key: '所在县', width: 70,},
+		{ title: '所属流域',  dataIndex: '所属流域', key: '所属流域',width: 100,},
+		{ title: '所在河流', dataIndex: '所在河流', key: '所在河流', width: 100 },
+		{
+			title: '操作',
+			key: 'operation',
+			width: 100,
+			render: (text,record) => {
+				const handleMenuClick = (record, e) => {
+					//console.log(record)
+					//console.log(e)
+				    if (e.key === 'update') {
+				      	dispatch({
+							type:'shierwuproject/showDetailModal'
+						})
+				    } else if (e.key === 'delete') {
+				      deleteModalRef = Modal.confirm({
+				        title: '你真的想删除该条记录吗?',
+				        onOk () {
+				        	deleteModalRef.destroy()
+				        },
+				        onCancel(){
+				        	deleteModalRef.destroy()
+				        }
+				      })
+				    }else if(e.key =='detail'){
+				    	dispatch({
+							type:'shierwuproject/showDetailModal'
+						})
+				    }
+			  	}
+			  	return <DropOption 
+					onMenuClick={e => handleMenuClick(record,e)}
+					menuOptions={[
+						{ key: 'update', name: '编辑' }, 
+						{ key: 'delete', name: '删除' }, 
+						{ key: 'detail', name: '详情' }
+					]}/>
+			}
+		},
+	];
+	const {projectType,shierwuproject,dispatch} = prop;
+
 	let searchRef ;
 	const map={'淮河流域':'huaiHeTable','黄河流域':'huangHeTable','长江流域':'changJiangTable','海河流域':'haiHeTable','全部':'allTable'}
 
 	const tabsProps={
-		activeKey:shiErWuProject.tabs,
+		activeKey:shierwuproject.tabs,
 		onChange(activeKey){
 			searchRef.input.refs.input.value=''
 			
 			dispatch({
-				type:'shiErWuProject/query',
+				type:'shierwuproject/query',
 				payload:{
 					tabs:activeKey,
 					filter:'',
-					tree:shiErWuProject.tree.selectedKeys,
-					type:shiErWuProjectType
+					tree:shierwuproject.tree.selectedKeys,
+					type:projectType
 				}
 			})
 			
@@ -37,16 +84,16 @@ const ShiErWuProject = (prop)=>{
 	const treeProps={
 		showLine:true,
 		defaultExpandAll:true,
-		selectedKeys:shiErWuProject.tree.selectedKeys,
+		selectedKeys:shierwuproject.tree.selectedKeys,
 		onSelect(selectedKeys){
 			searchRef.input.refs.input.value=''
 			dispatch({
-				type:'shiErWuProject/query',
+				type:'shierwuproject/query',
 				payload:{
-					tabs:shiErWuProject.tabs,
+					tabs:shierwuproject.tabs,
 					filter:'',
 					tree:selectedKeys,
-					type:shiErWuProjectType
+					type:projectType
 				}
 			})
 		},
@@ -55,35 +102,93 @@ const ShiErWuProject = (prop)=>{
 	const searchProps={
 		onSearch(value){
 			dispatch({
-				type:'shiErWuProject/query',
+				type:'shierwuproject/query',
 				payload:{
-					tabs:shiErWuProject.tabs,
+					tabs:shierwuproject.tabs,
 					filter:value,
-					tree:shiErWuProject.tree.selectedKeys,
+					tree:shierwuproject.tree.selectedKeys,
 					type:projectType
 				}
 			})
 		},
 	}
 	const huaiHeTableProps={
-		ds:shiErWuProject.huaiHeTable.ds,
-		loading:shiErWuProject.loading
+		ds:shierwuproject.huaiHeTable.ds,
+		loading:shierwuproject.loading,
+		columns:columns,
+		onRowDoubleClick(e){
+			dispatch({
+				type:'shierwuproject/showDetailModal',
+				payload:{
+					currentItem:e
+				}
+			})
+		}
 	}
 	const changJiangTableProps={
-		ds:shiErWuProject.changJiangTable.ds,
-		loading:shiErWuProject.loading
+		ds:shierwuproject.changJiangTable.ds,
+		loading:shierwuproject.loading,
+		columns:columns,
+		onRowDoubleClick(e){
+			dispatch({
+				type:'shierwuproject/showDetailModal',
+				payload:{
+					currentItem:e
+				}
+			})
+		}
 	}
 	const huangHeTableProps={
-		ds:shiErWuProject.huangHeTable.ds,
-		loading:shiErWuProject.loading
+		ds:shierwuproject.huangHeTable.ds,
+		loading:shierwuproject.loading,
+		columns:columns,
+		onRowDoubleClick(e){
+			dispatch({
+				type:'shierwuproject/showDetailModal',
+				payload:{
+					currentItem:e
+				}
+			})
+		}
 	}
 	const haiHeTableProps={
-		ds:shiErWuProject.haiHeTable.ds,
-		loading:shiErWuProject.loading
+		ds:shierwuproject.haiHeTable.ds,
+		loading:shierwuproject.loading,
+		columns:columns,
+		onRowDoubleClick(e){
+			dispatch({
+				type:'shierwuproject/showDetailModal',
+				payload:{
+					currentItem:e
+				}
+			})
+		}
 	}
 	const allTableProps={
-		ds:shiErWuProject.allTable.ds,
-		loading:shiErWuProject.loading
+		ds:shierwuproject.allTable.ds,
+		loading:shierwuproject.loading,
+		columns:columns,
+		onRowDoubleClick(e){
+			dispatch({
+				type:'shierwuproject/showDetailModal',
+				payload:{
+					currentItem:e
+				}
+			})
+		}
+	}
+	const detailModalProps={
+		visible:shierwuproject.detailModal.visible,
+		handleOk(e){
+			dispatch({
+				type:'shierwuproject/hideDetailModal'
+			})
+		},
+		handleCancel(e){
+			dispatch({
+				type:'shierwuproject/hideDetailModal'
+			})
+		}
 	}
 	return(
 		<div className={conStyle.layout}>
@@ -91,7 +196,7 @@ const ShiErWuProject = (prop)=>{
 				<Header>
 					<Breadcrumb separator=">">
 						<Breadcrumb.Item className="Item">查询信息</Breadcrumb.Item>
-						<Breadcrumb.Item className="Item">规划项目</Breadcrumb.Item>
+						<Breadcrumb.Item className="Item">十二五项目</Breadcrumb.Item>
 					</Breadcrumb>
 				</Header>
 				<Layout className='layout2'>
@@ -128,10 +233,25 @@ const ShiErWuProject = (prop)=>{
 					</Content>
 				</Layout>
 			</Layout>
+			<DetailModal {...detailModalProps}/>
 		</div>
 	)
 }
 
+const DetailModal=({visible,handleOk,handleCancel})=>{
+	return(
+		<Modal
+          title=""
+          visible={visible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width='1200px'
+        >
+          	<img width="100%" src="./resource/效果图/11查询信息-中小河流-项目详细信息编辑.jpg" />    
+        </Modal>
+	)
+}
+
 export default connect(
-	({shiErWuProject})=>({shiErWuProject})
+	({shierwuproject})=>({shierwuproject})
 )(ShiErWuProject);

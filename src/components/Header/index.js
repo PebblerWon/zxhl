@@ -7,18 +7,18 @@ import styles from './index.less'
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
-const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopover})=> {
+const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopover,user,logout})=> {
   const xsColProps={
     xs:2,
     sm:4,
-    md:3,
-    lg:3,
+    md:4,
+    lg:4,
   }
   const smalColProps={
   	xs:2,
   	sm:4,
-  	md:10,
-  	lg:10,
+  	md:9,
+  	lg:9,
   }
   const bigColProps={
   	 xs:20,
@@ -55,14 +55,12 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
             </Col>
             <Col span={12}>
               <Menu mode="horizontal" className={styles.menu} style={{float: 'right'}}>
-                    <SubMenu title={<span> <Icon type="user" />
-                      admin </span>}
-                    >
+                    <SubMenu title={<span> <Icon type="user" />{user['姓名']}</span>}>
                       <Menu.Item key="userManage">
                         用户管理
                       </Menu.Item>
                       <Menu.Item key="logout">
-                        退出
+                        <a onClick={(e)=>{console.log(e)}}>退出</a>
                       </Menu.Item>
                     </SubMenu>
                 </Menu>
@@ -81,13 +79,13 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
       			<Col {...xsColProps}>
       				<Menu mode="horizontal" className={styles.menu}>
   				          <SubMenu title={<span> <Icon type="user" />
-  				            admin </span>}
+  				            {user['姓名']}</span>}
   				          >
                       <Menu.Item key="userManage">
                         用户管理
                       </Menu.Item>
   				            <Menu.Item key="logout">
-  				              退出
+  				              <a onClick={(e)=>{console.log(e)}}>退出</a>
   				            </Menu.Item>
   				          </SubMenu>
   			        </Menu>

@@ -96,13 +96,13 @@ const Table2 = ({baseSituation,dispatch})=>{
     ]
     
    const exportProps={
-        onClick(e){
-            console.log(e)
-            alert('a')
+        type:"primary",
+        onClick(e,d){
+            dispatch({type:'baseSituation/exportExcel',payload:'table2'});
         }
     }
     const tableProps={
-        title:()=><TableTitle text={`河南省河流流域面积在200~3000平方公里河流治理情况统计表(按流域汇总)`} />,
+        title:()=><TableTitle text={`河南省河流流域面积在200~3000平方公里河流治理情况统计表（按流域汇总）`} />,
         bordered:true,
         pagination:false,
         dataSource:proDs(table2.ds),

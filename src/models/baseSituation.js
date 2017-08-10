@@ -44,7 +44,6 @@ export default {
       const data2 = yield call(query,{table:`table2`});
       const data3 = yield call(query,{table:`table3`,payload:['河南省']});
       yield put({type:'notLoading'})
-      //console.log(data);
       yield put({
         type:'table',
         payload:{
@@ -95,6 +94,7 @@ export default {
     *exportExcel({payload},{call,put}){
       yield put({type:'isLoading'})
       const data = yield call(exportExcel,{table:payload});
+      yield call(exportExcel,{table:payload});
       console.log(data);
       yield put({type:'notLoading'})
       if(payload=='table1'){

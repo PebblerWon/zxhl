@@ -82,17 +82,11 @@ const Table1 = ({baseSituation,dispatch})=>{
     
         type:"primary",
         onClick(e,d){
-            //console.log(e.target)
             dispatch({type:'baseSituation/exportExcel',payload:'table1'});
-            // if(table1ExcelUrl==''){
-            //     dispatch({type:'baseSituation/exportExcel',payload:'table1'});
-            // }else if(table1ExcelUrl.indexOf('http')>0){
-            //     console.log(table1ExcelUrl)
-            // }
         }
     }
     const tableProps={
-        title:()=><TableTitle text={`河南省河流流域面积在200~3000平方公里河流汇总表(按流域划分)`} />,
+        title:()=><TableTitle text={`河南省河流流域面积在200~3000平方公里河流汇总表（按流域划分）`} />,
         bordered:true,
         pagination:false,
         dataSource:proDs(table1.ds),

@@ -9,62 +9,16 @@ import coStyle from '../../common.less'
 import styles from './index.less'
 
 
-const columns = [
-		{ title: '编码',  dataIndex: '编码', key: '编码',width:50, },
-	   	{ title: '河流名称',  dataIndex: '河流名称', key: '河流名称'},
-		{ title: '所属流域',  dataIndex: '所属流域', key: '所属流域' },
-		{ title: '所在水系', dataIndex: '所在水系', key: '所在水系', },
-		{ title: '河流长度(Km)', dataIndex: '河流长度', key: '河流长度',width:120 },
-		{ title: '治理项目', dataIndex: '治理项目', key: '治理项目',width:100, },
-		{ title: '规划项目', dataIndex: '规划项目', key: '规划项目', width:100,},
-		{ title: '流经地', dataIndex: '流经地', key: '流经地',width:200, },
-		{
-			title: '操作',
-			key: 'operation',
-		 	width:50,
-			render: (text,record) => {
-				const handleMenuClick = (record, e) => {
-					console.log(record)
-					console.log(e)
-				    if (e.key === 'update') {
-				      //onEditItem(record)
-				    } else if (e.key === 'delete') {
-				      Modal.confirm({
-				        title: '你真的想删除该条记录吗?',
-				        onOk (e) {
-				        	console.log(e)
-				        },
-				        onCancel(e){
-				        	console.log(e)
-				        },
-				      })
-				    }
-			  	}
-			  	return <DropOption 
-					onMenuClick={e => handleMenuClick(record,e)}
-					menuOptions={[
-						{ key: 'update', name: '编辑' }, 
-						{ key: 'delete', name: '删除' }, 
-					]}/>
-			}
-		},
-	];
-const HuaiHeTable=({ds,loading})=>{
+
+const HuaiHeTable=({ds,loading,onRowDoubleClick,columns})=>{
 	const tableProps={
 		columns:columns, 
 		dataSource:ds,
 		pagination:false,
 		loading,
 		bordered:true,
-		size:'small'
-		/*onRowDoubleClick(e){
-			dispatch({
-				type:'river/showDetailModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}*/
+		size:'small',
+		onRowDoubleClick:onRowDoubleClick
 	}
 	return(
 		<div className={
@@ -76,22 +30,15 @@ const HuaiHeTable=({ds,loading})=>{
 	    </div>
 	)
 }
-const ChangJiangTable=({ds,loading})=>{
+const ChangJiangTable=({ds,loading,onRowDoubleClick,columns})=>{
 	const tableProps={
 		columns:columns, 
 		dataSource:ds,
 		pagination:false,
 		loading,
 		bordered:true,
-		size:'small'
-		/*onRowDoubleClick(e){
-			dispatch({
-				type:'river/showDetailModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}*/
+		size:'small',
+		onRowDoubleClick:onRowDoubleClick
 	}
 	return(
 		
@@ -104,22 +51,15 @@ const ChangJiangTable=({ds,loading})=>{
 	    </div>
 	)
 }
-const HuangHeTable=({ds,loading})=>{
+const HuangHeTable=({ds,loading,onRowDoubleClick,columns})=>{
 	const tableProps={
 		columns:columns, 
 		dataSource:ds,
 		pagination:false,
 		loading,
 		bordered:true,
-		size:'small'
-		/*onRowDoubleClick(e){
-			dispatch({
-				type:'river/showDetailModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}*/
+		size:'small',
+		onRowDoubleClick:onRowDoubleClick
 	}
 	return(
 		
@@ -132,23 +72,16 @@ const HuangHeTable=({ds,loading})=>{
 	    </div>
 	)
 }
-const HaiHeTable=({ds,loading})=>{
+const HaiHeTable=({ds,loading,onRowDoubleClick,columns})=>{
 	const tableProps={
 		columns:columns, 
 		dataSource:ds,
 		pagination:false,
 		loading,
 		bordered:true,
-		size:'small'
-		/*onRowDoubleClick(e){
-			dispatch({
-				type:'river/showDetailModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}*/
-	}
+		size:'small',
+		onRowDoubleClick:onRowDoubleClick
+		}
 	return(
 		
 		<div className={
@@ -161,22 +94,15 @@ const HaiHeTable=({ds,loading})=>{
 	)
 }
 
-const AllTable=({ds,loading})=>{
+const AllTable=({ds,loading,onRowDoubleClick,columns})=>{
 	const tableProps={
 		columns:columns, 
 		dataSource:ds,
 		pagination:false,
 		loading,
 		bordered:true,
-		size:'small'
-		/*onRowDoubleClick(e){
-			dispatch({
-				type:'river/showDetailModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}*/
+		size:'small',
+		onRowDoubleClick:onRowDoubleClick
 	}
 	return(
 		
@@ -186,9 +112,11 @@ const AllTable=({ds,loading})=>{
 			)
 		}>
 	    	<Table {...tableProps}/>
+
 	    </div>
 	)
 }
+
 
 export default {
 	HuaiHeTable,ChangJiangTable,HuangHeTable,HaiHeTable,AllTable

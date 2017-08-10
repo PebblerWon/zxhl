@@ -38,7 +38,7 @@ const Table1 = ({ds,loading})=>{
 		  	}
 		  	if(index==0){
 		  		obj.props.colSpan=2
-		  		console.log(obj)
+		  		// console.log(obj)
 		  	}
 		  	return obj;
 		  }
@@ -58,34 +58,28 @@ const Table1 = ({ds,loading})=>{
 			  	return obj;
 			}
 		},{
-			title:'项目总个数',
-			key:'项目总个数',
-			dataIndex:'项目总个数',
+			title:'项目个数',
+			key:'项目个数',
+			dataIndex:'项目个数',
 			width:100,
 		},{
-			title:'已治理项目数',
-			key:'已治理项目数',
-			dataIndex:'已治理项目数',
+			title:'河流条数',
+			key:'河流条数',
+			dataIndex:'河流条数',
 			width:100,
-			render:(text)=>`${text}%`
+			render:(text)=>`${text}`
 		},{
-			title:'未治理项目数',
-			key:'未治理项目数',
-			dataIndex:'未治理项目数',
+			title:'治理长度(km)',
+			key:'治理长度',
+			dataIndex:'治理长度',
 			width:100,
-			render:(text)=>`${text}%`
+			render:(text)=>`${text}`
 		},,{
-			title:'已审批项目数',
-			key:'已审批项目数',
-			dataIndex:'已审批项目数',
+			title:'投资(万元)',
+			key:'投资',
+			dataIndex:'投资',
 			width:100,
-			render:(text)=>`${text}%`
-		},{
-			title:'未审批项目数',
-			key:'未审批项目数',
-			dataIndex:'未审批项目数',
-			width:100,
-			render:(text)=>`${text}%`
+			render:(text)=>`${text}`
 		}
 	]
 	
@@ -120,14 +114,14 @@ const Table2 = ({ds,loading})=>{
 		  	}
 		  	if(index==0){
 		  		obj.props.colSpan=2
-		  		console.log(obj)
+		  		//console.log(obj)
 		  	}
 		  	return obj;
 		  }
 		},{
-			title:'所在政区',
-			key:'所在政区',
-			dataIndex:'所在政区',
+			title:'所在地市',
+			key:'所在地市',
+			dataIndex:'所在地市',
 			width:100,
 			render:(text,record,index)=>{
 				let obj={
@@ -140,32 +134,26 @@ const Table2 = ({ds,loading})=>{
 			  	return obj;
 			}
 		},{
-			title:'项目总个数',
-			key:'项目总个数',
-			dataIndex:'项目总个数',
+			title:'项目个数',
+			key:'项目个数',
+			dataIndex:'项目个数',
 			width:100,
 		},{
-			title:'已治理项目数',
-			key:'已治理项目数',
-			dataIndex:'已治理项目数',
+			title:'河流条数',
+			key:'河流条数',
+			dataIndex:'河流条数',
 			width:100,
 			render:(text)=>`${text}`
 		},{
-			title:'未治理项目数',
-			key:'未治理项目数',
-			dataIndex:'未治理项目数',
+			title:'治理长度(km)',
+			key:'治理长度',
+			dataIndex:'治理长度',
 			width:100,
 			render:(text)=>`${text}`
 		},,{
-			title:'已审批项目数',
-			key:'已审批项目数',
-			dataIndex:'已审批项目数',
-			width:100,
-			render:(text)=>`${text}`
-		},{
-			title:'未审批项目数',
-			key:'未审批项目数',
-			dataIndex:'未审批项目数',
+			title:'投资(万元)',
+			key:'投资',
+			dataIndex:'投资',
 			width:100,
 			render:(text)=>`${text}`
 		}

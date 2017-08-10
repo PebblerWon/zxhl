@@ -4,7 +4,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=7" />
-  <title>ArcGIS JavaScript API: 中小河流项目</title>
+  <title>ArcGIS JavaScript API: 中小河流</title>
   <style type="text/css">
   @import "http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/js/dojo/dijit/themes/tundra/tundra.css";
   @import "http://serverapi.arcgisonline.com/jsapi/arcgis/3.3/js/esri/css/esri.css";
@@ -27,7 +27,7 @@
 
   function init() {
     map = new esri.Map("map");
-    var layer = new esri.layers.ArcGISDynamicMapServiceLayer("http://jcxx.hnslkc.com:6080/arcgis/rest/services/%E4%B8%AD%E5%B0%8F%E6%B2%B3%E6%B5%81%E9%A1%B9%E7%9B%AE/MapServer");
+    var layer = new esri.layers.ArcGISDynamicMapServiceLayer("http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/MapServer");
     map.addLayer(layer);
     var resizeTimer;
     dojo.connect(map, 'onLoad', function(theMap) {

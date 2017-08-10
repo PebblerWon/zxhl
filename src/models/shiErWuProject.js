@@ -4,7 +4,7 @@ import {query} from '../services/projectServices'
 
 export default {
 
-  namespace: 'shiErWuProject',
+  namespace: 'shierwuproject',
 
   state: {
     loading:true,
@@ -36,6 +36,9 @@ export default {
       visible:false,
     },
     deleteModal:{
+      visible:false,
+    },
+    detailModal:{
       visible:false,
     }
   },
@@ -155,7 +158,39 @@ export default {
         ...state,
         loading:false
       }
-    }
+    },
+    showDetailModal(state){
+      return{
+        ...state,
+        detailModal:{
+          visible:true
+        }
+      }
+    },
+    hideDetailModal(state){
+      return{
+        ...state,
+        detailModal:{
+          visible:false
+        }
+      }
+    },
+    showUpdateModal(state){
+      return{
+        ...state,
+        updateModal:{
+          visible:true
+        }
+      }
+    },
+    hideUpdateModal(state){
+      return{
+        ...state,
+        updateModal:{
+          visible:false
+        }
+      }
+    },
   },
 
 }

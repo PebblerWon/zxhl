@@ -2,6 +2,9 @@ import { Tabs, Radio ,Button} from 'antd';
 import ZhongXiaoHeLiu from './ZhongXiaoHeLiu'
 import StasticGraph from './StasticGraph'
 import GuiHuaXiangMu from './GuiHuaXiangMu'
+import PiFuXiangMu from './PiFu'
+import YanShouXiangMu from './YanShou'
+import ShiErWuXiangMu from './ShiErWu'
 import coStyle from '../common.less'
 
 const TabPane = Tabs.TabPane;
@@ -19,13 +22,13 @@ const DataCenter=()=>{
           <GuiHuaXiangMu />
         </TabPane>
         <TabPane tab="批复项目" key="批复项目">
-          <StasticGraph />
+          <PiFuXiangMu />
         </TabPane>
         <TabPane tab="验收项目" key="验收项目">
-          <StasticGraph />
+          <YanShouXiangMu />
         </TabPane>
          <TabPane tab="十二五项目" key="十二五项目">
-          <StasticGraph />
+          <ShiErWuXiangMu />
         </TabPane>
       </Tabs> 
     </div>)
