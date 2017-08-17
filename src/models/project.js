@@ -1,6 +1,6 @@
 //查询信息 规划项目MODEL
-
-import {query} from '../services/projectServices'
+import {message} from 'antd'
+import {query,remove} from '../services/projectServices'
 
 export default {
 
@@ -34,13 +34,15 @@ export default {
     },
     updateModal:{
       visible:false,
-    },
-    deleteModal:{
-      visible:false,
+      currentItem:null,
     },
     detailModal:{
       visible:false,
-    }
+    },
+    newProjectModal:{
+      visible:false,
+    },
+    deleteItem:null
   },
   //获取项目数据
   subscriptions: {
@@ -77,13 +79,21 @@ export default {
         })
       }
     },
-    *deleteItem({payload},{call,put}){
-      if(payload){
-        const res = yield call(deleteItem,{...payload})
+    *remove({payload},{call,put}){
+        const res = yield call(remove,{...payload})
+        console.log(message)
         if(res){
-          
+          message.success('删除成功')
+        }else{
+          message.error('删除失败')
         }
-      }
+        window.deleteModalRef.destroy()
+    },
+    *updateProject({payload},{call,put}){
+      console.log('model project')
+      console.log(payload)
+
+      yield put({type:'hideUpdateModal'})
     }
   },
 
@@ -175,11 +185,12 @@ export default {
         }
       }
     },
-    showUpdateModal(state){
+    showUpdateModal(state,{payload}){
       return{
         ...state,
         updateModal:{
-          visible:true
+          visible:true,
+          currentItem:payload.currentItem
         }
       }
     },
@@ -187,10 +198,51 @@ export default {
       return{
         ...state,
         updateModal:{
+          visible:false,
+          currentItem:null,
+        }
+      }
+    },
+    showNewModal(state){
+      return{
+        ...state,
+        newProjectModal:{
+          visible:true
+        }
+      }
+    },
+    hideNewModal(state){
+      return{
+        ...state,
+        newProjectModal:{
           visible:false
         }
       }
     },
+    newProjectSubmit(state){
+      return{
+        ...state,
+        newProjectModal:{
+          visible:false
+        }
+      }
+    },
+    updateProject(state){
+      return{...state}
+    },
+    setDeleteItem(state,{payload}){
+      return{
+        ...state,
+        deleteItem:payload
+      }
+    },
+    clearDeleteItem(state){
+      console.log('重置删除项成功！')
+      return{
+        ...state,
+        deleteItem:null
+      }
+    }
   },
 
 }

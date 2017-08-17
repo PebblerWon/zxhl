@@ -28,16 +28,20 @@ module.exports = {
     dataCenter:{
       river:`${APIV1}/baseSituation/table1.asmx`,
       project:`${APIV1}/baseSituation/table1.asmx`,
+      projectDeleteFeature:'http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/30/deleteFeatures'
     },
     sign:{
       SignIn:`${APIV1}/RiverInfoWS.asmx/Login`,
       SignOut:`${APIV1}/baseSituation/table1.asmx`,
     },
     huiZongXinXi:{
-      guiHuaXiangMu:``,
-      piFuXiangMu:``,
-      yanShouXiangMu:``,
-      shiErWuXiangMu:``,
+      guiHuaXiangMu:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainPro`,
+      zhengqu:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainPro`,
+      heliu:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainPro`,
+      gongchengcuoshi:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainPro`,
+      table1excelDownload:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainProDownload`,
+      table2excelDownload:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainProDownload`,
+      table3excelDownload:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainProDownload`,
     }
   },
 }

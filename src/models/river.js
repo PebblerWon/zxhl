@@ -30,9 +30,15 @@ export default {
       filter:''
     },
     detailModal:{
+      item:{},
       visible:false,
     },
     deleteModal:{
+      item:{},
+      visible:false,
+    },
+    updateModal:{
+      currentItem:{},
       visible:false,
     }
   },
@@ -145,10 +151,11 @@ export default {
         loading:false
       }
     },
-    showDetailModal(state){
+    showDetailModal(state,{payload}){
       return{
         ...state,
         detailModal:{
+          item:payload.item,
           visible:true
         }
       }
@@ -157,14 +164,16 @@ export default {
       return{
         ...state,
         detailModal:{
+          ...state.detailModal,
           visible:false
         }
       }
     },
-    showDeleteModal(state){
+    showDeleteModal(state,{payload}){
       return{
         ...state,
         deleteModal:{
+          item:payload.item,
           visible:true
         }
       }
@@ -173,7 +182,26 @@ export default {
       return{
         ...state,
         deleteModal:{
+          ...state.deleteModal,
           visible:false
+        }
+      }
+    },
+    showUpdateModal(state,{payload}){
+      return{
+        ...state,
+        updateModal:{
+          currentItem:payload.currentItem,
+          visible:true,
+        }
+      }
+    },
+    hideUpdateModal(state){
+       return{
+        ...state,
+        updateModal:{
+          ...state.updateModal,
+          visible:false,
         }
       }
     }

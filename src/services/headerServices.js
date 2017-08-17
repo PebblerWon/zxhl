@@ -15,7 +15,7 @@ export async function query (params) {
 	  		fakeData = {
 		  		status:true,
 		    	user:{
-		      		name:'super'
+		      		'姓名':'super'
 		    	}
 	  		}
 	  	}else{
@@ -28,7 +28,7 @@ export async function query (params) {
 		fakeData = {
 	  		status:true,
 	    	user:{
-	    		name:'super'
+	    		'姓名':'super'
 	    	}
 	  	}
 	}

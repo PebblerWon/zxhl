@@ -34,11 +34,15 @@ export default {
     },
     updateModal:{
       visible:false,
+      currentItem:null,
     },
     deleteModal:{
       visible:false,
     },
     detailModal:{
+      visible:false,
+    },
+    newProjectModal:{
       visible:false,
     }
   },
@@ -77,14 +81,16 @@ export default {
         })
       }
     },
-    *deleteItem({payload},{call,put}){
-      if(payload){
-        const res = yield call(deleteItem,{...payload})
+    *remove({payload},{call,put}){
+        const res = yield call(remove,{...payload})
+        console.log(message)
         if(res){
-          
+          message.success('删除成功')
+        }else{
+          message.error('删除失败')
         }
-      }
-    }
+        window.deleteModalRef.destroy()
+    },
   },
 
   reducers: {
@@ -175,11 +181,12 @@ export default {
         }
       }
     },
-    showUpdateModal(state){
+    showUpdateModal(state,{payload}){
       return{
         ...state,
         updateModal:{
-          visible:true
+          visible:true,
+          currentItem:payload.currentItem
         }
       }
     },
@@ -187,10 +194,33 @@ export default {
       return{
         ...state,
         updateModal:{
+          visible:false,
+          currentItem:null,
+        }
+      }
+    },
+    showNewModal(state){
+      return{
+        ...state,
+        newProjectModal:{
+          visible:true
+        }
+      }
+    },
+    hideNewModal(state){
+      return{
+        ...state,
+        newProjectModal:{
           visible:false
         }
       }
     },
+    newProjectSubmit(state){
+      return{...state}
+    },
+    updateProject(state){
+      return{...state}
+    }
   },
 
 }

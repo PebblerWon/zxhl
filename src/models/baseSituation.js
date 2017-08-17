@@ -94,7 +94,7 @@ export default {
     *exportExcel({payload},{call,put}){
       yield put({type:'isLoading'})
       const data = yield call(exportExcel,{table:payload});
-      yield call(exportExcel,{table:payload});
+      //yield call(exportExcel,{table:payload});
       console.log(data);
       yield put({type:'notLoading'})
       if(payload=='table1'){

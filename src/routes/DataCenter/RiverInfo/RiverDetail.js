@@ -5,9 +5,29 @@ import styles from './RiverDetail.less'
 
 const FormItem = Form.Item;
 const Panel = Collapse.Panel
-const RiverDetail=({visible,maskClosable,onOk,onCancel,item,columns})=>{
+const RiverDetail=({visible,maskClosable,onOk,onCancel})=>{
 	//console.log(item)
-  //console.log(columns)
+ const columns = [
+    { title: '编码',  dataIndex: '编码', key: '编码',width:50, },
+      { title: '河流名称',  dataIndex: '河流名称', key: '河流名称'},
+    { title: '所属流域',  dataIndex: '所属流域', key: '所属流域' },
+    { title: '所在水系', dataIndex: '所在水系', key: '所在水系', },
+    { title: '河流长度(Km)', dataIndex: '河流长度', key: '河流长度',width:120 },
+    { title: '治理项目', dataIndex: '治理项目', key: '治理项目',width:100, },
+    { title: '规划项目', dataIndex: '规划项目', key: '规划项目', width:100,},
+    { title: '流经地', dataIndex: '流经地', key: '流经地',width:200, }
+  ];
+  const item={
+      '编码':Math.floor(Math.random()*100),
+      '河流名称': `东沙河`,
+      '所属流域': `黄河流域`,
+      '所在水系': `所属流域`,
+      '河流长度':31.60,
+      '治理项目':20,
+      '规划项目':30,
+      '流经地':'商丘市梁园区、虞城县、夏邑县、永城县',
+      '流域面积':1000
+  }
 	const modalProps = {visible,maskClosable,onOk,onCancel}
 	const showModal = () => {
 
@@ -54,7 +74,7 @@ const RiverDetail=({visible,maskClosable,onOk,onCancel,item,columns})=>{
     return (
       <div>
         <Modal
-          title={`${item['he_liu_ming_cheng']}详细信息`}
+          title={`${item['河流名称']}详细信息`}
           {...modalProps}
           width={'700px'}
           style={{width:'700px'}}

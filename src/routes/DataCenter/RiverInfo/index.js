@@ -2,12 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'dva'
 import { Form, Button, Row, Col,Input,Table,Card,Dropdown,Select,Cascader,Modal,Carousel} from 'antd'
-import city from '../../../utils/city'
+//import city from '../../../utils/city'
 import styles from './index.less'
 import DropOption from '../../../components/DropOptions'
 import LeftIcon from '../../../components/Common/LeftIcon'
 import RiverDetail from './RiverDetail'
-import RiverInput from './RiverInput'
+//import RiverInput from './RiverInput'
 
 const FormItem = Form.Item;
 const Search = Input.Search;
@@ -87,8 +87,8 @@ const RiverInfo = ({river,dispatch,form})=>{
 		wrapperCol:{span:19}
 	}
 	const detailModalProps={
-		item:river.currentItem,
-		visible:river.modalVisible,
+		item:river.detailModal.currentItem,
+		visible:river.detailModal.visible,
 		maskClosable:false,
 		columns:columns,
 		onOk(){
@@ -145,10 +145,7 @@ const RiverInfo = ({river,dispatch,form})=>{
 							<Col {...colProps}>
 								<FormItem {...formItemLayout} label="所在地市">
 									{getFieldDecorator('所在地市')(
-						            	<Cascader 
-											placeholder="请输所在地市"
-											options={city('河南省')}>
-										</Cascader>
+						            	<Input placeholder="请输所在地市" />
 						          	)}
 									
 								</FormItem>
@@ -195,8 +192,8 @@ const RiverInfo = ({river,dispatch,form})=>{
 		    	<RiverDetail {...detailModalProps}/>
     		</div>
     		<div>
-    			<Button onClick={exitCreate}>退出新建</Button>
-    			<RiverInput/>
+    			{/*<Button onClick={exitCreate}>退出新建</Button>
+    			<RiverInput/>*/}
     		</div>
 		</Carousel>
 	)

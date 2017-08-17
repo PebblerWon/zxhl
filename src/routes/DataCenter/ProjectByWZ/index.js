@@ -1,20 +1,20 @@
 import React from 'react'
-import { Form, Button, Row, Col,Input,Table,Card,
-	Breadcrumb,Tree,Layout,Tabs,Modal
-} from 'antd'
+import {Button,Input,Breadcrumb,Tree,Layout,Tabs,Modal} from 'antd'
 import {connect} from 'dva'
 import DropOption from '../../../components/DropOptions'
 import {HuaiHeTable,ChangJiangTable,HuangHeTable,HaiHeTable,AllTable} from './ProjectInfo'
+import NewProject from '../../MapC/NewProject'
+import UpdateProject from '../../MapC/UpdateProject'
 import {HNCity} from '../../../utils/city'
 import conStyle from '../../common.less'
+import styles from './index.less'
 
-const FormItem = Form.Item;
 const {Header,Content,Footer,Sider} = Layout
 const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
 const ProjectByWZ = (prop)=>{
-	let deleteModalRef;
+	console.log(prop)
 	const columns = [
 		{ title: '项目名称',  dataIndex: '项目名称', key: '编码', width: 150,},
 	   	{ title: '所在市',  dataIndex: '所在市', key: '所在市', width: 70,},
@@ -31,22 +31,24 @@ const ProjectByWZ = (prop)=>{
 					//console.log(e)
 				    if (e.key === 'update') {
 				      	dispatch({
-							type:'project/showDetailModal'
+							type:'project/showUpdateModal',
+							payload:{
+								currentItem:record,
+							}
 						})
 				    } else if (e.key === 'delete') {
-				      deleteModalRef = Modal.confirm({
+				      window.deleteModalRef = Modal.confirm({
 				        title: '你真的想删除该条记录吗?',
-				        onOk () {
-				        	deleteModalRef.destroy()
+				        onOk (e) {
+				        	dispatch({
+				        		type:'project/remove',
+				        		payload:record
+				        	})
 				        },
 				        onCancel(){
 				        	deleteModalRef.destroy()
 				        }
 				      })
-				    }else if(e.key =='detail'){
-				    	dispatch({
-							type:'project/showDetailModal'
-						})
 				    }
 			  	}
 			  	return <DropOption 
@@ -54,7 +56,6 @@ const ProjectByWZ = (prop)=>{
 					menuOptions={[
 						{ key: 'update', name: '编辑' }, 
 						{ key: 'delete', name: '删除' }, 
-						{ key: 'detail', name: '详情' }
 					]}/>
 			}
 		},
@@ -117,7 +118,7 @@ const ProjectByWZ = (prop)=>{
 		columns:columns,
 		onRowDoubleClick(e){
 			dispatch({
-				type:'project/showDetailModal',
+				type:'project/showUpdateModal',
 				payload:{
 					currentItem:e
 				}
@@ -130,7 +131,7 @@ const ProjectByWZ = (prop)=>{
 		columns:columns,
 		onRowDoubleClick(e){
 			dispatch({
-				type:'project/showDetailModal',
+				type:'project/showUpdateModal',
 				payload:{
 					currentItem:e
 				}
@@ -143,7 +144,7 @@ const ProjectByWZ = (prop)=>{
 		columns:columns,
 		onRowDoubleClick(e){
 			dispatch({
-				type:'project/showDetailModal',
+				type:'project/showUpdateModal',
 				payload:{
 					currentItem:e
 				}
@@ -156,7 +157,7 @@ const ProjectByWZ = (prop)=>{
 		columns:columns,
 		onRowDoubleClick(e){
 			dispatch({
-				type:'project/showDetailModal',
+				type:'project/showUpdateModal',
 				payload:{
 					currentItem:e
 				}
@@ -169,7 +170,7 @@ const ProjectByWZ = (prop)=>{
 		columns:columns,
 		onRowDoubleClick(e){
 			dispatch({
-				type:'project/showDetailModal',
+				type:'project/showUpdateModal',
 				payload:{
 					currentItem:e
 				}
@@ -189,6 +190,95 @@ const ProjectByWZ = (prop)=>{
 			})
 		}
 	}
+	const newProjectProps={
+		visible:project.newProjectModal.visible,
+		handleOk(e){
+			dispatch({
+				type:'project/hideNewModal'
+			})
+		},
+		handleCancel(e){
+			let a = Modal.error({
+		        title: '当前操作未完成,不允许退出！',
+		        onOk (e) {
+					a.destroy()
+		        },
+		        onCancel(){
+		        	a.destroy()
+		        }
+			})
+			
+		},
+		onSubmit(e){
+			dispatch({
+				type:'project/newProjectSubmit',
+				payload:e
+			})
+		}
+	}
+	const updateProjectProps={
+		visible:project.updateModal.visible,
+		currentItem:project.updateModal.currentItem,
+		handleCancel(e){
+			dispatch({
+				type:'project/hideUpdateModal'
+			})
+		},
+		onSubmit(e){
+			dispatch({
+				type:'project/updateProject',
+				payload:e
+			})
+		}
+	}
+	
+	const UpdateProjectModal=({handleCancel,visible,onSubmit,currentItem})=>{
+		return(
+			<Modal
+		        title=""
+		        visible={visible}
+		        style={{ top: 20 }}
+		        onCancel={handleCancel}
+		        width='calc(~"100vw - 60px")'
+		        height='calc(~"100vh - 90px")'
+		        footer={null}
+	        >
+	        	<UpdateProject item={currentItem} onSubmit={onSubmit} type='guiHua'/>
+	        	{/*<div style={{width:'100vw',height:'100vh',background:'red'}}></div>*/}
+	        </Modal>
+		)
+	}
+	const DetailModal=({visible,handleOk,handleCancel})=>{
+		return(
+			<Modal
+	          title=""
+	          visible={visible}
+	          onOk={handleOk}
+	          onCancel={handleCancel}
+	          width='1200px'
+	        >
+	          	<img width="100%" src="./resource/效果图/11查询信息-中小河流-项目详细信息编辑.jpg" />    
+	        </Modal>
+		)
+	}
+	const NewProjectModal=({visible,handleOk,handleCancel,onSubmit})=>{
+		return(
+			<Modal
+	          title=""
+	          style={{ top: 20 }}
+	          visible={visible}
+	          onOk={handleOk}
+	          onCancel={handleCancel}
+	          width='calc(~"100vw - 60px")'
+	          height='calc(~"100vh - 90px")'
+	          footer={null}
+	        >
+	        	<NewProject item={null} onSubmit={onSubmit} type='guiHua'/>
+	        	{/*<div style={{width:'100vw',height:'100vh',background:'red'}}></div>*/}
+	        </Modal>
+		)
+	}
+	
 	return(
 		<div className={conStyle.layout}>
 			<Layout className='layout1'>
@@ -209,9 +299,14 @@ const ProjectByWZ = (prop)=>{
 						</div>
 						
 					</Sider>
-					<Content>
+					<Content className='contentWithoutTree'>
 						<Tabs {...tabsProps} tabBarExtraContent={
-							<div style={{paddingRight:'50px'}} ><Input.Search {...searchProps} ref={c=>searchRef=c}/></div>
+							<div style={{paddingRight:'50px'}}  className={styles.tabBarExtraContent}>
+								<Input.Search {...searchProps} ref={c=>searchRef=c}/>
+								<Button type='primary' style={{marginLeft:'10px'}} onClick={
+									(e)=>{dispatch({type:'project/showNewModal'})}
+								}>新建</Button>
+							</div>
 						}>
 							<TabPane tab='淮河流域' key='淮河流域'>
 								<HuaiHeTable  {...huaiHeTableProps}/>
@@ -232,23 +327,14 @@ const ProjectByWZ = (prop)=>{
 					</Content>
 				</Layout>
 			</Layout>
-			<DetailModal {...detailModalProps}/>
+			{/*<DetailModal {...detailModalProps}/>*/}
+			<NewProjectModal  {...newProjectProps}/>
+			<UpdateProjectModal {...updateProjectProps} />
 		</div>
 	)
 }
-const DetailModal=({visible,handleOk,handleCancel})=>{
-	return(
-		<Modal
-          title=""
-          visible={visible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          width='1200px'
-        >
-          	<img width="100%" src="./resource/效果图/11查询信息-中小河流-项目详细信息编辑.jpg" />    
-        </Modal>
-	)
-}
+
+
 export default connect(
 	({project})=>({project})
 )(ProjectByWZ);

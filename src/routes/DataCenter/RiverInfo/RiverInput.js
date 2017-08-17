@@ -5,7 +5,7 @@ import {
 			Steps,Cascader,Select
 } from 'antd';
 import {connect} from 'dva'
-import city from '../../../utils/city'
+import {HNCity} from '../../../utils/city'
 import styles from './RiverInput.less'
 
 //data用于储存用户填写的表单数据
@@ -13,7 +13,7 @@ var DATA =[];
 const Step = Steps.Step;
 const FormItem = Form.Item;
 
-const areaData = city('河南省');
+const areaData = HNCity;
 
 const ProjectInfoForm1 = ({form,submitClick})=>{
 	//console.log(form)
@@ -71,9 +71,8 @@ const ProjectInfoForm1 = ({form,submitClick})=>{
 			 {...formItemProps}>
 			 	{
 			 		getFieldDecorator('流经地',requiredRules)(
-			 			<Cascader
-						 options={areaData}
-						 placeholder="请选择流经地" />
+			 			<Input
+						 options={areaData}/>
 			 	)}
 				
 			</FormItem>
@@ -135,116 +134,8 @@ const AddFeatureOnMap=({submitClick})=>{
 			<Button type="primary" style={{marginLeft:'20px'}}onClick={submitClick}>下一项</Button>
 		</div>
 	)
-	
 }
 
-/*const RiverInput=()=>{
-	const constructor()=> {
-    	super();
-    	this.state = {
-					stepState:{
-						current:0,
-						items:[
-							{
-								description:"项目基本情况",
-								title:"填写中"
-							},
-							{
-								description:"主要工程措施",
-								title:"未填写"
-							},
-							{
-								description:"治理效果",
-								title:"未填写"
-							},
-						],
-					},
-					currentForm:"ProjectInfoForm1"
-				};
-  	}	
-	const handelSubmit=(e)=>{
-	}
-	const changeForm=(nextForm)=>{
-		//currentForm表示当前表单已经被填写完毕 可以切换下一个表单
-		if(nextForm == "ProjectInfoForm2"){
-					this.setState({
-						stepState:{
-							current:1,
-							items:[
-							{
-								description:"项目基本情况",
-								title:"填写完成"
-							},
-							{
-								description:"主要工程措施",
-								title:"填写中"
-							},
-							{
-								description:"治理效果",
-								title:"未填写"
-							},
-							],
-						},
-						currentForm:"ProjectInfoForm2"
-					})
-			
-		}else if(nextForm == "ProjectInfoForm3"){
-
-					this.setState({
-						stepState:{
-							current:2,
-							items:[
-							{
-								description:"项目基本情况",
-								title:"填写完成"
-							},
-							{
-								description:"主要工程措施",
-								title:"填写完成"
-							},
-							{
-								description:"治理效果",
-								title:"填写中"
-							},
-							],
-						},
-						currentForm:"ProjectInfoForm3"
-					})
-		}
-		//console.log("changeForm");
-	}
-	
-	var _state = this.state;
-	var changeForm = this.changeForm;
-	var currentForm = _state.currentForm;
-	var currentFormCom; 
-	if(currentForm=="ProjectInfoForm1"){
-		currentFormCom = <ProjectInfoForm1 submitClick={changeForm} nextForm="ProjectInfoForm2" key="ProjectInfoForm1"/>
-	}else if(currentForm=="ProjectInfoForm2"){
-		currentFormCom =  <ProjectInfoForm2  submitClick={changeForm}  nextForm="ProjectInfoForm3" key="ProjectInfoForm2"/>
-	}else if(currentForm=="ProjectInfoForm3"){
-		currentFormCom =  <ProjectInfoForm3  submitClick={changeForm} key="ProjectInfoForm3"/>
-	}else{
-		currentFormCom = null;
-	}
-	
-	return(
-		<div className={styles.riverInput}>
-			
-		
-		<Row>
-			<Col span={12} offset={6}>
-				<Steps current={_state.stepState.current}>
-					{_state.stepState.items.map(
-					(item,index)=> <Step title = {item.title} description={item.description} key={index}/>)
-					}
-					</Steps>
-			</Col>
-			<Col span={12} offset={6}>
-					{currentFormCom}
-			</Col>
-		</Row></div>)
-}*/
 const RiverInput=({form,river,dispatch})=>{
 	var _state = river.riverInput;
 	//console.log(_state)

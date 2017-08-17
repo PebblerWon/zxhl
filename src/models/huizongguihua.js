@@ -42,7 +42,7 @@ export default {
         type:'tabs',
         payload:payload.tabs
       })
-      const data = yield call(query,{table:map[payload.tabs]});
+      const data = yield call(query,{table:map[payload.tabs],type:'规划项目'});
       yield put({type:'notLoading'})
       //console.log(data);
       yield put({
@@ -52,8 +52,8 @@ export default {
     },
     *exportExcel({payload},{call,put}){
       yield put({type:'isLoading'})
-      const data = yield call(exportExcel,{table:payload});
-      yield call(exportExcel,{table:payload});
+      const data = yield call(exportExcel,{table:payload,type:'规划项目'});
+      //yield call(exportExcel,{table:payload});
       console.log(data);
       yield put({type:'notLoading'})
       if(payload=='table1'){

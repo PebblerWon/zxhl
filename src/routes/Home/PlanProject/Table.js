@@ -74,7 +74,7 @@ const Table1 = ({ds,loading})=>{
 			dataIndex:'治理长度',
 			width:100,
 			render:(text)=>`${text}`
-		},,{
+		},{
 			title:'投资(万元)',
 			key:'投资',
 			dataIndex:'投资',
@@ -86,7 +86,7 @@ const Table1 = ({ds,loading})=>{
 	
 	
 	const tableProps={
-		title:()=><TableTitle text={ds.tableTitle} />,
+		title:()=><TableTitle text="全省规划项目治理情况表(按流域划分)" />,
 		bordered:true,
 		pagination:false,
 		dataSource:proDs(ds),
@@ -160,7 +160,7 @@ const Table2 = ({ds,loading})=>{
 	]
 	
 	const tableProps={
-		title:()=><TableTitle text={ds.tableTitle} />,
+		title:()=><TableTitle text="全省河流流域面积在200~3000平方公里河流治理情况统计表(按流域汇总)" />,
 		bordered:true,
 		pagination:false,
 		dataSource:proDs(ds),

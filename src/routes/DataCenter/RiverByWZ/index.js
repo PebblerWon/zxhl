@@ -1,21 +1,21 @@
 import React from 'react'
-import { Form, Button, Row, Col,Input,Table,Card,
-	Breadcrumb,Tree,Layout,Tabs,Modal
-} from 'antd'
+import {Input,Breadcrumb,Layout,Tabs,Button,Modal} from 'antd'
 import {connect} from 'dva'
 import DropOption from '../../../components/DropOptions'
 import {HuaiHeTable,ChangJiangTable,HuangHeTable,HaiHeTable,AllTable} from './RiverInfo'
+import DetailModal from './DetailModal'
+import UpdateModal from './UpdateModal'
 import {HNCity} from '../../../utils/city'
 import conStyle from '../../common.less'
+import styles from './index.less'
 
-const FormItem = Form.Item;
 const {Header,Content,Footer,Sider} = Layout
-const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
 
 
 
-const RiverByWZ = ({river,dispatch,form})=>{
+const RiverByWZ = ({river,dispatch})=>{
+	console.log(river)
 	let searchRef ;
 	let deleteModalRef;
 	const columns = [
@@ -36,7 +36,9 @@ const RiverByWZ = ({river,dispatch,form})=>{
 					//console.log(record)
 					//console.log(e)
 				    if (e.key === 'update') {
-				      dispatch({type:'river/showDetailModal'})
+				      dispatch({type:'river/showUpdateModal',payload:{
+				      	currentItem:record,
+				      }})
 				    } else if (e.key === 'delete') {
 				      deleteModalRef = Modal.confirm({
 				        title: '你真的想删除该条记录吗?',
@@ -99,10 +101,11 @@ const RiverByWZ = ({river,dispatch,form})=>{
 		loading:river.loading,
 		columns:columns,
 		onRowDoubleClick(e){
+			console.log(e)
 			dispatch({
 				type:'river/showDetailModal',
 				payload:{
-					currentItem:e
+					item:e
 				}
 			})
 		}
@@ -115,7 +118,7 @@ const RiverByWZ = ({river,dispatch,form})=>{
 			dispatch({
 				type:'river/showDetailModal',
 				payload:{
-					currentItem:e
+					item:e
 				}
 			})
 		}
@@ -128,7 +131,7 @@ const RiverByWZ = ({river,dispatch,form})=>{
 			dispatch({
 				type:'river/showDetailModal',
 				payload:{
-					currentItem:e
+					item:e
 				}
 			})
 		}
@@ -141,7 +144,7 @@ const RiverByWZ = ({river,dispatch,form})=>{
 			dispatch({
 				type:'river/showDetailModal',
 				payload:{
-					currentItem:e
+					item:e
 				}
 			})
 		}
@@ -154,21 +157,36 @@ const RiverByWZ = ({river,dispatch,form})=>{
 			dispatch({
 				type:'river/showDetailModal',
 				payload:{
-					currentItem:e
+					item:e
 				}
 			})
 		}
 	}
 	const detailModalProps={
 		visible:river.detailModal.visible,
-		handleOk(e){
+		item:river.detailModal.item,
+		onOk(e){
 			dispatch({
 				type:'river/hideDetailModal'
 			})
 		},
-		handleCancel(e){
+		onCancel(e){
 			dispatch({
 				type:'river/hideDetailModal'
+			})
+		}
+	}
+	const updateModalProps={
+		visible:river.updateModal.visible,
+		item:river.updateModal.currentItem,
+		onOk(e){
+			dispatch({
+				type:'river/hideUpdateModal'
+			})
+		},
+		onCancel(e){
+			dispatch({
+				type:'river/hideUpdateModal'
 			})
 		}
 	}
@@ -184,7 +202,9 @@ const RiverByWZ = ({river,dispatch,form})=>{
 				<Layout className='layout2'>
 					<Content>
 						<Tabs {...tabsProps} tabBarExtraContent={
-							<div style={{paddingRight:'50px'}} ><Input.Search {...searchProps} ref={c=>searchRef=c}/></div>
+							<div style={{paddingRight:'50px'}} className={styles.tabBarExtraContent}>
+								<Input.Search {...searchProps} ref={c=>searchRef=c}/>
+							</div>
 						}>
 							<TabPane tab='淮河流域' key='淮河流域'>
 								<HuaiHeTable {...huaiHeTableProps}></HuaiHeTable>
@@ -204,27 +224,13 @@ const RiverByWZ = ({river,dispatch,form})=>{
 						</Tabs>
 					</Content>
 					<DetailModal {...detailModalProps} />
-
+					<UpdateModal {...updateModalProps} />
 				</Layout>
 			</Layout>
 		</div>
 	)
 }
-const DetailModal=({visible,handleOk,handleCancel})=>{
-	return(
-		<Modal
-          title="河流详细信息"
-          visible={visible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          width='700px'
-        >
-          <Card>
-          	<img width="100%" src="./resource/效果图/7查询信息-中小河流-河流详细信息.jpg" />
-          </Card>
-        </Modal>
-	)
-}
+
 
 export default connect(
 	({river})=>({river})

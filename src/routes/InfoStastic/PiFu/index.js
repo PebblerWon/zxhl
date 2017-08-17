@@ -15,7 +15,15 @@ const FormItem = Form.Item;
 const {Header,Content,Footer,Sider} = Layout
 const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
-
+const proDs = (ds)=>{
+	for(let i = 0;i<ds.length;i++){
+		ds[i].key = ds[i].key+i;
+		for(let j = 0;j<ds[i].dataSource.length;j++){
+			ds[i].dataSource[j].key +=`${i}-${j}`;
+		}
+	}
+	return ds;
+}
 const PiFuXiangMu = ({huizongpifu,dispatch})=>{
 	
 	const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
@@ -42,7 +50,7 @@ const PiFuXiangMu = ({huizongpifu,dispatch})=>{
 
 	const table1Props={
 		loading:huizongpifu.loading,
-		dataSource:huizongpifu.table1.ds,
+		dataSource:proDs(huizongpifu.table1.ds),
 		title:'河南省中小河流治理工程批复项目主要工程措施及治理效果汇总表（按所在地市划分）',
 		exportProps:{
 			type:"primary",
@@ -53,7 +61,7 @@ const PiFuXiangMu = ({huizongpifu,dispatch})=>{
 	}
 	const table2Props={
 		loading:huizongpifu.loading,
-		dataSource:huizongpifu.table2.ds,
+		dataSource:proDs(huizongpifu.table2.ds),
 		title:'河南省中小河流治理情况统计表',
 		exportProps:{
 			type:"primary",
@@ -64,7 +72,7 @@ const PiFuXiangMu = ({huizongpifu,dispatch})=>{
 	}
 	const table3Props={
 		loading:huizongpifu.loading,
-		dataSource:huizongpifu.table3.ds,
+		dataSource:proDs(huizongpifu.table3.ds),
 		title:'河南省中小河流治理工程验收项目主要工程措施及治理效果汇总表',
 		exportProps:{
 			type:"primary",

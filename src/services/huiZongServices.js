@@ -3,7 +3,7 @@ import { request, config } from '../utils'
 import {HNCity} from '../utils/city'
 import fakeRequest from '../utils/fakeRequest'
 const { api } = config
-const { baseSituation } = api
+const { huiZongXinXi ,baseSituation} = api
 //const {useFakeData} = config;
 const useFakeData = true;
 
@@ -11,6 +11,7 @@ const useFakeData = true;
 
 
 export async function query (params) {
+  console.log(params)
   let data ={
     '郑州市':[],
     '焦作市':[],
@@ -32,11 +33,11 @@ export async function query (params) {
       '北纬1':`33.54.28`,
       '东经2':`111.48.11`,
       '北纬2':`33.59.15`,
-          '项目分类':'乡镇防洪',
-          '工程任务':'防洪',
-          '主要建设内容':'清淤疏浚、堤防加固，险工护砌，重建生产桥',
+      '项目分类':'乡镇防洪',
+      '工程任务':'防洪',
+      '主要建设内容':'清淤疏浚、堤防加固，险工护砌，重建生产桥',
       '规划依据':`河南省中小河流治理工程总体规划`,
-          '项目前期工作':'2',
+      '项目前期工作':'2',
       '项目审批情况':`未审批`,
       '备注':`水利普查序号为12345678`,
     }
@@ -156,7 +157,7 @@ export async function query (params) {
   };
   for(let i = 0;i<9;i++){
     let item = {
-      'key':`河南省登封市双洎河井湾水库至玉台段河道治理工程${i}`,
+          'key':`河南省登封市双洎河井湾水库至玉台段河道治理工程${i}`,
           '项目名称':`河南省登封市双洎河井湾水库至玉台段河道治理工程${i}`,
           '所在河流名称':`双洎河`,
           '河道治理长度':`6.10`,
@@ -218,16 +219,16 @@ export async function query (params) {
     }
     case 'table3':{
       //console.log(params)
-      if(useFakeData){
+      /*if(useFakeData){
         resData =await fakeRequest({
           url: baseSituation,
           method: 'get',
           data: params,
         },ds3)
-      }else{
-        const area = params.payload[0];
-        resData = await request(`${baseSituation.table3}?${qs.stringify({city:area})}`)
-      }
+      }else{*/
+        //const area = params.payload[0];
+        resData = await request(`${huiZongXinXi.guiHuaXiangMu}?${qs.stringify({proType:params.type})}`)
+      //}
       break;
     }
     default:{
@@ -247,7 +248,7 @@ export async function query (params) {
       }
     }
   }
-   return resData;
+  return resData;
 }
 
 export async function exportExcel(params){
@@ -259,9 +260,14 @@ export async function exportExcel(params){
       res = `${baseSituation.table1Excel}`
       break;
     }
-    case'table2':{
+    case 'table2':{
+      res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
+      //res = await request(`${baseSituation.table1Excel}`)
+      break;
+    }
+    case 'table3':{
+      res = `${huiZongXinXi.table1excelDownload}?${qs.stringify({proType:params.type})}`
       //res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
-      res = await request(`${baseSituation.table1Excel}`)
       break;
     }
     default:{
@@ -269,6 +275,7 @@ export async function exportExcel(params){
       break;
     }
   }
+  console.log(res);
   return res;
 }
 const huiZongServices = {

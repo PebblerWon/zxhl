@@ -53,16 +53,22 @@ export default class  extends React.Component {
 	}
 	mapInit(){
 		const mapUrl = this.state.mapUrl;
-		dojoRequire(['esri/arcgis/utils'], (arcgisUtils) => {
+		dojoRequire(['esri/arcgis/utils','esri/geometry/Point','esri/SpatialReference'],
+			(arcgisUtils,Point,SpatialReference) => {
 			this.showSpin();
 		  	/*console.timeEnd('modules loaded')
 		  	console.log('loading map')
 		  	console.time('map loaded')*/
 		  	//create a map at a DOM node in this component
 		  	let map = new esri.Map("map");
+		  	map.on("layer-add-result", initEditing);
 		  	let layer = new esri.layers.ArcGISDynamicMapServiceLayer(mapUrl);
 		  	map.addLayer(layer);
+		  	console.log(layer)
 		  	this.hideSpin()
+		  	function initEditing(){
+		  		map.centerAndZoom(new Point(113.52,33.58, layer.spatialReference),8)
+		  	}
 		})
 	}
 }

@@ -8,6 +8,7 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopover,user,logout})=> {
+  //console.log(user)
   const xsColProps={
     xs:2,
     sm:4,

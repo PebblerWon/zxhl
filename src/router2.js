@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Router } from 'dva/router'
 import App from './routes/app'
+import NewProject from './routes/MapC/NewProject'
 
 const registerModel = (app, model) => {
   if (!(app._models.filter(m => m.namespace === model.namespace).length === 1)) {
@@ -79,8 +80,28 @@ const Routers = function ({ history, app }) {
                       }, 'MapC')
                   },
             },
+            {
+              path: '/test',
+              getComponent (nextState, cb) {
+                  require.ensure([], require => {
+                      registerModel(app, require('./models/header'))
+                      cb(null, require('./routes/MapC/NewProject'))
+                      }, 'NewProject')
+                  },
+            },
+            {
+              path: '/test2',
+              getComponent (nextState, cb) {
+                  require.ensure([], require => {
+                      registerModel(app, require('./models/header'))
+                      registerModel(app, require('./models/river'))
+                      cb(null, require('./routes/DataCenter/RiverInfo'))
+                      }, 'RiverInfo')
+                  },
+            }
         	],
       },
+      
     ]
 
   return <Router history={history} routes={routes} />

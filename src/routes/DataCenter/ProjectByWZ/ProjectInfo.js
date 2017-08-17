@@ -11,7 +11,8 @@ const HuaiHeTable=({ds,loading,onRowDoubleClick,columns})=>{
 		pagination:false,
 		loading,
 		bordered:true,
-		size:'small'
+		size:'small',
+		onRowDoubleClick,
 	}
 	return(
 		<div className={
@@ -31,7 +32,8 @@ const ChangJiangTable=({ds,loading,onRowDoubleClick,columns})=>{
 		pagination:false,
 		loading,
 		bordered:true,
-		size:'small'
+		size:'small',
+		onRowDoubleClick,
 	}
 	return(
 		
@@ -52,7 +54,8 @@ const HuangHeTable=({ds,loading,onRowDoubleClick,columns})=>{
 		pagination:false,
 		loading,
 		bordered:true,
-		size:'small'
+		size:'small',
+		onRowDoubleClick,
 	}
 	return(
 		
@@ -72,7 +75,8 @@ const HaiHeTable=({ds,loading,onRowDoubleClick,columns})=>{
 		pagination:false,
 		loading,
 		bordered:true,
-		size:'small'
+		size:'small',
+		onRowDoubleClick,
 	}
 	return(
 		
@@ -93,7 +97,8 @@ const AllTable=({ds,loading,onRowDoubleClick,columns})=>{
 		pagination:false,
 		loading,
 		bordered:true,
-		size:'small'
+		size:'small',
+		onRowDoubleClick,
 	}
 	return(
 		

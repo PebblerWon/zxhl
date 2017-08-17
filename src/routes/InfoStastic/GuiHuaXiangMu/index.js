@@ -8,9 +8,6 @@ import ZhengQuHuiZong from '../../../components/HuiZongXinXi/ZhengQuHuiZong.js'
 import HeLiuHuiZong from '../../../components/HuiZongXinXi/HeLiuHuiZong.js'
 import GongChengCuoShi from '../../../components/HuiZongXinXi/GongChengCuoShi.js'
 
-import Table1 from './table1' 
-import Table2 from './table2'
-import Table3 from './table3'
 import {HNCity} from '../../../utils/city'
 import conStyle from '../../common.less'
 
@@ -18,8 +15,17 @@ const FormItem = Form.Item;
 const {Header,Content,Footer,Sider} = Layout
 const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
-
+const proDs = (ds)=>{
+	for(let i = 0;i<ds.length;i++){
+		ds[i].key = ds[i].key+i;
+		for(let j = 0;j<ds[i].dataSource.length;j++){
+			ds[i].dataSource[j].key +=`${i}-${j}`;
+		}
+	}
+	return ds;
+}
 const GuiHuaXiangMu = ({huizongguihua,dispatch})=>{
+	console.log(huizongguihua)
 	const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
 	const tabsProps={
 		activeKey:huizongguihua.tabs,
@@ -60,18 +66,18 @@ const GuiHuaXiangMu = ({huizongguihua,dispatch})=>{
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
-	            dispatch({type:'huizongguihua/exportExcel',payload:'table1'});
+	            dispatch({type:'huizongguihua/exportExcel',payload:'table2'});
 	        }
 		}
 	}
 	const table3Props={
 		loading:huizongguihua.loading,
-		dataSource:huizongguihua.table3.ds,
+		dataSource:proDs(huizongguihua.table3.ds),
 		title:'河南省中小河流治理工程总体规划项目主要工程措施及治理效果汇总表',
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
-	            dispatch({type:'huizongguihua/exportExcel',payload:'table1'});
+	            dispatch({type:'huizongguihua/exportExcel',payload:'table3'});
 	        }
 		}
 	}
