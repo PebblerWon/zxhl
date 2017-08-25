@@ -221,7 +221,7 @@ const ZhengQuHuiZong=(props)=>{
     const tableProps={
         title:(text)=><TableTitle text={title} />,
         bordered:true,
-        scroll:{x:'1800px'},
+        scroll:{x:'1800px',y:'500px'},
         pagination:false,
         columns:columns,
         expandedRowRender:(record)=><Table {...subTableProps} dataSource={record.dataSource} className='subTable'/>,

@@ -27,7 +27,7 @@ const proDs = (ds)=>{
 			})
 		}
 		return dataSource;
-	}
+}
 const Table1 = ({ds,filter,loading})=>{
 	/*console.log(ds)*/
 	const columns=[{

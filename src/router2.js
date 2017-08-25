@@ -85,8 +85,8 @@ const Routers = function ({ history, app }) {
               getComponent (nextState, cb) {
                   require.ensure([], require => {
                       registerModel(app, require('./models/header'))
-                      cb(null, require('./routes/MapC/NewProject'))
-                      }, 'NewProject')
+                      cb(null, require('./routes/MapC/ImgLayer'))
+                      }, 'ImgLayer')
                   },
             },
             {

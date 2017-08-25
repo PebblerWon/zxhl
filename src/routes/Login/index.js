@@ -35,11 +35,12 @@ const Login = ({login,dispatch,form})=> {
     				</div>
     				<div className={styles.title}>
                         <p>河南省流域面积200~3000平方</p>
-                        <p>公里中小河流治理项目标绘系统</p>
+                        <p>公里中小河流治理项目图上管理系统</p>
+                        {/*<p>河南省中小河流图上标绘系统</p>*/}
             </div>
     			</div>
           <div style={{position:'relative',top:'25px',left:'90px',display:'inline-block'}}>
-            <span>用户名：super</span> <span>密码：super</span>
+            {/*<span>用户名：super</span> <span>密码：super</span>*/}
           </div>
     			<div className={styles.form}>
             <Form onSubmit={submit}   className="login-form">

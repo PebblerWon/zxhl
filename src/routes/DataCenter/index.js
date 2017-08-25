@@ -18,8 +18,8 @@ const DataCenter=()=>{
         <TabPane tab="中小河流" key="1" className='tabPanel'>
           <RiverByWZ />
         </TabPane>
-        <TabPane tab="规划项目" key="2" className='tabPanel'>
-          <ProjectByWZ projectType='规划项目'/>
+        <TabPane tab="灾后薄弱环节" key="2" className='tabPanel'>
+          <ProjectByWZ projectType='灾后薄弱环节'/>
         </TabPane>
         <TabPane tab="十二五项目" key="3" className='tabPanel'>
           <ShiErWuProject projectType='十二五项目'/>

@@ -1,260 +1,131 @@
-//按河流汇总表
 import React from 'react'
-import {Table,Button} from 'antd'
-import TableTitle from '../../../components/Common/TableTitle'
 import classnames from 'classnames'
+import TableTitle from '../../../components/Common/TableTitle'
+import {Table,Button} from 'antd'
 import conStyle from '../../common.less'
 import styles from './index.less'
 
-const columnsRender1 = (text,record,index)=>{
-	if(record.dataSource){
-		return {
-			children:text,
-				props:{
-					colSpan:11
-			}
-		}
-	}else{
-		return{
-			children:text,
-			props:{}
-		}
-	}
-	
-}
-const columnsRender2 = (text,record,index)=>{
-	if(record.dataSource){
-		return {
-			children:text,
-			props:{
-				colSpan:0
-			}
-		}
-	}else{
-		return{
-			children:text,
-			props:{}
-		}
-	}
-	
-}
-const columns = [
-  		{
-            title:'河流名称',
-            dataIndex:'河流名称',
-            key:'河流名称',
-            width:100,
-            render:columnsRender1,
-        },{
-            title:'河流基本情况',
-            children:[
-                {
-                    title:'所在流域',
-                    key:'所在流域',
-                    dataIndex:'所在流域',
-                    width:100,
-                    render:columnsRender2,
-                },{
-                    title:'流域面积',
-                    key:'流域面积',
-                    dataIndex:'流域面积',
-                    width:100,
-                    render:columnsRender2,
-                },
-            ]
-
-        },{
-            title:'总河长',
-            dataIndex:'总河长',
-            key:'总河长',
-            width:100,
-            render:columnsRender2,
-        },{
-            title:'已治理长度',
-            dataIndex:'已治理长度',
-            key:'已治理长度',
-            width:100,
-            render:columnsRender2,
-        },{
-            title:'未治理长度',
-            dataIndex:'未治理长度',
-            key:'未治理长度',
-            width:100,
-            render:columnsRender2,
-        },{
-            title:'“十二五”期间治理项目',
-            children:[
-                {
-                    title:'地级行政区',
-                    key:'十二五地级行政区',
-                    dataIndex:'十二五地级行政区',
-                    width:100,
-                    render:columnsRender2,
-                },{
-                    title:'县级行政区',
-                    key:'十二五县级行政区',
-                    dataIndex:'十二五县级行政区',
-                    width:100,
-                    render:columnsRender2,
-                },{
-                    title:'治理段',
-                    key:'十二五治理段',
-                    dataIndex:'十二五治理段',
-                    width:100,
-                    render:columnsRender2,
-                },{
-                    title:'治理长度(Km)',
-                    key:'十二五治理长度',
-                    dataIndex:'十二五治理长度',
-                    width:100,
-                    render:columnsRender2,
-                }
-            ]
-        },{
-            title:'总体规划治理项目',
-            children:[
-                {
-                    title:'地级行政区',
-                    key:'地级行政区',
-                    dataIndex:'地级行政区',
-                    width:100,
-                    render:columnsRender2,
-                },{
-                    title:'县级行政区',
-                    key:'县级行政区',
-                    dataIndex:'县级行政区',
-                    width:100,
-                    render:columnsRender2,
-                },{
-                    title:'治理段',
-                    key:'治理段',
-                    dataIndex:'治理段',
-                    width:100,
-                    render:columnsRender2,
-                },{
-                    title:'治理长度(Km)',
-                    key:'治理长度',
-                    dataIndex:'治理长度',
-                    width:100,
-                    render:columnsRender2,
-                }
-            ]
-        },{
-            title:'第一次水利普查序号',
-            dataIndex:'第一次水利普查序号',
-            key:'第一次水利普查序号',
-            width:100,
-            render:columnsRender2,
-        },{
-            title:'河流流经地',
-            dataIndex:'河流流经地',
-            key:'河流流经地',
-            width:100,
-            render:columnsRender2,
+const proDs = (ds)=>{
+        let dataSource=[];
+        if(ds&&ds.total){
+            dataSource.push({
+                '序号':'合计',
+                'key':'total',
+                ...ds.total
+            })
         }
-];
-const data ={
-	'淮河流域':[],
-	'海河流域':[],
-    '黄河流域':[],
-    '长江流域':[],
-};
-for(let i = 0;i<10;i++){
-	let item = {
-		'key':`白沟河${i}`,
-		'河流名称':`白沟河`,
-		'所在流域':`淮河`,
-		'流域面积':`960.20`,
-		'总河长':`83.00`,
-        '已治理长度':'42.5',
-        '未治理长度':'40.5',
-		'十二五地级行政区':`/`,
-		'十二五县级行政区':`鹿邑`,
-		'十二五治理段':`1`,
-		'十二五治理长度':`8.00`,
-        '地级行政区':`/`,
-        '县级行政区':`鹿邑`,
-        '治理段':`1`,
-        '治理长度':`8.00`,
-
-		'投资':`1260.00`,
-		'第一次水利普查序号':`784`,
-		'河流流经地':`鹿邑县`,
-	}
-	data['淮河流域'].push(item)
+        if(ds&&ds.data&&ds.data.length>0){
+            ds.data.map((item,index)=>{
+                dataSource.push({
+                    '序号':index+1,
+                    key:`data${index}`,
+                    ...item
+                })
+            })
+        }
+        return dataSource;
 }
-for(let i = 0;i<9;i++){
-	let item = {
-		'key':`白沟河${i}`,
-        '河流名称':`白沟河`,
-        '所在流域':`淮河`,
-        '流域面积':`960.20`,
-        '总河长':`83.00`,
-        '已治理长度':'42.5',
-        '未治理长度':'40.5',
-        '十二五地级行政区':`/`,
-        '十二五县级行政区':`鹿邑`,
-        '十二五治理段':`1`,
-        '十二五治理长度':`8.00`,
-        '地级行政区':`/`,
-        '县级行政区':`鹿邑`,
-        '治理段':`1`,
-        '治理长度':`8.00`,
-        '投资':`1260.00`,
-        '第一次水利普查序号':`784`,
-        '河流流经地':`鹿邑县`,
-	}
-	data['海河流域'].push(item)
-}
-const a = [
-    {
-        key:`合计`,
-        '河流名称':`合计：治理段(397) 治理长度(3959.54) 投资(1070141.93)`,
-        'dataSource':[]
-    },
-	{
-		'key':`淮河流域`,
-		'河流名称':`淮河流域：治理段(225) 治理长度(2572.76) 投资(611107.59)`,
-		'dataSource':data['淮河流域'],
-	},
-	{
-		'key':`海河流域`,
-		'河流名称':`海河流域：治理段(36) 治理长度(355.80) 投资(97673.00)`,
-		'dataSource':data['海河流域'],
-	},
-
-]
 
 
-const subTableProps={
-	columns:columns,
-	showHeader:false,
-	pagination:false,
-}
-const StasticByArea=()=>{
-    const tableProps={
-        title:(text)=><TableTitle text={`河南省中小河流治理情况统计表`} />,
-        bordered:true,
-        //scroll:{x:'1800px',y:'400px'},
-        pagination:false,
-        columns:columns,
-        expandedRowRender:(record)=>{
-            let res;
-            res=record.dataSource? <Table {...subTableProps} dataSource={record.dataSource} className='subTable'/>:false
-            return res;
+const Table2 = ({dataSource,exportProps,loading})=>{
+    const columns=[
+        {
+          title:'序号',
+          key:'序号',
+          dataIndex:'序号',
+          width:50,
+          render:(text,record,index)=>{
+            let obj={
+                children:text,
+                props:{}
+            }
+            if(index==0){
+                obj.props.colSpan=4
+            }
+            return obj;
+          }
         },
-        dataSource:a
+        {
+            title:'项目名称',
+            key:'项目名称',
+            dataIndex:'项目名称',
+            width:100,
+            render:(text,record,index)=>{
+                let obj={
+                    children:text,
+                    props:{}
+                }
+                if(index==0){
+                    obj.props.colSpan=0
+                }
+                return obj;
+            }
+        },
+        {
+            title:'地级行政区',
+            key:'地级行政区',
+            dataIndex:'地级行政区',
+            width:100,
+            render:(text,record,index)=>{
+                let obj={
+                    children:text,
+                    props:{}
+                }
+                if(index==0){
+                    obj.props.colSpan=0
+                }
+                return obj;
+            }
+        },
+        {
+            title:'县级行政区',
+            key:'县级行政区',
+            dataIndex:'县级行政区',
+            width:100,
+            render:(text,record,index)=>{
+                let obj={
+                    children:text,
+                    props:{}
+                }
+                if(index==0){
+                    obj.props.colSpan=0
+                }
+                return obj;
+            }
+        },
+        {
+            title:'备案长度(Km)',
+            key:'备案长度',
+            dataIndex:'备案长度',
+            width:100,
+        },
+        {
+            title:'批复投资(万元)',
+            key:'批复投资',
+            dataIndex:'批复投资',
+            width:100,
+        }
+    ]
+    const tableProps={
+        title:()=><TableTitle text={`河南省2017年申报投资中小河流治理项目名录`} />,
+        bordered:true,
+        pagination:false,
+        dataSource:proDs(dataSource),
+        scroll:{y:true},
+        columns:columns,
+        size:'small',
+        loading:loading
     }
-	return (
+    return(
         <div className={classnames(
                 {[conStyle.table]:true,[styles.table]:true}
             )}>
             <div className={styles.export}>
-                <Button type="primary">导出</Button>
+                <Button {...exportProps}>导出</Button>
             </div>
-            <Table {...tableProps} />
+            <Table {...tableProps}></Table>
         </div>
     )
-};
+}
 
-export default StasticByArea;
+export default Table2;

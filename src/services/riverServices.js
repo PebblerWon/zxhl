@@ -1,13 +1,14 @@
 //数据中心（查询信息）中小河流
 import { request, config } from '../utils'
+import request2 from '../utils/request2.js'
 import qs from 'qs'
 import {HNCity} from '../utils/city'
 import fakeRequest from '../utils/fakeRequest'
 
 const { api } = config
 const { dataCenter } = api
-const {useFakeData} = config;
-
+//const {useFakeData} = config;
+const useFakeData = false
 
 
 export async function query (params) {
@@ -15,6 +16,7 @@ export async function query (params) {
     '所属流域':'',
     '查询字段':''
   }*/
+  console.log(params)
   let resData;
   const fakeData1 = [];
   for (let i = 0; i < 20; i++) {
@@ -31,14 +33,19 @@ export async function query (params) {
       '流域面积':1000
     });
   }
-  //if(useFakeData){
+  if(useFakeData){
     resData = await fakeRequest({
       url: dataCenter.river,
       method: 'get',
     },fakeData1)
-  //}else{
-  //  resData = await request(`${dataCenter.river}?`)
-  //}
+  }else{
+    if(params['所属流域']=='全部'){
+      resData = await request(`${dataCenter.river}?${qs.stringify({basin:''})}`)
+    }else{
+      resData = await request(`${dataCenter.river}?${qs.stringify({basin:params['所属流域']})}`)
+    }
+    
+  }
   return resData;
 }
 
@@ -53,8 +60,32 @@ export async function deleteItem (params) {
   return data;
 }
 
+export async function update(params){
+  console.log(params)
+  let b = JSON.stringify(params);
+  var data = new FormData()
+  data.append('json','1')
+  // const a = await request(`${dataCenter.riverUpdate}`,{
+  //   method:'POST',
+  //   headers: {
+  //   'Content-Type': 'application/x-www-form-urlencoded'
+  //   },
+  //   /*body:JSON.stringify({
+  //     json:b
+  //   })*/
+  //   body:data
+  // })
+  const  a = await request2(`${dataCenter.riverUpdate}`,{
+    method:'post',
+    data:{
+      json:b
+    }
+  })
+  return a ;
+}
 const riverServices = {
   query,
   deleteItem,
+  update
 }
 export default riverServices

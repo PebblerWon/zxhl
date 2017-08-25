@@ -26,7 +26,7 @@ const PlanProject = ({planProject,dispatch})=>{
 				<Header>
 					<Breadcrumb separator=">">
 						<Breadcrumb.Item className="Item">首页</Breadcrumb.Item>
-						<Breadcrumb.Item className="Item">规划项目</Breadcrumb.Item>
+						<Breadcrumb.Item className="Item">灾后薄弱环节</Breadcrumb.Item>
 					</Breadcrumb>
 
 				</Header>

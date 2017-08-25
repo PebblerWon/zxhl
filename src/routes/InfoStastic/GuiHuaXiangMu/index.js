@@ -1,13 +1,20 @@
+//之前的规划项目不再使用
+//修改为灾后重建项目
+
 import React from 'react'
 import {connect} from 'dva'
 import { Form, Button, Row, Col,Input,Table,Card,
-	Breadcrumb,Tree,Layout,Tabs
+	Breadcrumb,Tree,Layout,Tabs,Tooltip
 } from 'antd'
 
-import ZhengQuHuiZong from '../../../components/HuiZongXinXi/ZhengQuHuiZong.js'
-import HeLiuHuiZong from '../../../components/HuiZongXinXi/HeLiuHuiZong.js'
-import GongChengCuoShi from '../../../components/HuiZongXinXi/GongChengCuoShi.js'
-
+// import ZhengQuHuiZong from '../../../components/HuiZongXinXi/ZhengQuHuiZong.js'
+// import HeLiuHuiZong from '../../../components/HuiZongXinXi/HeLiuHuiZong.js'
+// import GongChengCuoShi from '../../../components/HuiZongXinXi/GongChengCuoShi.js'
+import Table1 from './table1'
+import Table2 from './table2'
+import Table3 from './table3'
+import Table4 from './table4'
+import Table5 from './table5'
 import {HNCity} from '../../../utils/city'
 import conStyle from '../../common.less'
 
@@ -26,11 +33,10 @@ const proDs = (ds)=>{
 }
 const GuiHuaXiangMu = ({huizongguihua,dispatch})=>{
 	console.log(huizongguihua)
-	const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
 	const tabsProps={
 		activeKey:huizongguihua.tabs,
 		onChange(activeKey){
-			if(huizongguihua[map[activeKey]].ds.length==0){
+			if(huizongguihua[activeKey].ds.length==0){
 				dispatch({
 					type:'huizongguihua/query',
 					payload:{
@@ -51,7 +57,6 @@ const GuiHuaXiangMu = ({huizongguihua,dispatch})=>{
 	const table1Props={
 		loading:huizongguihua.loading,
 		dataSource:huizongguihua.table1.ds,
-		title:'河南省中小河流治理工程总体规划项目主要工程措施及治理效果汇总表（按所在地市划分）',
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
@@ -62,7 +67,6 @@ const GuiHuaXiangMu = ({huizongguihua,dispatch})=>{
 	const table2Props={
 		loading:huizongguihua.loading,
 		dataSource:huizongguihua.table2.ds,
-		title:'河南省中小河流治理情况统计表',
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
@@ -72,12 +76,31 @@ const GuiHuaXiangMu = ({huizongguihua,dispatch})=>{
 	}
 	const table3Props={
 		loading:huizongguihua.loading,
-		dataSource:proDs(huizongguihua.table3.ds),
-		title:'河南省中小河流治理工程总体规划项目主要工程措施及治理效果汇总表',
+		dataSource:huizongguihua.table3.ds,
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
 	            dispatch({type:'huizongguihua/exportExcel',payload:'table3'});
+	        }
+		}
+	}
+	const table4Props={
+		loading:huizongguihua.loading,
+		dataSource:huizongguihua.table4.ds,
+		exportProps:{
+			type:"primary",
+	        onClick(e,d){
+	            dispatch({type:'huizongguihua/exportExcel',payload:'table4'});
+	        }
+		}
+	}
+	const table5Props={
+		loading:huizongguihua.loading,
+		dataSource:huizongguihua.table5.ds,
+		exportProps:{
+			type:"primary",
+	        onClick(e,d){
+	            dispatch({type:'huizongguihua/exportExcel',payload:'table4'});
 	        }
 		}
 	}
@@ -88,22 +111,49 @@ const GuiHuaXiangMu = ({huizongguihua,dispatch})=>{
 				<Header>
 					<Breadcrumb separator=">">
 						<Breadcrumb.Item className="Item">汇总信息</Breadcrumb.Item>
-						<Breadcrumb.Item className="Item">规划项目</Breadcrumb.Item>
+						<Breadcrumb.Item className="Item">灾后薄弱环节</Breadcrumb.Item>
 					</Breadcrumb>
-
 				</Header>
 					<Layout className='layout2'>
 						<Content>
 							<Tabs {...tabsProps}>
-								<TabPane tab='按政区汇总' key='按政区汇总'>
-									<ZhengQuHuiZong {...table1Props}/>
+								<TabPane tab={
+									<Tooltip placement="topLeft" title="河南省2017年后续中小河流治理项目名单" arrowPointAtCenter={true}>
+   										后续治理项目名单
+   									</Tooltip>} 
+									key='table1'
+								>
+									<Table1 {...table1Props}/>
 								</TabPane>
-								<TabPane tab='按河流汇总' key='按河流汇总'>
-									<HeLiuHuiZong {...table2Props}/>
+								<TabPane tab={
+									<Tooltip placement="topLeft" title="河南省2017年申报投资中小河流治理项目名录" arrowPointAtCenter={true}>
+   										申报治理项目名录
+   									</Tooltip>} 
+									key='table2'>
+									<Table2 {...table2Props}/>
 								</TabPane>
-								<TabPane tab='按主要工程措施' key='按主要工程措施'>
-									<GongChengCuoShi {...table3Props}/>
+								<TabPane tab={
+									<Tooltip placement="topLeft" title="河南省流域面积200～3000平方公里中小河流治理项目备案表" arrowPointAtCenter={true}>
+   										200~3000平方公里项目备案表
+   									</Tooltip>} 
+									key='table3'>
+									<Table3 {...table3Props}/>
 								</TabPane>
+								<TabPane tab={
+									<Tooltip placement="topLeft" title="中小河流治理现有项目规划结转项目表" arrowPointAtCenter={true}>
+   										规划结转项目
+   									</Tooltip>} 
+									key='table4'>
+									<Table4 {...table4Props}/>
+								</TabPane>
+								<TabPane tab={
+									<Tooltip placement="topLeft" title="中小河流治理项目2017年度投资落实情况及2018年储备项目前期工作进展情况表" arrowPointAtCenter={true}>
+   										项目进展
+   									</Tooltip>} 
+									key='table5'>
+									<Table5 {...table5Props}/>
+								</TabPane>
+								
 							</Tabs>
 						</Content>
 					</Layout>

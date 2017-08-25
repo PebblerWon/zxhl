@@ -26,7 +26,7 @@ export default {
         userName:payload.userName,
         password:payload.password
       })
-      yield put({ type: 'hideLoginLoading' })
+      
       if(data.status){
         if(window.sessionStorage){
           window.sessionStorage.setItem('curuser',JSON.stringify(data))
@@ -47,11 +47,12 @@ export default {
         //if (from) {
           //yield put(routerRedux.push(from))
         //} else {
-          yield put(routerRedux.push('/home'))
+        yield put(routerRedux.push('/home'))
         //}
       }else{
         yield put({type:'showAlert'})
       }
+      yield put({ type: 'hideLoginLoading' })
     },
   },
 

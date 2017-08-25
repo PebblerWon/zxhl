@@ -18,7 +18,7 @@ const DataCenter=()=>{
         <TabPane tab="中小河流" key="中小河流">
           <ZhongXiaoHeLiu />
         </TabPane>
-        <TabPane tab="规划项目" key="规划项目">
+        <TabPane tab="灾后薄弱环节" key="规划项目">
           <GuiHuaXiangMu />
         </TabPane>
         <TabPane tab="批复项目" key="批复项目">

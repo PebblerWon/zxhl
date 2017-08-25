@@ -171,7 +171,7 @@ const HeLiuHuiZong=(props)=>{
         loading,
         title:(text)=><TableTitle text={title} />,
         bordered:true,
-        //scroll:{x:'1800px'},
+        scroll:{x:true,y:'500px'},
         pagination:false,
         columns:columns,
         expandedRowRender:(record)=>{

@@ -25,12 +25,12 @@ const proDs = (ds)=>{
 	return ds;
 }
 const PiFuXiangMu = ({huizongpifu,dispatch})=>{
-	
-	const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
+	console.log(huizongpifu)
+	//const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
 	const tabsProps={
 		activeKey:huizongpifu.tabs,
 		onChange(activeKey){
-			if(huizongpifu[map[activeKey]].ds.length==0){
+			if(huizongpifu[activeKey].ds.length==0){
 				dispatch({
 					type:'huizongpifu/query',
 					payload:{
@@ -66,7 +66,7 @@ const PiFuXiangMu = ({huizongpifu,dispatch})=>{
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
-	            dispatch({type:'huizongpifu/exportExcel',payload:'table1'});
+	            dispatch({type:'huizongpifu/exportExcel',payload:'table2'});
 	        }
 		}
 	}
@@ -77,7 +77,7 @@ const PiFuXiangMu = ({huizongpifu,dispatch})=>{
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
-	            dispatch({type:'huizongpifu/exportExcel',payload:'table1'});
+	            dispatch({type:'huizongpifu/exportExcel',payload:'table3'});
 	        }
 		}
 	}
@@ -94,13 +94,13 @@ const PiFuXiangMu = ({huizongpifu,dispatch})=>{
 					<Layout className='layout2'>
 						<Content>
 							<Tabs {...tabsProps}>
-								<TabPane tab='按政区汇总' key='按政区汇总'>
+								<TabPane tab='按政区汇总' key='table1'>
 									<ZhengQuHuiZong {...table1Props}/>
 								</TabPane>
-								<TabPane tab='按河流汇总' key='按河流汇总'>
+								<TabPane tab='按河流汇总' key='table2'>
 									<HeLiuHuiZong {...table2Props}/>
 								</TabPane>
-								<TabPane tab='按主要工程措施' key='按主要工程措施'>
+								<TabPane tab='按主要工程措施' key='table3'>
 									<GongChengCuoShi {...table3Props}/>
 								</TabPane>
 							</Tabs>

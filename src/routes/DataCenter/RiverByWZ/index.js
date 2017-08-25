@@ -11,7 +11,12 @@ import styles from './index.less'
 
 const {Header,Content,Footer,Sider} = Layout
 const TabPane = Tabs.TabPane
-
+const proDs = (ds)=>{
+	for(let i = 0;i<ds.length;i++){
+		ds[i].key = i;
+	}
+	return ds;
+}
 
 
 const RiverByWZ = ({river,dispatch})=>{
@@ -68,7 +73,7 @@ const RiverByWZ = ({river,dispatch})=>{
 		activeKey:river.tabs,
 		onChange(activeKey){
 			searchRef.input.refs.input.value=''
-			if(river[map[activeKey]].ds.length==0){
+			if(river[map[activeKey]].originDs.length==0){
 				dispatch({
 					type:'river/query',
 					payload:{
@@ -78,8 +83,11 @@ const RiverByWZ = ({river,dispatch})=>{
 				})
 			}else{
 				dispatch({
-					type:'river/tabs',
-					payload:activeKey
+					type:'river/browserQuery',
+					payload:{
+						tabs:activeKey,
+						filter:'',
+					}
 				})
 			}
 			
@@ -88,7 +96,7 @@ const RiverByWZ = ({river,dispatch})=>{
 	const searchProps={
 		onSearch(value){
 			dispatch({
-				type:'river/query',
+				type:'river/browserQuery',
 				payload:{
 					tabs:river.tabs,
 					filter:value
@@ -97,7 +105,7 @@ const RiverByWZ = ({river,dispatch})=>{
 		},
 	}
 	const huaiHeTableProps={
-		ds:river.huaiHeTable.ds,
+		ds:proDs(river.huaiHeTable.ds),
 		loading:river.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -111,7 +119,7 @@ const RiverByWZ = ({river,dispatch})=>{
 		}
 	}
 	const changJiangTableProps={
-		ds:river.changJiangTable.ds,
+		ds:proDs(river.changJiangTable.ds),
 		loading:river.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -124,7 +132,7 @@ const RiverByWZ = ({river,dispatch})=>{
 		}
 	}
 	const huangHeTableProps={
-		ds:river.huangHeTable.ds,
+		ds:proDs(river.huangHeTable.ds),
 		loading:river.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -137,7 +145,7 @@ const RiverByWZ = ({river,dispatch})=>{
 		}
 	}
 	const haiHeTableProps={
-		ds:river.haiHeTable.ds,
+		ds:proDs(river.haiHeTable.ds),
 		loading:river.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -150,7 +158,7 @@ const RiverByWZ = ({river,dispatch})=>{
 		}
 	}
 	const allTableProps={
-		ds:river.allTable.ds,
+		ds:proDs(river.allTable.ds),
 		loading:river.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -176,19 +184,32 @@ const RiverByWZ = ({river,dispatch})=>{
 			})
 		}
 	}
-	const updateModalProps={
+	const updateRiverModalProps={
 		visible:river.updateModal.visible,
 		item:river.updateModal.currentItem,
-		onOk(e){
+		onSubmit(e){
 			dispatch({
-				type:'river/hideUpdateModal'
+				type:'river/update',
+				payload:e
 			})
 		},
-		onCancel(e){
+		handleCancel(e){
 			dispatch({
 				type:'river/hideUpdateModal'
 			})
 		}
+	}
+	const UpdateRiverModal=({visible,handleCancel,onSubmit,item})=>{
+		return(
+			<Modal
+		        visible={visible}
+		        onCancel={handleCancel}
+		        width='700px'
+		        footer={null}
+	        >
+	        	<UpdateModal item={item} onCancel={handleCancel} onSubmit={onSubmit} />
+	        </Modal>
+		)
 	}
 	return(
 		<div className={conStyle.layout}>
@@ -224,7 +245,7 @@ const RiverByWZ = ({river,dispatch})=>{
 						</Tabs>
 					</Content>
 					<DetailModal {...detailModalProps} />
-					<UpdateModal {...updateModalProps} />
+					<UpdateRiverModal {...updateRiverModalProps} />
 				</Layout>
 			</Layout>
 		</div>

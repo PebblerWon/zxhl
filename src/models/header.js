@@ -17,7 +17,7 @@ export default {
   subscriptions: {
     setup({ dispatch, history }) {
       //判断用户是否登录
-      console.log('header')
+      //console.log('header')
       dispatch({type:'query'});
       let tid
       window.onresize=()=>{
@@ -51,6 +51,7 @@ export default {
         })
         let getFromReg = /^#\/(\w+)\?/i;
         const current =getFromReg.exec(location.hash)
+        console.log(current)
         yield put({
           type: 'test',
           action:{key: current?current[1]:'home'},
@@ -62,7 +63,7 @@ export default {
         //if (config.openPages && config.openPages.indexOf(location.pathname) < 0) {
           //let from = location.pathname
           //window.location = `${location.origin}/#/login?from=${from}`
-          //window.location = `${location.origin}`
+          window.location = `${location.origin}`
         //}
       }
     },

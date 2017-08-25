@@ -26,11 +26,11 @@ const proDs = (ds)=>{
 }
 const YanShouXiangMu = ({huizongyanshou,dispatch})=>{
 	
-	const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
+	//const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
 	const tabsProps={
 		activeKey:huizongyanshou.tabs,
 		onChange(activeKey){
-			if(huizongyanshou[map[activeKey]].ds.length==0){
+			if(huizongyanshou[activeKey].ds.length==0){
 				dispatch({
 					type:'huizongyanshou/query',
 					payload:{
@@ -66,7 +66,7 @@ const YanShouXiangMu = ({huizongyanshou,dispatch})=>{
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
-	            dispatch({type:'huizongyanshou/exportExcel',payload:'table1'});
+	            dispatch({type:'huizongyanshou/exportExcel',payload:'table2'});
 	        }
 		}
 	}
@@ -77,7 +77,7 @@ const YanShouXiangMu = ({huizongyanshou,dispatch})=>{
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
-	            dispatch({type:'huizongyanshou/exportExcel',payload:'table1'});
+	            dispatch({type:'huizongyanshou/exportExcel',payload:'table3'});
 	        }
 		}
 	}
@@ -94,13 +94,13 @@ const YanShouXiangMu = ({huizongyanshou,dispatch})=>{
 					<Layout className='layout2'>
 						<Content>
 							<Tabs {...tabsProps}>
-								<TabPane tab='按政区汇总' key='按政区汇总'>
+								<TabPane tab='按政区汇总' key='table1'>
 									<ZhengQuHuiZong {...table1Props}/>
 								</TabPane>
-								<TabPane tab='按河流汇总' key='按河流汇总'>
+								<TabPane tab='按河流汇总' key='table2'>
 									<HeLiuHuiZong {...table2Props}/>
 								</TabPane>
-								<TabPane tab='按主要工程措施' key='按主要工程措施'>
+								<TabPane tab='按主要工程措施' key='table3'>
 									<GongChengCuoShi {...table3Props}/>
 								</TabPane>
 							</Tabs>

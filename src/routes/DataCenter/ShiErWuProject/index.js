@@ -12,9 +12,14 @@ import styles from '../ProjectByWZ/index.less'
 const {Header,Content,Footer,Sider} = Layout
 const TreeNode = Tree.TreeNode;
 const TabPane = Tabs.TabPane
-
+const proDs = (ds)=>{
+	for(let i = 0;i<ds.length;i++){
+		ds[i].key = i;
+	}
+	return ds;
+}
 const ShiErWuProject = (prop)=>{
-	let deleteModalRef;
+	console.log(prop)
 	const columns = [
 		{ title: '项目名称',  dataIndex: '项目名称', key: '编码', width: 150,},
 	   	{ title: '所在市',  dataIndex: '所在市', key: '所在市', width: 70,},
@@ -39,7 +44,7 @@ const ShiErWuProject = (prop)=>{
 				    } else if (e.key === 'delete') {
 				      window.deleteModalRef = Modal.confirm({
 				        title: '你真的想删除该条记录吗?',
-				        onOk () {
+				        onOk (e) {
 				        	dispatch({
 				        		type:'shierwuproject/remove',
 				        		payload:record
@@ -49,11 +54,7 @@ const ShiErWuProject = (prop)=>{
 				        	deleteModalRef.destroy()
 				        }
 				      })
-				    }/*else if(e.key =='detail'){
-				    	dispatch({
-							type:'shierwuproject/showUpdateModal'
-						})
-				    }*/
+				    }
 			  	}
 			  	return <DropOption 
 					onMenuClick={e => handleMenuClick(record,e)}
@@ -65,7 +66,6 @@ const ShiErWuProject = (prop)=>{
 		},
 	];
 	const {projectType,shierwuproject,dispatch} = prop;
-	console.log(shierwuproject)
 	let searchRef ;
 	const map={'淮河流域':'huaiHeTable','黄河流域':'huangHeTable','长江流域':'changJiangTable','海河流域':'haiHeTable','全部':'allTable'}
 
@@ -73,17 +73,27 @@ const ShiErWuProject = (prop)=>{
 		activeKey:shierwuproject.tabs,
 		onChange(activeKey){
 			searchRef.input.refs.input.value=''
-			
-			dispatch({
-				type:'shierwuproject/query',
-				payload:{
-					tabs:activeKey,
-					filter:'',
-					tree:shierwuproject.tree.selectedKeys,
-					type:projectType
-				}
-			})
-			
+			if(shierwuproject[map[activeKey]].originDs.length==0){
+				dispatch({
+					type:'shierwuproject/query',
+					payload:{
+						tabs:activeKey,
+						filter:'',
+						tree:shierwuproject.tree.selectedKeys,
+						type:projectType
+					}
+				})
+			}else{
+				dispatch({
+					type:'shierwuproject/browserQuery',
+					payload:{
+						tabs:activeKey,
+						filter:'',
+						tree:shierwuproject.tree.selectedKeys,
+						type:projectType
+					}
+				})
+			}
 		},
 	}
 	const treeProps={
@@ -92,33 +102,60 @@ const ShiErWuProject = (prop)=>{
 		selectedKeys:shierwuproject.tree.selectedKeys,
 		onSelect(selectedKeys){
 			searchRef.input.refs.input.value=''
-			dispatch({
-				type:'shierwuproject/query',
-				payload:{
-					tabs:shierwuproject.tabs,
-					filter:'',
-					tree:selectedKeys,
-					type:projectType
-				}
-			})
+			const activeTab = shierwuproject.tabs;
+			if(shierwuproject[map[activeTab]].originDs.length==0){
+				dispatch({
+					type:'shierwuproject/query',
+					payload:{
+						tabs:activeTab,
+						filter:'',
+						tree:selectedKeys,
+						type:projectType
+					}
+				})
+			}else{
+				dispatch({
+					type:'shierwuproject/browserQuery',
+					payload:{
+						tabs:shierwuproject.tabs,
+						filter:'',
+						tree:selectedKeys,
+						type:projectType
+					}
+				})
+			}
 		},
 	}
 	
 	const searchProps={
 		onSearch(value){
-			dispatch({
-				type:'shierwuproject/query',
-				payload:{
-					tabs:shierwuproject.tabs,
-					filter:value,
-					tree:shierwuproject.tree.selectedKeys,
-					type:projectType
-				}
-			})
+			const activeTab = shierwuproject.tabs;
+			if(shierwuproject[map[activeTab]].originDs.length==0){
+				dispatch({
+					type:'shierwuproject/query',
+					payload:{
+						tabs:activeTab,
+						filter:value,
+						tree:shierwuproject.tree.selectedKeys,
+						type:projectType
+					}
+				})
+			}else{
+				dispatch({
+					type:'shierwuproject/browserQuery',
+					payload:{
+						tabs:shierwuproject.tabs,
+						filter:value,
+						tree:shierwuproject.tree.selectedKeys,
+						type:projectType
+					}
+				})
+			}
+
 		},
 	}
 	const huaiHeTableProps={
-		ds:shierwuproject.huaiHeTable.ds,
+		ds:proDs(shierwuproject.huaiHeTable.ds),
 		loading:shierwuproject.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -131,7 +168,7 @@ const ShiErWuProject = (prop)=>{
 		}
 	}
 	const changJiangTableProps={
-		ds:shierwuproject.changJiangTable.ds,
+		ds:proDs(shierwuproject.changJiangTable.ds),
 		loading:shierwuproject.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -144,7 +181,7 @@ const ShiErWuProject = (prop)=>{
 		}
 	}
 	const huangHeTableProps={
-		ds:shierwuproject.huangHeTable.ds,
+		ds:proDs(shierwuproject.huangHeTable.ds),
 		loading:shierwuproject.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -157,7 +194,7 @@ const ShiErWuProject = (prop)=>{
 		}
 	}
 	const haiHeTableProps={
-		ds:shierwuproject.haiHeTable.ds,
+		ds:proDs(shierwuproject.haiHeTable.ds),
 		loading:shierwuproject.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -170,7 +207,7 @@ const ShiErWuProject = (prop)=>{
 		}
 	}
 	const allTableProps={
-		ds:shierwuproject.allTable.ds,
+		ds:proDs(shierwuproject.allTable.ds),
 		loading:shierwuproject.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -203,9 +240,19 @@ const ShiErWuProject = (prop)=>{
 			})
 		},
 		handleCancel(e){
-			dispatch({
-				type:'shierwuproject/hideNewModal'
+			let a = Modal.error({
+		        title:'你的操作不会被保存，是否继续？',
+				onOk(e){
+					a.destroy();
+					dispatch({
+						type:'shierwuproject/hideNewModal'
+					})
+				},
+				onCancel(){
+					a.destroy()
+				}
 			})
+			
 		},
 		onSubmit(e){
 			dispatch({
@@ -218,9 +265,19 @@ const ShiErWuProject = (prop)=>{
 		visible:shierwuproject.updateModal.visible,
 		currentItem:shierwuproject.updateModal.currentItem,
 		handleCancel(e){
-			dispatch({
-				type:'shierwuproject/hideUpdateModal'
+			let a = Modal.confirm({
+				title:'你的操作不会被保存，是否继续？',
+				onOk(e){
+					a.destroy();
+					dispatch({
+						type:'shierwuproject/hideUpdateModal'
+					})
+				},
+				onCancel(){
+					a.destroy()
+				}
 			})
+			
 		},
 		onSubmit(e){
 			dispatch({
@@ -229,6 +286,24 @@ const ShiErWuProject = (prop)=>{
 			})
 		}
 	}
+
+	const UpdateProjectModal=({handleCancel,visible,onSubmit,currentItem})=>{
+		return(
+			<Modal
+	            title=""
+	            visible={visible}
+	            style={{ top: 20 }}
+	            onCancel={handleCancel}
+	            width='calc(~"100vw - 60px")'
+	            height='calc(~"100vh - 90px")'
+	            footer={null}
+	        >
+	        	<UpdateProject item={currentItem}  onCancel={handleCancel} onSubmit={onSubmit} type='shiErWu'/>
+	        	{/*<div style={{width:'100vw',height:'100vh',background:'red'}}></div>*/}
+	        </Modal>
+		)
+	}
+
 	const DetailModal=({visible,handleOk,handleCancel})=>{
 		return(
 			<Modal
@@ -247,9 +322,9 @@ const ShiErWuProject = (prop)=>{
 		return(
 			<Modal
 	          title=""
+	          style={{ top: 20 }}
 	          visible={visible}
 	          onOk={handleOk}
-	          style={{ top: 20 }}
 	          onCancel={handleCancel}
 	          width='calc(~"100vw - 60px")'
 	          height='calc(~"100vh - 90px")'
@@ -259,22 +334,7 @@ const ShiErWuProject = (prop)=>{
 	        </Modal>
 		)
 	}
-	const UpdateProjectModal=({handleCancel,visible,onSubmit,currentItem})=>{
-		return(
-			<Modal
-	          title=""
-	          visible={visible}
-	          style={{ top: 20 }}
-	          onCancel={handleCancel}
-	          width='calc(~"100vw - 60px")'
-	          height='calc(~"100vh - 90px")'
-	          footer={null}
-	        >
-	        	<UpdateProject item={currentItem} onSubmit={onSubmit} type='shiErWu'/>
-	        	{/*<div style={{width:'100vw',height:'100vh',background:'red'}}></div>*/}
-	        </Modal>
-		)
-	}
+	
 	return(
 		<div className={conStyle.layout}>
 			<Layout className='layout1'>

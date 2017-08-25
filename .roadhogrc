@@ -17,7 +17,8 @@
   },
   "proxy": {
     "/api": {
-      "target": "http://172.66.16.190:6500/api",
+      //"target": "http://172.66.16.190:6500/api",
+      "target": "http://172.36.16.2:6500/api",
       //"target":"http://zxhl.hnslkc.com/api",
       "changeOrigin": true,
       "pathRewrite": { "^/api/v1" : "" }

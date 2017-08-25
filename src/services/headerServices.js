@@ -3,7 +3,8 @@ import { request, config } from '../utils'
 import fakeRequest from '../utils/fakeRequest'
 const { api } = config
 const {sign} = api
-const {useFakeData} = config;
+//const {useFakeData} = config;
+const useFakeData = true;
 
 
 
@@ -11,11 +12,11 @@ export async function query (params) {
   let fakeData ;
   let resData;
   	if(params){
-  		if(params.userName=='super'&&params.password=='super'){
+  		if(params.userName=='jhc'&&params.password=='jhc'){
 	  		fakeData = {
 		  		status:true,
 		    	user:{
-		      		'姓名':'super'
+		      		'姓名':'计划处'
 		    	}
 	  		}
 	  	}else{

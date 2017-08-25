@@ -66,186 +66,189 @@ export async function query (params) {
     }
     data['焦作市'].push(item)
   }
-  const ds1 = [
-    {
-      'key':`郑州市`,
-      '项目名称':`郑州市(10)`,
-      'dataSource':data['郑州市'],
-    },
-    {
-      'key':`焦作市`,
-      '项目名称':`焦作市(9)`,
-      'dataSource':data['焦作市'],
-    },
-  ]
-
-
-  data ={
-    '淮河流域':[],
-    '海河流域':[],
-    '黄河流域':[],
-    '长江流域':[],
-  };
-  for(let i = 0;i<10;i++){
-    let item = {
-      'key':`白沟河${i}`,
-      '河流名称':`白沟河`,
-      '所在流域':`淮河`,
-      '流域面积':`960.20`,
-      '总河长':`83.00`,
-          '已治理长度':'42.5',
-          '未治理长度':'40.5',
-      '十二五地级行政区':`/`,
-      '十二五县级行政区':`鹿邑`,
-      '十二五治理段':`1`,
-      '十二五治理长度':`8.00`,
-          '地级行政区':`/`,
-          '县级行政区':`鹿邑`,
-          '治理段':`1`,
-          '治理长度':`8.00`,
-
-      '投资':`1260.00`,
-      '第一次水利普查序号':`784`,
-      '河流流经地':`鹿邑县`,
-    }
-    data['淮河流域'].push(item)
+  const ds1 = {
+        'total':{
+          '治理河长':'178.3',
+          '批复及初审投资':'40185.0',
+          '测算投资':'37500',
+          '中央资金':'15000',
+          '省级资金':'5625',
+          '备注':'无'
+        },
+        'data':[
+          {
+            '项目名称':'河南省洛阳市汝阳县靳村河牌路界至杨坪段河道治理工程',
+            '地级行政区':'洛阳市',
+            '县级行政区':'汝阳县',
+            '治理河长':'178.3',
+            '批复及初审投资':'40185.0',
+            '测算投资':'37500',
+            '中央资金':'15000',
+            '省级资金':'5625',
+            '备注':'无'
+          },
+        ]
   }
-  for(let i = 0;i<9;i++){
-    let item = {
-      'key':`白沟河${i}`,
-          '河流名称':`白沟河`,
-          '所在流域':`淮河`,
-          '流域面积':`960.20`,
-          '总河长':`83.00`,
-          '已治理长度':'42.5',
-          '未治理长度':'40.5',
-          '十二五地级行政区':`/`,
-          '十二五县级行政区':`鹿邑`,
-          '十二五治理段':`1`,
-          '十二五治理长度':`8.00`,
-          '地级行政区':`/`,
-          '县级行政区':`鹿邑`,
-          '治理段':`1`,
-          '治理长度':`8.00`,
-          '投资':`1260.00`,
-          '第一次水利普查序号':`784`,
-          '河流流经地':`鹿邑县`,
-    }
-    data['海河流域'].push(item)
-  }
-  const ds2 = [
-      {
+  const ds2 = {
+      total:{
           key:`合计`,
-          '河流名称':`合计：治理段(397) 治理长度(3959.54) 投资(1070141.93)`,
-          'dataSource':[]
+          '备案长度':`550.9`,
+          '批复投资':'131356.7'
       },
-    {
-      'key':`淮河流域`,
-      '河流名称':`淮河流域：治理段(225) 治理长度(2572.76) 投资(611107.59)`,
-      'dataSource':data['淮河流域'],
+      data:[
+        {
+            '项目名称':'河南省荥阳市汜水镇至入黄河口段治理工程',
+            '地级行政区':'郑州市',
+            '县级行政区':'荥阳市',
+            '备案长度':'6.68',
+            '批复投资':'2861',
+           
+          },
+      ]}
+  const ds3 = {
+    total:{
+      '序号':'合计',
+      '治理河长':'2350',
+      '投资':'640428'
     },
-    {
-      'key':`海河流域`,
-      '河流名称':`海河流域：治理段(36) 治理长度(355.80) 投资(97673.00)`,
-      'dataSource':data['海河流域'],
-    },
-  ]
-
-
-  data ={
-    '郑州市':[],
-  };
-  for(let i = 0;i<9;i++){
-    let item = {
-          'key':`河南省登封市双洎河井湾水库至玉台段河道治理工程${i}`,
-          '项目名称':`河南省登封市双洎河井湾水库至玉台段河道治理工程${i}`,
-          '所在河流名称':`双洎河`,
-          '河道治理长度':`6.10`,
-          '堤防新建':`0.00`,
-          '堤防加固':'6.10',
-          '护岸新建':'6.10',
-          '护岸加固':`0.00`,
-          '清淤河长':`6.10`,
-          '清淤量':`24.40`,
-          '新建或加固穿堤建筑物':`0`,
-          '滨岸待整治面积':`0.00`,
-          '整治入河排污':`0`,
-          '现状防洪标准':`10`,
-          '现状除涝标准':`3`,
-          '设计防洪标准':`20`,
-          '设计除涝标准':`5`,
-          '项目保护城镇':`/`,
-          '项目保护人口':`5.00`,
-          '项目保护耕地':`4.00`,
-          '排涝收益面积':`0.00`,
-          '移民人数':`0.00`,
-          '永久占地':`0.00`,
-    }
-    data['郑州市'].push(item)
-  }
-  const ds3 = [
+    data:[
       {
-          key:`合计`,
-          '项目名称':`01郑州(11)`,
-          'dataSource':data['郑州市']
-      },
-  ]
-  
+        '序号':'一  原规划结转项目(含调整补充项目)，涉及河流68条 ',
+        '治理河长':'769',
+        '投资':'209567',
+        dataSource:[
+          {
+            '序号':'1',
+            '项目名称':'河南省信阳市光山县白露河白雀镇街区段治理工程',
+            '河流名称':'白露河',
+            '流域面积':'2211',
+            '所属流域':'淮河流域',
+            '所在县级行政区':'光山县',
+            '治理河长':'5.6',
+            '投资':'1995',
+          }
+        ]
+      }
+    ]
+  }
+  const ds4 = {
+    total:{
+      '序号':'河南（总计）',
+      '治理河长':'768',
+      '总投资':'211418',
+      '中央原规划投资':'142504',
+      '地方原规划投资':'68915',
+      '中央已安排投资':'9782',
+      '地方已安排投资':'9782',
+      '中央剩余投资':'9782',
+      '地方剩余投资':'9782',
+    },
+    data:[
+      {
+        '序号':'一  中央资金尚未安排完毕的项目，或中央资金尚未安排但能够继续实施的项目 ',
+        '治理河长':'112',
+        '总投资':'211418',
+        '中央原规划投资':'17164',
+        '地方原规划投资':'9782',
+        '中央已安排投资':'9782',
+        '地方已安排投资':'9782',
+        '中央剩余投资':'9782',
+        '地方剩余投资':'9782',
+        dataSource:[
+          {
+            '序号':'1',
+            '项目名称':'河南省信阳市光山县白露河白雀镇街区段治理工程',
+            '省':'河南省',
+            '市':'信阳市',
+            '县':'光山县',
+            '所在河流':'白露河',
+            '流域面积':'2211',
+            '所属流域机构':'淮河流域',
+            '治理河长':'5.6',
+            '保护人口':'3000',
+            '保护耕地':'0.5',
+            '排涝收益面积':'0.5',
+            '总投资':'2500',
+            '中央原规划投资':'2000',
+            '地方原规划投资':'500',
+            '中央已安排投资':'0',
+            '地方已安排投资':'0',
+            '中央剩余投资':'2000',
+            '地方剩余投资':'500',
+            '拟调整纳入的规划阶段':'',
+            '是否属于享受特殊政策地区':'中部享受西部政策',
+            '初步设计是否已批复':'否',
+            '项目建设进展':'未开工',
+          }
+        ]
+      }
+    ]
+  }
+  const ds5 = {
+    total:{
+      '序号':'一 2017年度安排项目',
+    },
+    data:[
+      {
+        '序号':'（一）  中小河流现有规划项目 ',
+        dataSource:[
+          {
+            '序号':'1',
+            '项目名称':'光山县白露河白雀镇街区段治理工程',
+            '省':'河南省',
+            '市':'信阳市',
+            '县':'光山县',
+            '所属流域':'淮河流域',
+            '所在河流':'白露河',
+            
+            '项目区个数':'',
+            '批复或规划综合治理河长':'3000',
+            '批复或估算总投资':'0.5',
+            '中央投资':'0.5',
+            '目前进展':'2500',
+            '批复文号':'2000',
+            '合计':'500',
+            '一七年中央投资':'0',
+            '省级投资':'0',
+            '市县投资':'2000',
+          }
+        ]
+      }
+    ]
+  };
   let resData;
-  switch(params.table){
-    case 'table1':{
-      if(useFakeData){
-       resData =await fakeRequest({
-          url: baseSituation.table1,
-          method: 'get',
-          data: params,
-        },ds1)
-      }else{
-       resData = await request(`${baseSituation.table1}`)
+  switch(params.type){
+    case '灾后薄弱环节':{
+      if(params.table == 'table1'){
+        // resData = await fakeRequest({},ds1)
+        resData = await request(`${huiZongXinXi.zaiHouXiangMu.table1}`)
+      }else if(params.table == 'table2'){
+        // resData = await fakeRequest({},ds2)
+        resData = await request(`${huiZongXinXi.zaiHouXiangMu.table2}`)
+      }else if(params.table == 'table3'){
+        // resData = await fakeRequest({},ds3)
+        resData = await request(`${huiZongXinXi.zaiHouXiangMu.table3}`)
+      }else if(params.table == 'table4'){
+        // resData = await fakeRequest({},ds4)
+        resData = await request(`${huiZongXinXi.zaiHouXiangMu.table4}`)
+      }else if(params.table == 'table5'){
+        // resData = await fakeRequest({},ds5)
+        resData = await request(`${huiZongXinXi.zaiHouXiangMu.table5}`)
       }
       break;
     }
-    case 'table2':{
-      if(useFakeData){
-       resData =await fakeRequest({
-          url: baseSituation.table2,
-          method: 'get',
-          data: params,
-        },ds2)
-      }else{
-       resData = await request(`${baseSituation.table2}`)
+    case '批复项目':{}
+    case '验收项目':{}
+    case '十二五项目':{
+      if(params.table == 'table1'){
+        resData = await request(`${huiZongXinXi.contable1}?${qs.stringify({proType:params.type})}`)
+      }else if(params.table == 'table2'){
+        resData = await request(`${huiZongXinXi.contable2}?${qs.stringify({proType:params.type})}`)
+        //resData = await fakeRequest({},[])
+      }else if(params.table == 'table3'){
+        resData = await request(`${huiZongXinXi.contable3}?${qs.stringify({proType:params.type})}`)
       }
       break;
-    }
-    case 'table3':{
-      //console.log(params)
-      /*if(useFakeData){
-        resData =await fakeRequest({
-          url: baseSituation,
-          method: 'get',
-          data: params,
-        },ds3)
-      }else{*/
-        //const area = params.payload[0];
-        resData = await request(`${huiZongXinXi.guiHuaXiangMu}?${qs.stringify({proType:params.type})}`)
-      //}
-      break;
-    }
-    default:{
-      if(useFakeData){
-        const fakeData = {ds1:ds1,ds2:ds2,ds3:ds3};
-        resData =await fakeRequest({
-          url: '',
-          method: 'get',
-          data: params,
-        },fakeData)
-      }else{
-        resData =await fakeRequest({
-          url: '',
-          method: 'get',
-          data: params,
-        },fakeData)
-      }
     }
   }
   return resData;
@@ -254,24 +257,33 @@ export async function query (params) {
 export async function exportExcel(params){
   let res;
   console.log(params)
-  switch(params.table){
-    case 'table1':{
-      //res = await fakeRequest({},`${baseSituation.table1Excel}`)
-      res = `${baseSituation.table1Excel}`
+  let resData;
+  switch(params.type){
+    case '灾后薄弱环节':{
+      if(params.table == 'table1'){
+        res = `${huiZongXinXi.zaiHouXiangMu.table1Download}`
+      }else if(params.table == 'table2'){
+        res = `${huiZongXinXi.zaiHouXiangMu.table2Download}`
+      }else if(params.table == 'table3'){
+        res = `${huiZongXinXi.zaiHouXiangMu.table3Download}`
+      }else if(params.table == 'table4'){
+        res = `${huiZongXinXi.zaiHouXiangMu.table4Download}`
+      }else if(params.table == 'table5'){
+        res = `${huiZongXinXi.zaiHouXiangMu.table5Download}`
+      }
       break;
     }
-    case 'table2':{
-      res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
-      //res = await request(`${baseSituation.table1Excel}`)
-      break;
-    }
-    case 'table3':{
-      res = `${huiZongXinXi.table1excelDownload}?${qs.stringify({proType:params.type})}`
-      //res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
-      break;
-    }
-    default:{
-      res = await fakeRequest({},'http://jcxx.hnslkc.com/ExcelTemp/%E7%9C%81%E5%8D%97%E6%B0%B4%E5%8C%97%E8%B0%83%E5%8A%9E20170412082343%E5%AF%BC%E5%87%BA%E6%8A%A5%E8%A1%A8.xls')
+    case '批复项目':{}
+    case '验收项目':{}
+    case '十二五项目':{
+      if(params.table == 'table1'){
+        res = `${huiZongXinXi.table1excelDownload}?${qs.stringify({proType:params.type})}`
+      }else if(params.table == 'table2'){
+        res = `${huiZongXinXi.table2excelDownload}?${qs.stringify({proType:params.type})}`
+        //resData = await fakeRequest({},[])
+      }else if(params.table == 'table3'){
+        res = `${huiZongXinXi.table3excelDownload}?${qs.stringify({proType:params.type})}`
+      }
       break;
     }
   }

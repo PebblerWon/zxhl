@@ -9,11 +9,31 @@
 		.ant-input{
 			color:rgba(0,0,0,1);
 		}
+		
 	}
 	legend{
 		margin:0px 0px 15px 25px;
 		border:none;
 		width:auto;
 		color:rgba(0,0,0,1);
+	}
+}
+.carousel{
+	:global{
+		.slick-dots{
+			li button{
+				background:#111;
+			}
+			li.slick-active button{
+				background:red;
+			}
+		} 
+	}
+}
+.map{
+	:global{
+		.ant-btn-group .ant-btn{
+			font-size:16px;
+		}
 	}
 }

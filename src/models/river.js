@@ -1,6 +1,6 @@
 //查询信息 中小河流 MODEL
-
-import {query} from '../services/riverServices'
+import {message} from 'antd'
+import {query,update} from '../services/riverServices'
 
 export default {
 
@@ -11,23 +11,28 @@ export default {
     tabs:'',
     huaiHeTable:{
       ds:[],
-      fliter:''
+      fliter:'',
+      originDs:[],
     },
     changJiangTable:{
       ds:[],
-      fliter:''
+      fliter:'',
+      originDs:[],
     },
     huangHeTable:{
       ds:[],
-      fliter:''
+      fliter:'',
+      originDs:[],
     },
     haiHeTable:{
       ds:[],
-      fliter:''
+      fliter:'',
+      originDs:[],
     },
     allTable:{
       ds:[],
-      filter:''
+      filter:'',
+      originDs:[],
     },
     detailModal:{
       item:{},
@@ -84,6 +89,23 @@ export default {
           
         }
       }
+    },
+    *update({payload},{call,put}){
+      console.log(payload)
+      const data = yield call(update,{...payload});
+      console.log(data);
+      if(data){
+        yield put({
+          type:'query'
+        })
+        yield put({
+          type:'hideUpdateModal'
+        })
+        message.success('保存成功',3)
+      }else{
+        message.error('保存失败',3)
+      }
+      
     }
   },
 
@@ -99,7 +121,8 @@ export default {
         ...state,
         huaiHeTable:{
           ds:payload.ds,
-          filter:payload.filter
+          filter:payload.filter,
+            originDs:payload.ds,
         }
       }
     },
@@ -108,7 +131,8 @@ export default {
         ...state,
         changJiangTable:{
           ds:payload.ds,
-          filter:payload.filter
+          filter:payload.filter,
+            originDs:payload.ds,
         }
       }
     },
@@ -117,7 +141,8 @@ export default {
         ...state,
         huangHeTable:{
           ds:payload.ds,
-          filter:payload.filter
+          filter:payload.filter,
+            originDs:payload.ds,
         }
       }
     },
@@ -126,7 +151,8 @@ export default {
         ...state,
         haiHeTable:{
           ds:payload.ds,
-          filter:payload.filter
+          filter:payload.filter,
+            originDs:payload.ds,
         }
       }
     },
@@ -135,7 +161,8 @@ export default {
         ...state,
         allTable:{
           ds:payload.ds,
-          filter:payload.filter
+          filter:payload.filter,
+            originDs:payload.ds,
         }
       }
     },
@@ -197,14 +224,56 @@ export default {
       }
     },
     hideUpdateModal(state){
-       return{
+      return{
         ...state,
         updateModal:{
           ...state.updateModal,
           visible:false,
         }
       }
-    }
+    },
+    browserQuery(state,{payload={tabs:'',filter:''}}){
+      console.log(payload)
+      const{tabs,filter,tree}=payload;
+      const map={'淮河流域':'huaiHeTable','黄河流域':'huangHeTable','长江流域':'changJiangTable','海河流域':'haiHeTable','全部':'allTable'}
+      const targetTable =map[payload.tabs] 
+      const targetOriginDs = state[map[payload.tabs]].originDs;
+      console.log(targetOriginDs)
+      const targetDs = []
+      if(targetOriginDs.length>0){
+          for(var i = 0;i<targetOriginDs.length;i++){
+            var item = targetOriginDs[i];
+            for(var key in item){
+              if(item[key]){
+                var a = item[key].toString();
+                var b = a.indexOf(filter);
+                var c = filter.indexOf(a);
+                if(a.indexOf(filter)>-1||filter.indexOf(a)>-1){
+                  find = true;
+                  targetDs.push(item)
+                  break;
+                }
+              }else{
+                console.log(item)
+              }
+              
+            }
+            
+          }
+       
+      }else{
+        
+      }
+      console.log(payload)
+      var newState =Object.assign({},state);
+      newState[targetTable].ds = targetDs;
+      newState[targetTable].filter = payload.filter;
+      newState.tabs = payload.tabs;
+      //newState.tree.selectedKeys= payload.tree;
+      return{
+          ...newState,
+      }
+    },
   },
-
+  
 }

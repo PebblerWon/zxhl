@@ -7,6 +7,7 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 const HeaderMenu=({isHorizontal,menuClick,current})=>{
+    console.log(current)
     const mode = isHorizontal?'horizontal':'vertical'
     return(
       <Menu className={isHorizontal?styles.menu:''}

@@ -1,15 +1,17 @@
 //数据中心（查询信息）规划项目、十二五项目
 import * as esriLoader from 'esri-loader'
+import qs from 'qs'
 import { request, config } from '../utils'
 import { HNCity } from '../utils/city'
 import fakeRequest from '../utils/fakeRequest'
 const { api } = config
 const { dataCenter } = api
-const { useFakeData } = config;
-
+//const { useFakeData } = config;
+const useFakeData = false;
 
 
 export async function query(params) {
+  console.log(params)
   /* params= {
          '查询字段':'',
          '所属流域':'',
@@ -28,26 +30,27 @@ export async function query(params) {
       '所在河流': '伊源河',
     });
   }
-  //if(useFakeData){
-  resData = await fakeRequest({
-    url: dataCenter.project,
-    method: 'get',
-    data: params,
-  }, fakeData1)
-  //}else{
-  //  resData = await request(`${dataCenter.project}?`)
-  //}
+  if(params['所属流域']=='全部'){
+    if(params['项目类型']=='十二五项目'){
+      resData = await request(`${dataCenter.shiErWuproject}?${qs.stringify({'proType':params['项目类型'],'basin':'','city':params['所属地市']})}`)
+      //resData = fakeData1
+    }else if(params['项目类型']=='灾后薄弱环节'){
+      resData = await request(`${dataCenter.shiErWuproject}?${qs.stringify({'proType':params['项目类型'],'basin':'','city':params['所属地市']})}`)
+    }
+  }else{
+    if(params['项目类型']=='十二五项目'){
+      resData = await request(`${dataCenter.shiErWuproject}?${qs.stringify({'proType':params['项目类型'],'basin':params['所属流域'],'city':params['所属地市']})}`)
+      //resData = fakeData1
+    }else if(params['项目类型']=='灾后薄弱环节'){
+      resData = await request(`${dataCenter.shiErWuproject}?${qs.stringify({'proType':params['项目类型'],'basin':params['所属流域'],'city':params['所属地市']})}`)
+    }
+  }
+  
+  //console.log(resData)
   return resData;
 }
 
-/*export async function remove (params) {
-  return request({
-    url: projectQuery,
-    method: 'delete',
-    data: params,
-  })
-}
-*/
+
 export async function update(params) {
   return request
 }

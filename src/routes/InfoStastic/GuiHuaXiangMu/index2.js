@@ -1,9 +1,12 @@
-//表格和规划项目的一样
+//之前的规划项目不再使用
+//修改为灾后重建项目
+
 import React from 'react'
 import {connect} from 'dva'
 import { Form, Button, Row, Col,Input,Table,Card,
 	Breadcrumb,Tree,Layout,Tabs
 } from 'antd'
+
 import ZhengQuHuiZong from '../../../components/HuiZongXinXi/ZhengQuHuiZong.js'
 import HeLiuHuiZong from '../../../components/HuiZongXinXi/HeLiuHuiZong.js'
 import GongChengCuoShi from '../../../components/HuiZongXinXi/GongChengCuoShi.js'
@@ -24,15 +27,15 @@ const proDs = (ds)=>{
 	}
 	return ds;
 }
-const ShiErWuXiangMu = ({huizongshierwu,dispatch})=>{
-	
-	//const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
+const GuiHuaXiangMu = ({huizongguihua,dispatch})=>{
+	console.log(huizongguihua)
+	const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
 	const tabsProps={
-		activeKey:huizongshierwu.tabs,
+		activeKey:huizongguihua.tabs,
 		onChange(activeKey){
-			if(huizongshierwu[activeKey].ds.length==0){
+			if(huizongguihua[map[activeKey]].ds.length==0){
 				dispatch({
-					type:'huizongshierwu/query',
+					type:'huizongguihua/query',
 					payload:{
 						tabs:activeKey,
 						filter:''
@@ -40,7 +43,7 @@ const ShiErWuXiangMu = ({huizongshierwu,dispatch})=>{
 				})
 			}else{
 				dispatch({
-					type:'huizongshierwu/tabs',
+					type:'huizongguihua/tabs',
 					payload:activeKey
 				})
 			}
@@ -49,58 +52,59 @@ const ShiErWuXiangMu = ({huizongshierwu,dispatch})=>{
 	}
 
 	const table1Props={
-		loading:huizongshierwu.loading,
-		dataSource:proDs(huizongshierwu.table1.ds),
-		title:'河南省中小河流治理工程十二五项目主要工程措施及治理效果汇总表（按所在地市划分）',
+		loading:huizongguihua.loading,
+		dataSource:huizongguihua.table1.ds,
+		title:'河南省中小河流治理工程总体规划项目主要工程措施及治理效果汇总表（按所在地市划分）',
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
-	            dispatch({type:'huizongshierwu/exportExcel',payload:'table1'});
+	            dispatch({type:'huizongguihua/exportExcel',payload:'table1'});
 	        }
 		}
 	}
 	const table2Props={
-		loading:huizongshierwu.loading,
-		dataSource:proDs(huizongshierwu.table2.ds),
+		loading:huizongguihua.loading,
+		dataSource:huizongguihua.table2.ds,
 		title:'河南省中小河流治理情况统计表',
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
-	            dispatch({type:'huizongshierwu/exportExcel',payload:'table2'});
+	            dispatch({type:'huizongguihua/exportExcel',payload:'table2'});
 	        }
 		}
 	}
 	const table3Props={
-		loading:huizongshierwu.loading,
-		dataSource:proDs(huizongshierwu.table3.ds),
-		title:'河南省中小河流治理工程十二五项目主要工程措施及治理效果汇总表',
+		loading:huizongguihua.loading,
+		dataSource:proDs(huizongguihua.table3.ds),
+		title:'河南省中小河流治理工程总体规划项目主要工程措施及治理效果汇总表',
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
-	            dispatch({type:'huizongshierwu/exportExcel',payload:'table3'});
+	            dispatch({type:'huizongguihua/exportExcel',payload:'table3'});
 	        }
 		}
 	}
+	
 	return(
 		<div className={conStyle.layout}>
 			<Layout className='layout1'>
 				<Header>
 					<Breadcrumb separator=">">
 						<Breadcrumb.Item className="Item">汇总信息</Breadcrumb.Item>
-						<Breadcrumb.Item className="Item">十二五项目</Breadcrumb.Item>
+						<Breadcrumb.Item className="Item">规划项目</Breadcrumb.Item>
 					</Breadcrumb>
 
 				</Header>
 					<Layout className='layout2'>
 						<Content>
 							<Tabs {...tabsProps}>
-								<TabPane tab='按政区汇总' key='table1'>
+								<TabPane tab='按政区汇总' key='按政区汇总'>
 									<ZhengQuHuiZong {...table1Props}/>
 								</TabPane>
-								<TabPane tab='按河流汇总' key='table2'>
+								<TabPane tab='按河流汇总' key='按河流汇总'>
 									<HeLiuHuiZong {...table2Props}/>
 								</TabPane>
-								<TabPane tab='按主要工程措施' key='table3'>
+								<TabPane tab='按主要工程措施' key='按主要工程措施'>
 									<GongChengCuoShi {...table3Props}/>
 								</TabPane>
 							</Tabs>
@@ -112,5 +116,5 @@ const ShiErWuXiangMu = ({huizongshierwu,dispatch})=>{
 }
 
 export default connect(
-	({huizongshierwu})=>({huizongshierwu})
-)(ShiErWuXiangMu) ;
+	({huizongguihua})=>({huizongguihua})
+)(GuiHuaXiangMu)

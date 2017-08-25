@@ -36,18 +36,18 @@ export default {
     *fetch({ payload }, { call, put }) {  // eslint-disable-line
       yield put({ type: 'save' });
     },
-    *query({payload={tabs:'按政区汇总',fliter:''}},{call,put}){
-      const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
+    *query({payload={tabs:'table1',fliter:''}},{call,put}){
+      //const map={'按政区汇总':'table1','按河流汇总':'table2','按主要工程措施':'table3'}
       yield put({type:'isLoading'})
       yield put({
         type:'tabs',
         payload:payload.tabs
       })
-      const data = yield call(query,{table:map[payload.tabs],type:'批复项目'});
+      const data = yield call(query,{table:payload.tabs,type:'批复项目'});
       yield put({type:'notLoading'})
-      //console.log(data);
+      console.log(data);
       yield put({
-        type:map[payload.tabs],
+        type:payload.tabs,
         payload:data,
       })
     },

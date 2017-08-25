@@ -7,7 +7,7 @@ const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 const Header = ({dispatch,header})=> {
-  //console.log(header)
+  console.log(header)
   const menuProps={
     isNavbar:header.isNavbar,
     current: header.current,
@@ -27,8 +27,8 @@ const Header = ({dispatch,header})=> {
 	      	<HeaderC {...menuProps}{...popoverProps}></HeaderC>
       	</div>
       )
-  }
+}
 
 export default connect(
   ({header})=>({header})
-  )(Header);
+)(Header);
