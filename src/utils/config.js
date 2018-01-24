@@ -1,7 +1,7 @@
 const APIV1 = '/api/v1'
 const APIV2 = '/api/v2'
 module.exports = {
-  useFakeData:false,
+  useFakeData:true,
   name: 'AntD Admin',
   prefix: 'antdAdmin',
   footerText: 'Ant Design Admin  © 2017 zuiidea',
