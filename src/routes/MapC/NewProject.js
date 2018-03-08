@@ -11,7 +11,8 @@ import styles from './index.less'
 
 const city = DICT_FIXED_BY_PROVINCE('河南省')
 const esriOptions = {
-    url:'https://js.arcgis.com/3.21'
+    url:'http://jcxx.hnslkc.com/arcgis_js_api/library/3.18/3.18/init.js'
+    //url:'https://js.arcgis.com/3.21/'
 }
 const FormItem = Form.Item;
 const colProps={
@@ -482,9 +483,19 @@ class NewProject extends React.Component {
 		      	<fieldset>
 		      		<legend>其他</legend>
 		      		<Row>
-		      			<Col span={24}>
-				        <FormItem labelCol={{span:3}} wrapperCol={{span:18}} label='工程照片'>
+		      			<Col span={12}>
+				        <FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='工程照片'>
 				        	{this.props.form.getFieldDecorator('工程照片')(
+				            	<Upload {...uploadProps}>
+				            		<Button>
+				            			<Icon type='upload' />点击上传
+				            		</Button>
+				            	</Upload>
+				          	)}
+				        </FormItem></Col>
+				        <Col span={12}>
+				        <FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='批复文件'>
+				        	{this.props.form.getFieldDecorator('批复文件')(
 				            	<Upload {...uploadProps}>
 				            		<Button>
 				            			<Icon type='upload' />点击上传
@@ -493,8 +504,8 @@ class NewProject extends React.Component {
 				          	)}
 				        </FormItem>
 				      </Col>
-				      <Col span={24}>
-				        <FormItem labelCol={{span:3}} wrapperCol={{span:18}} label='工程视频'>
+				      <Col span={12}>
+				        <FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='工程视频'>
 				        	{this.props.form.getFieldDecorator('工程视频')(
 				            	<Upload {...uploadProps}>
 				            		<Button>
@@ -513,8 +524,10 @@ class NewProject extends React.Component {
 				          	)}
 				        </FormItem>
 				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='上报人'>
+				      </Row>
+				      <Row>
+				      <Col span={12}>
+				        <FormItem {...formItemLayout} label='上报人' labelCol={{span:6}} wrapperCol={{span:7}} >
 				        	{this.props.form.getFieldDecorator('中央投资', {
 					            rules: [{ required: true, message: '不能为空！' }],
 					          	})(
@@ -522,8 +535,8 @@ class NewProject extends React.Component {
 				          	)}
 				        </FormItem>
 				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='审核人'>
+				      <Col span={12}>
+				        <FormItem {...formItemLayout} label='审核人' labelCol={{span:6}} wrapperCol={{span:7}} >
 				        	{this.props.form.getFieldDecorator('中央投资', {
 					            rules: [{ required: true, message: '不能为空！' }],
 					          	})(
@@ -557,11 +570,8 @@ class NewProject extends React.Component {
 		const item = this.props.item;
 		//如果item ==null表示是新建一个项目
 		//如果item !=null表示是编辑一个项目
-		if(item == null){
-			this.newProject();
-		}else{
-			this.updateProject();
-		}
+		if(item == null)
+			this.newProject()
 	}
 	showSpin(){
 		this.setState({
@@ -576,244 +586,248 @@ class NewProject extends React.Component {
 		})
 	}
 	newProject(){
-			const mapUrl = this.state.mapUrl;
-			const domId = this.state.domId;
-			var imgMap,imgMapMarker;
-			//let map,editToolbar,editingEnabled=false,featureLayer1,drawToolbar;
-			var {map,editToolbar,editingEnabled,featureLayer1,drawToolbar,add,selectedTemplate}={...this.state.mapProp}
-			editingEnabled=false
-		  	dojoRequire(
-		      	[
-			        "esri/map",
-			        "esri/toolbars/edit",
-			        "esri/toolbars/draw",
-        			"esri/graphic",
-        			"esri/SpatialReference",
-        			"esri/geometry/Point",
-        			"esri/dijit/editing/Add",
-			        
+		this.showSpin()
+		const mapUrl = this.state.mapUrl;
+		const domId = this.state.domId;
+		var imgMap,imgMapMarker;
+		//let map,editToolbar,editingEnabled=false,featureLayer1,drawToolbar;
+		var {map,editToolbar,editingEnabled,featureLayer1,drawToolbar,add,selectedTemplate}={...this.state.mapProp}
+		editingEnabled=false
 
-			        "esri/layers/ArcGISDynamicMapServiceLayer",
-			        "esri/layers/FeatureLayer",
-			        "esri/dijit/editing/TemplatePicker",
+	  	dojoRequire(
+	      	[
+		        "esri/map",
+		        "esri/toolbars/edit",
+		        "esri/toolbars/draw",
+    			"esri/graphic",
+    			"esri/SpatialReference",
+    			"esri/geometry/Point",
+    			"esri/dijit/editing/Add",
+		        
 
-			        "esri/symbols/SimpleFillSymbol",
-			        "esri/symbols/SimpleLineSymbol",
-			        "esri/symbols/SimpleMarkerSymbol",
-			        "esri/Color", 
-			        "esri/renderers/SimpleRenderer",
-			        
-			        "esri/layers/WebTiledLayer",
-			        "esri/layers/TileInfo",
+		        "esri/layers/ArcGISDynamicMapServiceLayer",
+		        "esri/layers/FeatureLayer",
+		        "esri/dijit/editing/TemplatePicker",
 
-			        "esri/config",
-			        "dojo/i18n!esri/nls/jsapi",
+		        "esri/symbols/SimpleFillSymbol",
+		        "esri/symbols/SimpleLineSymbol",
+		        "esri/symbols/SimpleMarkerSymbol",
+		        "esri/Color", 
+		        "esri/renderers/SimpleRenderer",
+		        
+		        "esri/layers/WebTiledLayer",
+		        "esri/layers/TileInfo",
 
-			        "dojo/_base/array", "dojo/parser", "dojo/keys","dojo/_base/event",
-			        
-			        "dojo/domReady!"
-		      	], 
-				(
-					Map,Edit,Draw,Graphic,SpatialReference,Point,Add,
-					ArcGISDynamicMapServiceLayer, FeatureLayer,TemplatePicker,
-					SimpleFillSymbol,SimpleLineSymbol,SimpleMarkerSymbol, Color, SimpleRenderer,
-					WebTiledLayer,TileInfo,
-					esriConfig, jsapiBundle,
-					arrayUtils, parser, keys,event
-				)=>{
-		      		this.showSpin();
-		      		let reactDom = this;
-		      		console.log(this)
-			        
-			        map = new Map(domId, {
-			        	//basemap:'satellite',
-						zoom:8,
-			          	slider: false
-			        });
-			        
-			        var tileInfo = new TileInfo(tileInfoObj)
-			        
-			       	imgMap = new WebTiledLayer("http://\${subDomain}.tianditu.com/DataServer?T=img_c&X=\${col}&Y=\${row}&L=\${level}", {
-			            "id": "TiandituImg",
-			            "subDomains": ["t0", "t1", "t2"],
-			            "tileInfo": tileInfo,
-			        });
+		        "esri/config",
+		        "dojo/i18n!esri/nls/jsapi",
 
-			        //底图标注
-			        imgMapMarker = new WebTiledLayer(
-			        	"http://\${subDomain}.tianditu.com/DataServer?T=cia_c&X=\${col}&Y=\${row}&L=\${level}", {
-			            "id": "TiandituImgMarker",
-			            "subDomains": ["t0", "t1", "t2"],
-			            "tileInfo": tileInfo,
-			        });
-			        featureLayer1 = new FeatureLayer("http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/35", {
-			          	mode: FeatureLayer.MODE_SNAPSHOT,
-			          	definitionExpression: 'id=-1',
-			          	outFields:['*']
-			        });
+		        "dojo/_base/array", "dojo/parser", "dojo/keys","dojo/_base/event",
+		        
+		        "dojo/domReady!"
+	      	], 
+			(
+				Map,Edit,Draw,Graphic,SpatialReference,Point,Add,
+				ArcGISDynamicMapServiceLayer, FeatureLayer,TemplatePicker,
+				SimpleFillSymbol,SimpleLineSymbol,SimpleMarkerSymbol, Color, SimpleRenderer,
+				WebTiledLayer,TileInfo,
+				esriConfig, jsapiBundle,
+				arrayUtils, parser, keys,event
+			)=>{
+	      		
+	      		let reactDom = this;
+	      		console.log(this)
+		        
+		        map = new Map(domId, {
+		        	//basemap:'satellite',
+					zoom:8,
+		          	slider: false
+		        });
+		        
+		        var tileInfo = new TileInfo(tileInfoObj)
+		        
+		       	imgMap = new WebTiledLayer("http://\${subDomain}.tianditu.com/DataServer?T=img_c&X=\${col}&Y=\${row}&L=\${level}", {
+		            "id": "TiandituImg",
+		            "subDomains": ["t0", "t1", "t2"],
+		            "tileInfo": tileInfo,
+		        });
 
-			  		//let symbol = new SimpleFillSymbol("solid", null, new Color([255, 0, 255, 0.75]));
-					let symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 30,
-					    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-					    new Color([255,0,0]), 3),
-					    new Color([0,255,0,0.5]))
-					let symbol2 = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-					    new Color([255,0,0]), 5)
-					let renderer = new SimpleRenderer(symbol2);
-					featureLayer1.setRenderer(renderer);
-					//console.log(featureLayer1)
-					map.on("layers-add-result", initEditing);
-					//map.addLayer(layer)
-					//map.addLayer(imgMap)
-			        map.addLayers([imgMap,imgMapMarker,featureLayer1]);
-			        
-			        function initEditing(e){
-						//双击编辑
-						reactDom.hideSpin()
-						map.centerAt(new Point([113.52,34.58],new SpatialReference({ wkid:4326 })))
-						
-						featureLayer1.on("dbl-click", function(evt) {
-			              	event.stop(evt);
-			              	if (editingEnabled === false) {
-			                	editingEnabled = true;
-			                	console.log(evt)
-			                	reactDom.setState({
-				        			...reactDom.state,
-				        			qidian:evt.graphic.geometry.x,
-				        			zhongdian:evt.graphic.geometry.y
-				        		})
-			                	editToolbar.activate(Edit.MOVE|Edit.EDIT_VERTICES , evt.graphic);
-			              	} else {
-			                	editToolbar.deactivate();
-			                	editingEnabled = false;
-			              	}
-			              	reactDom.setState({
-				            	...reactDom.state,
-				            	mapProp:{
-				            		...reactDom.state.mapProp,selectedTemplate,
-				            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-				            	}
-				            })
-		            	});
-		            	//ctrl+单击s删除
-			            featureLayer1.on("click", function(evt) {
-			              	event.stop(evt);
-			              	console.log(evt)
-			              	if (evt.ctrlKey === true || evt.metaKey === true) {  //delete feature if ctrl key is depressed
-			                	featureLayer1.applyEdits(null,null,[evt.graphic]);
-			                	featureLayer1 = this;
-			                	editToolbar.deactivate();
-			                	editingEnabled=false;
-			              	}
-			              	reactDom.setState({
-				            	...reactDom.state,
-				            	mapProp:{
-				            		...reactDom.state.mapProp,add,selectedTemplate,
-				            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-				            	}
-				        	})
-			            });
-			            var templatePicker = new TemplatePicker({
-				            featureLayers: [featureLayer1],
-				            rows: "auto",
-				            columns:1,
-				            style: "height: auto; overflow: auto;position:absolute;z-index:1;bakcground:transparent;",
-				            items:[{label:'点击添加项目',symbol:symbol,description:''}],
-				            useLegend:false,
-
-				        }, `${reactDom.state.templatePickerDivId}`);
-				        templatePicker.startup();
-				        templatePicker.on("selection-change", function() {
-				            if( templatePicker.getSelected() ) {
-				              selectedTemplate = templatePicker.getSelected();
-				            }
-				            switch (selectedTemplate.featureLayer.geometryType) {
-				              case "esriGeometryPoint":
-				                drawToolbar.activate(Draw.POINT);
-				                break;
-				              case "esriGeometryPolyline":
-				                drawToolbar.activate(Draw.POLYLINE);
-				                break;
-				              case "esriGeometryPolygon":
-				                drawToolbar.activate(Draw.POLYGON);
-				                break;
-				            }
-				            reactDom.setState({
-				            	...reactDom.state,
-				            	mapProp:{
-				            		...reactDom.state.mapProp,add,selectedTemplate,
-				            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-				            	}
-				        	})
-				        });
-			            editToolbar = new Edit(map);
-			            //编辑操作完成应用编辑
-			            editToolbar.on("deactivate", function(evt) {
-			        		console.log(evt)
-
-			        		reactDom.toApplyEdits(null, [evt.graphic], null)
-			            	reactDom.setState({
-				            	...reactDom.state,
-				            	mapProp:{
-				            		...reactDom.state.mapProp,selectedTemplate,
-				            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-				            	}
-			            	})
-				        });
-				        editToolbar.on("graphic-move-stop",function(evt){
-				        	console.log(reactDom)
-				        	console.log(evt)
-				        	var a = evt.graphic.geometry.paths[0].length;
-				        	reactDom.setState({
-				        		...reactDom.state,
-				        		qidian:`${evt.graphic.geometry.paths[0][0][0]},${evt.graphic.geometry.paths[0][0][1]}`,
-				        		zhongdian:`${evt.graphic.geometry.paths[0][a-1][0]},${evt.graphic.geometry.paths[0][a-1][1]}`,
-				        	})
-				        	reactDom.setState({
-				            	...reactDom.state,
-				            	mapProp:{
-				            		...reactDom.state.mapProp,selectedTemplate,
-				            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-				            	}
-				            })
-				            reactDom.props.form.setFieldsValue({"起点坐标":reactDom.state.qidian})
-			        		reactDom.props.form.setFieldsValue({"终点坐标":reactDom.state.zhongdian})
-				        })
-				       	drawToolbar = new Draw(map);
-				        //drawToolbar.activate(Draw.POINT);
-				        drawToolbar.on("draw-end", function(evt) {
-				        	//console.log(evt)
-				            drawToolbar.deactivate();
-				            editToolbar.deactivate();
-				            let newAttributes = selectedTemplate.template.prototype.attributes;
-				            newAttributes.id=-1
-				            let newGraphic = new Graphic(evt.geometry, null, newAttributes);
-				            console.log(newGraphic)
-				            add = new Add({
-				            	featureLayer:featureLayer1,
-				            	addedGraphics:[newGraphic]
-				            })
-				            reactDom.setState({
-				            	...reactDom.state,
-				            	mapProp:{
-				            		...reactDom.state.mapProp,add,selectedTemplate,
-				            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-				            	}
-				            })
-				            reactDom.toApplyEdits([newGraphic], null, null)
-				        });
-
-						reactDom.setState({
+		        //底图标注
+		        imgMapMarker = new WebTiledLayer(
+		        	"http://\${subDomain}.tianditu.com/DataServer?T=cia_c&X=\${col}&Y=\${row}&L=\${level}", {
+		            "id": "TiandituImgMarker",
+		            "subDomains": ["t0", "t1", "t2"],
+		            "tileInfo": tileInfo,
+		        });
+		        featureLayer1 = new FeatureLayer("http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/35", {
+		          	mode: FeatureLayer.MODE_SNAPSHOT,
+		          	definitionExpression: 'id=-1',
+		          	outFields:['*']
+		        });
+		        featureLayer1.on("dbl-click", function(evt) {
+		              	event.stop(evt);
+		              	if (editingEnabled === false) {
+		                	editingEnabled = true;
+		                	console.log(evt)
+		                	reactDom.setState({
+			        			...reactDom.state,
+			        			qidian:evt.graphic.geometry.x,
+			        			zhongdian:evt.graphic.geometry.y
+			        		})
+		                	editToolbar.activate(Edit.MOVE|Edit.EDIT_VERTICES , evt.graphic);
+		              	} else {
+		                	editToolbar.deactivate();
+		                	editingEnabled = false;
+		              	}
+		              	reactDom.setState({
 			            	...reactDom.state,
 			            	mapProp:{
-			            		...reactDom.state.mapProp,add,selectedTemplate,
+			            		...reactDom.state.mapProp,selectedTemplate,
 			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
 			            	}
-			        	})
-			        }
-		      		
-		      	}
-			)
+			            })
+	            });
+	            //ctrl+单击s删除
+		        featureLayer1.on("click", function(evt) {
+	              	event.stop(evt);
+	              	console.log(evt)
+	              	if (evt.ctrlKey === true || evt.metaKey === true) {  //delete feature if ctrl key is depressed
+	                	featureLayer1.applyEdits(null,null,[evt.graphic]);
+	                	featureLayer1 = this;
+	                	editToolbar.deactivate();
+	                	editingEnabled=false;
+	              	}
+	              	reactDom.setState({
+		            	...reactDom.state,
+		            	mapProp:{
+		            		...reactDom.state.mapProp,add,selectedTemplate,
+		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+		            	}
+		        	})
+	            });
+		  		//let symbol = new SimpleFillSymbol("solid", null, new Color([255, 0, 255, 0.75]));
+				let symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 30,
+				    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+				    new Color([255,0,0]), 3),
+				    new Color([0,255,0,0.5]))
+				let symbol2 = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+				    new Color([255,0,0]), 5)
+				let renderer = new SimpleRenderer(symbol2);
+				featureLayer1.setRenderer(renderer);
+
+				var templatePicker = new TemplatePicker({
+		            featureLayers: [featureLayer1],
+		            rows: "auto",
+		            columns:1,
+		            style: "height: auto; overflow: auto;position:absolute;z-index:1;bakcground:transparent;",
+		            items:[{label:'点击添加项目',symbol:symbol,description:''}],
+		            useLegend:false,
+
+		        }, `${reactDom.state.templatePickerDivId}`);
+		        
+		        templatePicker.on("selection-change", function() {
+		            if( templatePicker.getSelected() ) {
+		              selectedTemplate = templatePicker.getSelected();
+		            }
+		            switch (selectedTemplate.featureLayer.geometryType) {
+		              case "esriGeometryPoint":
+		                drawToolbar.activate(Draw.POINT);
+		                break;
+		              case "esriGeometryPolyline":
+		                drawToolbar.activate(Draw.POLYLINE);
+		                break;
+		              case "esriGeometryPolygon":
+		                drawToolbar.activate(Draw.POLYGON);
+		                break;
+		            }
+		            reactDom.setState({
+		            	...reactDom.state,
+		            	mapProp:{
+		            		...reactDom.state.mapProp,add,selectedTemplate,
+		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+		            	}
+		        	})
+		        });
+	            editToolbar = new Edit(map);
+	            //编辑操作完成应用编辑
+	            editToolbar.on("deactivate", function(evt) {
+	        		console.log(evt)
+
+	        		reactDom.toApplyEdits(null, [evt.graphic], null)
+	            	reactDom.setState({
+		            	...reactDom.state,
+		            	mapProp:{
+		            		...reactDom.state.mapProp,selectedTemplate,
+		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+		            	}
+	            	})
+		        });
+		        editToolbar.on("graphic-move-stop",function(evt){
+		        	console.log(reactDom)
+		        	console.log(evt)
+		        	var a = evt.graphic.geometry.paths[0].length;
+		        	reactDom.setState({
+		        		...reactDom.state,
+		        		qidian:`${evt.graphic.geometry.paths[0][0][0]},${evt.graphic.geometry.paths[0][0][1]}`,
+		        		zhongdian:`${evt.graphic.geometry.paths[0][a-1][0]},${evt.graphic.geometry.paths[0][a-1][1]}`,
+		        	})
+		        	reactDom.setState({
+		            	...reactDom.state,
+		            	mapProp:{
+		            		...reactDom.state.mapProp,selectedTemplate,
+		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+		            	}
+		            })
+		            reactDom.props.form.setFieldsValue({"起点坐标":reactDom.state.qidian})
+	        		reactDom.props.form.setFieldsValue({"终点坐标":reactDom.state.zhongdian})
+		        })
+		       	drawToolbar = new Draw(map);
+		        //drawToolbar.activate(Draw.POINT);
+		        drawToolbar.on("draw-end", function(evt) {
+		        	//console.log(evt)
+		            drawToolbar.deactivate();
+		            editToolbar.deactivate();
+		            let newAttributes = selectedTemplate.template.prototype.attributes;
+		            newAttributes.id=-1
+		            let newGraphic = new Graphic(evt.geometry, null, newAttributes);
+		            console.log(newGraphic)
+		            add = new Add({
+		            	featureLayer:featureLayer1,
+		            	addedGraphics:[newGraphic]
+		            })
+		            reactDom.setState({
+		            	...reactDom.state,
+		            	mapProp:{
+		            		...reactDom.state.mapProp,add,selectedTemplate,
+		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+		            	}
+		            })
+		            reactDom.toApplyEdits([newGraphic], null, null)
+		        });
+
+				//console.log(featureLayer1)
+				map.on("layers-add-result", initEditing);
+				//map.addLayer(layer)
+				//map.addLayer(imgMap)
+		        map.addLayers([imgMap,imgMapMarker,featureLayer1]);
+		        
+		        function initEditing(e){
+					//双击编辑
+					reactDom.hideSpin()
+					map.centerAt(new Point([113.52,34.58],new SpatialReference({ wkid:4326 })))
+					
+					templatePicker.startup();
+
+					reactDom.setState({
+		            	...reactDom.state,
+		            	mapProp:{
+		            		...reactDom.state.mapProp,add,selectedTemplate,
+		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+		            	}
+		        	})
+		        }
+	      		
+	      	}
+		)
 	}
 	toApplyAdd(add,update,remove,success,error){
 		this.state.mapProp.add.performRedo();
@@ -835,4 +849,4 @@ class NewProject extends React.Component {
 
 export default Form.create()(NewProject)
 
-12637665.44279583,4108917.4768558647
+//12637665.44279583,4108917.4768558647

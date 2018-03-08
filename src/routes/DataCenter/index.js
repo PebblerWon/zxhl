@@ -24,7 +24,6 @@ const DataCenter=()=>{
         <TabPane tab="十二五项目" key="3" className='tabPanel'>
           <ShiErWuProject projectType='十二五项目'/>
         </TabPane>
-        {/*<TabPane tab="资金信息1231rw1f3w1" key="3" className='tabPanel'>资金信息</TabPane>*/}
       </Tabs>
     </div>)
 }

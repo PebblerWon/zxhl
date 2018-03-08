@@ -11,7 +11,8 @@ import styles from './index.less'
 
 const city = DICT_FIXED_BY_PROVINCE('河南省')
 const esriOptions = {
-    url:'https://js.arcgis.com/3.21/'
+	url:'http://jcxx.hnslkc.com/arcgis_js_api/library/3.18/3.18/init.js'
+    //url:'https://js.arcgis.com/3.21/'
 }
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -62,9 +63,9 @@ var tileInfoObj = {
 };
 class NewZaiHou extends React.Component {
 	constructor (props) {
+		super(props)
 		console.log(props)
 		const {getFieldDecorator,setFieldsValue} = props.form
-		super(props)
 		this.state = { 
 			mapLoaded: false ,
 			mapUrl:"http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/MapServer",
@@ -627,8 +628,19 @@ class NewZaiHou extends React.Component {
 		      		<legend>其他</legend>
 		      		<Row>
 		      			<Col span={12}>
-		            		<FormItem labelCol={{span:3}} wrapperCol={{span:18}} label='工程照片'>
+		            		<FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='工程照片'>
 					        	{this.props.form.getFieldDecorator('工程照片')(
+					            	<Upload {...uploadProps}>
+					            		<Button>
+					            			<Icon type='upload' />点击上传
+					            		</Button>
+					            	</Upload>
+					          	)}
+				        	</FormItem>
+				        </Col>
+				        <Col span={12}>
+				        	<FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='批复文件'>
+					        	{this.props.form.getFieldDecorator('批复文件')(
 					            	<Upload {...uploadProps}>
 					            		<Button>
 					            			<Icon type='upload' />点击上传
@@ -638,7 +650,7 @@ class NewZaiHou extends React.Component {
 				        	</FormItem>
 				      	</Col>
 				      	<Col span={12}>
-				       		<FormItem labelCol={{span:3}} wrapperCol={{span:18}} label='工程视频'>
+				       		<FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='工程视频'>
 					        	{this.props.form.getFieldDecorator('工程视频')(
 					            	<Upload {...uploadProps}>
 					            		<Button>
@@ -774,23 +786,23 @@ class NewZaiHou extends React.Component {
 					let renderer = new SimpleRenderer(symbol2);
 					featureLayer1.setRenderer(renderer);
 					featureLayer1.on("dbl-click", function(evt) {
-			              	event.stop(evt);
-			              	if (editingEnabled === false) {
-			                	editingEnabled = true;
-			                	console.log(evt)
-			                	
-			                	editToolbar.activate(Edit.MOVE|Edit.EDIT_VERTICES , evt.graphic);
-			              	} else {
-			                	editToolbar.deactivate();
-			                	editingEnabled = false;
-			              	}
-			              	reactDom.setState({
-				            	...reactDom.state,
-				            	mapProp:{
-				            		...reactDom.state.mapProp,selectedTemplate,
-				            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-				            	}
-				            })
+		              	event.stop(evt);
+		              	if (editingEnabled === false) {
+		                	editingEnabled = true;
+		                	console.log(evt)
+		                	
+		                	editToolbar.activate(Edit.MOVE|Edit.EDIT_VERTICES , evt.graphic);
+		              	} else {
+		                	editToolbar.deactivate();
+		                	editingEnabled = false;
+		              	}
+		              	reactDom.setState({
+			            	...reactDom.state,
+			            	mapProp:{
+			            		...reactDom.state.mapProp,selectedTemplate,
+			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+			            	}
+			            })
 		            });
 		            	//ctrl+单击s删除
 		            featureLayer1.on("click", function(evt) {

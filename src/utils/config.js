@@ -1,8 +1,10 @@
-const APIV1 = '/api/v1'
-const APIV2 = '/api/v2'
+const APIV1 = '/api'
+//const APIV1 = 'http://zxhl2.hnslkc.com:81/api'
+const APIV2 = '/api'
 module.exports = {
-  useFakeData:true,
+  useFakeData:false,
   name: 'AntD Admin',
+  noimage:'/resource/noimage.jpg',
   prefix: 'antdAdmin',
   footerText: 'Ant Design Admin  © 2017 zuiidea',
   logo: '/logo.png',
@@ -67,7 +69,8 @@ module.exports = {
     },
     map:{
       getInfoById:`${APIV1}/InfoDataPostWS.asmx/returnProAndPostDisasterInfo`,
-      projectSource:`http://172.36.16.2:6500/项目照片和视频/`
+      //projectSource:`http://172.36.16.2:6500/项目照片和视频/`
+      projectSource:`http://zxhl2.hnslkc.com:81/项目照片和视频/`
       //projectSource:`http://172.66.16.190:6500/项目照片和视频/`
     },
     fileUpload:`${APIV1}/Handler1.ashx`,

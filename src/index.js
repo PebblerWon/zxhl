@@ -5,7 +5,7 @@ import { message } from 'antd'
 
 // 1. Initialize
 const app = dva({
-	...createLoading({
+  ...createLoading({
     effects: true,
   }),
   onError (error) {

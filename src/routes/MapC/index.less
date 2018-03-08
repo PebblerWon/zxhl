@@ -20,15 +20,18 @@
 }
 .carousel{
 	:global{
-		.slick-dots{
-			li button{
-				background:#111;
-			}
-			li.slick-active button{
-				background:red;
-			}
-		} 
+		.slick-dots>li>button{
+			background-color:#999;
+			opacity:0.7;
+			height:5px;
+		}
+		.slick-dots>li.slick-active>button{
+			background-color:red;
+			opacity:0.7;
+			height:5px;
+		}
 	}
+	
 }
 .map{
 	:global{

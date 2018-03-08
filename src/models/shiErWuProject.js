@@ -101,6 +101,9 @@ export default {
       console.log(payload)
 
       yield put({type:'hideUpdateModal'})
+    },
+    *newProjectSubmit({payload},{call,put}){
+      yield put({type:'hideNewModal'})
     }
   },
 
@@ -231,17 +234,7 @@ export default {
         }
       }
     },
-    newProjectSubmit(state){
-      return{
-        ...state,
-        newProjectModal:{
-          visible:false
-        }
-      }
-    },
-    updateProject(state){
-      return{...state}
-    },
+    
     setDeleteItem(state,{payload}){
       return{
         ...state,

@@ -108,6 +108,9 @@ export default {
       const data = yield call(riverServices.query,{'所属流域':'全部'})
       const riverNames = data.map((item)=>item['河流名称'])
       yield put({type:'riverInfo',payload:riverNames})
+    },
+    *newProjectSubmit({payload},{call,put}){
+       yield put({type:'hideNewModal'})
     }
   },
 
@@ -231,14 +234,6 @@ export default {
       }
     },
     hideNewModal(state){
-      return{
-        ...state,
-        newProjectModal:{
-          visible:false
-        }
-      }
-    },
-    newProjectSubmit(state){
       return{
         ...state,
         newProjectModal:{

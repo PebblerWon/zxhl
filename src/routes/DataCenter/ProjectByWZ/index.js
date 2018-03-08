@@ -154,7 +154,7 @@ const ProjectByWZ = (prop)=>{
 			
 		},
 	}
-	const huaiHeTableProps={
+	/*const huaiHeTableProps={
 		ds:proDs(project.huaiHeTable.ds),
 		loading:project.loading,
 		columns:columns,
@@ -166,9 +166,10 @@ const ProjectByWZ = (prop)=>{
 				}
 			})
 		}
-	}
-	const changJiangTableProps={
-		ds:proDs(project.changJiangTable.ds),
+	}*/
+	
+
+	const tableProps={
 		loading:project.loading,
 		columns:columns,
 		onRowDoubleClick(e){
@@ -180,58 +181,7 @@ const ProjectByWZ = (prop)=>{
 			})
 		}
 	}
-	const huangHeTableProps={
-		ds:proDs(project.huangHeTable.ds),
-		loading:project.loading,
-		columns:columns,
-		onRowDoubleClick(e){
-			dispatch({
-				type:'project/showUpdateModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}
-	}
-	const haiHeTableProps={
-		ds:proDs(project.haiHeTable.ds),
-		loading:project.loading,
-		columns:columns,
-		onRowDoubleClick(e){
-			dispatch({
-				type:'project/showUpdateModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}
-	}
-	const allTableProps={
-		ds:proDs(project.allTable.ds),
-		loading:project.loading,
-		columns:columns,
-		onRowDoubleClick(e){
-			dispatch({
-				type:'project/showUpdateModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}
-	}
-	const detailModalProps={
-		visible:project.detailModal.visible,
-		handleOk(e){
-			dispatch({
-				type:'project/hideDetailModal'
-			})
-		},
-		handleCancel(e){
-			dispatch({
-				type:'project/hideDetailModal'
-			})
-		}
-	}
+	
 	const newProjectProps={
 		visible:project.newProjectModal.visible,
 		riverInfo:project.riverInfo,
@@ -305,20 +255,7 @@ const ProjectByWZ = (prop)=>{
 		)
 	}
 
-	const DetailModal=({visible,handleOk,handleCancel})=>{
-		return(
-			<Modal
-	          title=""
-	          visible={visible}
-	          onOk={handleOk}
-	          onCancel={handleCancel}
-	          width='1200px'
-	        >
-	          	<img width="100%" src="./resource/效果图/11查询信息-中小河流-项目详细信息编辑.jpg" />    
-	        </Modal>
-		)
-	}
-
+	
 	const NewProjectModal=({visible,handleOk,handleCancel,onSubmit,riverInfo})=>{
 		return(
 			<Modal
@@ -366,25 +303,24 @@ const ProjectByWZ = (prop)=>{
 							</div>
 						}>
 							<TabPane tab='淮河流域' key='淮河流域'>
-								<HuaiHeTable  {...huaiHeTableProps}/>
+								<HuaiHeTable ds={proDs(project.huaiHeTable.ds)}  {...tableProps}/>
 							</TabPane>
 							<TabPane tab='长江流域' key='长江流域'>
-								<ChangJiangTable  {...changJiangTableProps}/>
+								<ChangJiangTable ds={proDs(project.changJiangTable.ds)}  {...tableProps}/>
 							</TabPane>
 							<TabPane tab='黄河流域' key='黄河流域'>
-								<HuangHeTable  {...huangHeTableProps}/>
+								<HuangHeTable ds={proDs(project.huangHeTable.ds)}  {...tableProps}/>
 							</TabPane>
 							<TabPane tab='海河流域' key='海河流域'>
-								<HaiHeTable  {...haiHeTableProps}/>
+								<HaiHeTable ds={proDs(project.haiHeTable.ds)}  {...tableProps}/>
 							</TabPane>
 							<TabPane tab='全部' key='全部'>
-								<AllTable  {...allTableProps}/>
+								<AllTable ds={proDs(project.allTable.ds)}  {...tableProps}/>
 							</TabPane>
 						</Tabs>
 					</Content>
 				</Layout>
 			</Layout>
-			{/*<DetailModal {...detailModalProps}/>*/}
 			<NewProjectModal  {...newProjectProps}/>
 			<UpdateProjectModal {...updateProjectProps} />
 		</div>

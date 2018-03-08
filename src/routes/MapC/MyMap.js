@@ -57,6 +57,9 @@ export default class  extends React.Component {
 		const error = this.state.error
 		const ReactDom = this;
 		const infoModalCancel = (e)=>{
+			let myVideo = document.getElementById("video");
+			if (myVideo&&myVideo.played) 
+	  			myVideo.pause()
 			ReactDom.setState({
 				...ReactDom.state,
 				infoModal:{
@@ -72,7 +75,7 @@ export default class  extends React.Component {
 		let item = ReactDom.state.infoModal.item;
 		console.log(ReactDom)
 		console.log(item)
-		if(item){
+		if(item&&item.model){
 			for(let i = 0;i<columns.length;i++){
 			    let title = columns[i]
 			    let dataIndex = columns[i]
@@ -104,7 +107,9 @@ export default class  extends React.Component {
 				for(let i = 0;i<item.vioUrl.length;i++){
 				    vioInfo.push(
 				        <div  key={item.vioUrl[i]}>
-				          <video width='470px' src={`${api.map.projectSource}${Math.floor(item.model.id/100)}/${item.vioUrl[i]}`} controls="controls"></video>
+				          <video width='470px' controls="controls" id="video">
+				          	<source src={`${api.map.projectSource}${Math.floor(item.model.id/100)}/${item.vioUrl[i]}`} />
+				          </video>
 				        </div>
 				      )
 				}
@@ -190,17 +195,15 @@ export default class  extends React.Component {
 	}
 	showSpin(){
 		this.setState({
-			...this.state,
 			loading:true
 		})
 	}
 	hideSpin(){
 		this.setState({
-			...this.state,
 			loading:false
 		})
 	}
-	mapInit(){
+	async mapInit(){
 		const mapUrl = this.state.mapUrl;
 		const ReactDom = this;
 		dojoRequire([
@@ -290,7 +293,7 @@ export default class  extends React.Component {
 					})
 					//highlightGraphic.show();
          			//map.graphics.add(highlightGraphic);
-					console.log(map)
+					//console.log(map)
 				})
 				let fenSeLayer = new FeatureLayer("http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/MapServer/35", {
 		            mode: FeatureLayer.MODE_ONDEMAND,
@@ -305,6 +308,7 @@ export default class  extends React.Component {
 					})
 					let id = e.graphic.attributes.id;
 					const data =await ReactDom.getDataById(id);
+					console.log(data)
 					ReactDom.setState({
 						...ReactDom.state,
 						loading:false,
@@ -324,7 +328,7 @@ export default class  extends React.Component {
 					})
 					//highlightGraphic.show();
          			//map.graphics.add(highlightGraphic);
-					console.log(map)
+					//console.log(map)
 				})
 		        map.addLayers([layer,featureLayer])
 		        let legend1 = new Legend({
@@ -359,7 +363,7 @@ export default class  extends React.Component {
 		           legend3.startup();legend4.startup();
 			  	function init(e){
 			  		console.log(e)
-			  		map.centerAndZoom(new Point(113.52,33.58, layer.spatialReference),8)
+			  		map.centerAt(new Point([113.52,34.58],new SpatialReference({ wkid:4326 })))
 			  		ReactDom.hideSpin()
 			  	}
 
@@ -405,7 +409,7 @@ export default class  extends React.Component {
 			  				legend4:{visible:false},
 			  			})
 			  		}
-			  		console.log(map)
+			  		//console.log(map)
 			  	}
 			  	function render2(){
 			  		if(ReactDom.state.button2.type=='primary'){
@@ -525,7 +529,6 @@ export default class  extends React.Component {
 		        	ReactDom.setState(newState)
 		        }
 			  	ReactDom.setState({
-			  		...ReactDom.state,
 			  		mapProp:{
 			  			render1:render1,render2:render2,render3:render3,render4:render4,
 			  			fenseLayer:fenSeLayer
@@ -537,8 +540,8 @@ export default class  extends React.Component {
 		const fakeData = {
 			'项目名称':'abc',
 			'picUrl': [
-			    "http://tse2.mm.bing.net/th?id=OIP.fkXTL7VA58-qGHL9Y76ctAD5D6&pid=15.1",
-			    "http://tse3.mm.bing.net/th?id=OIP.I7rLEI8ZFdJMap0t0cOuBQEsEh&pid=15.1",
+			    "http://a4.att.hudong.com/16/26/19300131134329132102266261316_950.jpg",
+			    "http://a4.att.hudong.com/16/26/19300131134329132102266261316_950.jpg",
 			    "http://a4.att.hudong.com/16/26/19300131134329132102266261316_950.jpg"
 			],
 			'vioUrl':[

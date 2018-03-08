@@ -154,59 +154,8 @@ const ShiErWuProject = (prop)=>{
 
 		},
 	}
-	const huaiHeTableProps={
-		ds:proDs(shierwuproject.huaiHeTable.ds),
-		loading:shierwuproject.loading,
-		columns:columns,
-		onRowDoubleClick(e){
-			dispatch({
-				type:'shierwuproject/showUpdateModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}
-	}
-	const changJiangTableProps={
-		ds:proDs(shierwuproject.changJiangTable.ds),
-		loading:shierwuproject.loading,
-		columns:columns,
-		onRowDoubleClick(e){
-			dispatch({
-				type:'shierwuproject/showUpdateModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}
-	}
-	const huangHeTableProps={
-		ds:proDs(shierwuproject.huangHeTable.ds),
-		loading:shierwuproject.loading,
-		columns:columns,
-		onRowDoubleClick(e){
-			dispatch({
-				type:'shierwuproject/showUpdateModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}
-	}
-	const haiHeTableProps={
-		ds:proDs(shierwuproject.haiHeTable.ds),
-		loading:shierwuproject.loading,
-		columns:columns,
-		onRowDoubleClick(e){
-			dispatch({
-				type:'shierwuproject/showUpdateModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}
-	}
-	const allTableProps={
+	
+	/*const allTableProps={
 		ds:proDs(shierwuproject.allTable.ds),
 		loading:shierwuproject.loading,
 		columns:columns,
@@ -218,20 +167,21 @@ const ShiErWuProject = (prop)=>{
 				}
 			})
 		}
-	}
-	const detailModalProps={
-		visible:shierwuproject.detailModal.visible,
-		handleOk(e){
+	}*/
+
+	const tableProps={
+		loading:shierwuproject.loading,
+		columns:columns,
+		onRowDoubleClick(e){
 			dispatch({
-				type:'shierwuproject/hideDetailModal'
-			})
-		},
-		handleCancel(e){
-			dispatch({
-				type:'shierwuproject/hideDetailModal'
+				type:'shierwuproject/showUpdateModal',
+				payload:{
+					currentItem:e
+				}
 			})
 		}
 	}
+
 	const newProjectProps={
 		visible:shierwuproject.newProjectModal.visible,
 		handleOk(e){
@@ -299,25 +249,11 @@ const ShiErWuProject = (prop)=>{
 	            footer={null}
 	        >
 	        	<UpdateProject item={currentItem}  onCancel={handleCancel} onSubmit={onSubmit} type='shiErWu'/>
-	        	{/*<div style={{width:'100vw',height:'100vh',background:'red'}}></div>*/}
-	        </Modal>
+	        	</Modal>
 		)
 	}
 
-	const DetailModal=({visible,handleOk,handleCancel})=>{
-		return(
-			<Modal
-	          title=""
-	          visible={visible}
-	          onOk={handleOk}
-	          onCancel={handleCancel}
-	          width='1200px'
-	        >
-	          	<img width="100%" src="./resource/效果图/11查询信息-中小河流-项目详细信息编辑.jpg" />    
-	        </Modal>
-		)
-	}
-
+	
 	const NewProjectModal=({visible,handleOk,handleCancel,onSubmit})=>{
 		return(
 			<Modal
@@ -367,25 +303,24 @@ const ShiErWuProject = (prop)=>{
 							</div>
 						}>
 							<TabPane tab='淮河流域' key='淮河流域'>
-								<HuaiHeTable  {...huaiHeTableProps}/>
+								<HuaiHeTable ds={proDs(shierwuproject.huaiHeTable.ds)}  {...tableProps}/>
 							</TabPane>
 							<TabPane tab='长江流域' key='长江流域'>
-								<ChangJiangTable  {...changJiangTableProps}/>
+								<ChangJiangTable ds={proDs(shierwuproject.changJiangTable.ds)}  {...tableProps}/>
 							</TabPane>
 							<TabPane tab='黄河流域' key='黄河流域'>
-								<HuangHeTable  {...huangHeTableProps}/>
+								<HuangHeTable ds={proDs(shierwuproject.huangHeTable.ds)}  {...tableProps}/>
 							</TabPane>
 							<TabPane tab='海河流域' key='海河流域'>
-								<HaiHeTable  {...haiHeTableProps}/>
+								<HaiHeTable ds={proDs(shierwuproject.haiHeTable.ds)}  {...tableProps}/>
 							</TabPane>
 							<TabPane tab='全部' key='全部'>
-								<AllTable  {...allTableProps}/>
+								<AllTable ds={proDs(shierwuproject.allTable.ds)}  {...tableProps}/>
 							</TabPane>
 						</Tabs>
 					</Content>
 				</Layout>
 			</Layout>
-			{/*<DetailModal {...detailModalProps}/>*/}
 			<NewProjectModal  {...newProjectProps}/>
 			<UpdateProjectModal {...updateProjectProps} />
 		</div>
