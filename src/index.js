@@ -8,8 +8,8 @@ const app = dva({
   ...createLoading({
     effects: true,
   }),
-  onError (error) {
-    console.error(error)
+  onError(e) {
+    message.error(e.message, /* duration */3);
   },
 });
 

@@ -42,7 +42,7 @@ const Routers = function ({ history, app }) {
                       registerModel(app, require('./models/header'))
                       registerModel(app, require('./models/river'))
                       registerModel(app, require('./models/project'))
-                      registerModel(app, require('./models/shierwuproject.js'))
+                      registerModel(app, require('./models/shierwuproject'))
                       cb(null, require('./routes/DataCenter/'))
                   }, 'dataCenter')
                 },

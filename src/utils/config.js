@@ -32,6 +32,7 @@ module.exports = {
       riverUpdate:`${APIV1}/InfoDataPostWS.asmx/UpdateRiverInfo`,
       project:`${APIV1}/RiverInfoWS.asmx/SearchInfoByTypeAndBasinAndCity`,
       shiErWuproject:`${APIV1}/RiverInfoWS.asmx/SearchInfoByTypeAndBasinAndCity`,
+      updateZaiHou:`${APIV1}/InfoDataPostWS.asmx/UpdatePostDisasterInfo`,
       projectDeleteFeature:'http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/30/deleteFeatures'
     },
     sign:{

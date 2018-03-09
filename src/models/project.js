@@ -1,7 +1,9 @@
 //查询信息 规划项目MODEL，更新为灾后薄弱环节
 import {message} from 'antd'
-import {query,remove} from '../services/projectServices'
+import {query,remove,update} from '../services/projectServices'
 import riverServices from '../services/riverServices'
+
+const delay = timeout => new Promise(resolve => setTimeout(resolve, timeout));
 
 export default {
 
@@ -99,10 +101,17 @@ export default {
         window.deleteModalRef.destroy()
     },
     *updateProject({payload},{call,put}){
-      console.log('model project')
-      console.log(payload)
+      console.log('a: '+new Date().toLocaleString())
 
-      yield put({type:'hideUpdateModal'})
+      const res = yield call(update,payload)
+      if(res=='true'){
+        message.success("修改成功",3)
+        yield put({type:'hideUpdateModal'})
+      }else{
+        message.error("修改失败")
+      }
+      console.log('b: '+new Date().toLocaleString())
+      
     },
     *getRiverInfo({payload},{call,put}){
       const data = yield call(riverServices.query,{'所属流域':'全部'})

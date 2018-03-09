@@ -6,12 +6,14 @@ import { hashHistory } from 'react-router'
 import { dojoRequire } from 'esri-loader'
 import config from '../../utils/config'
 import {DICT_FIXED_BY_PROVINCE} from '../../utils/city'
+import {TileInfoObj,TDTUrl,FeatureLayerUrl,GiSApiUrl,MapUrl} from './mapConfig'
 import EsriLoader from 'esri-loader-react'
 import styles from './index.less'
 
+
 const city = DICT_FIXED_BY_PROVINCE('河南省')
 const esriOptions = {
-    url:'http://jcxx.hnslkc.com/arcgis_js_api/library/3.18/3.18/init.js'
+    url:GiSApiUrl
     //url:'https://js.arcgis.com/3.21/'
 }
 const FormItem = Form.Item;
@@ -25,41 +27,9 @@ const formItemLayout = {
 const numberInput={
 	type:'number',
 	min:"0",
-	step:'0.1'
+	step:'0.01'
 }
-var tileInfoObj = {
-  "rows": 256,
-  "cols": 256,
-  "compressionQuality": 0,
-  "origin": {
-    "x": -180,
-    "y": 90
-  },
-  "spatialReference": {
-    "wkid": 4326
-  },
-  "lods": [
-  	{ "level": 0, "resolution": 1.40625, "scale": 590995186.11750008 },
-  	{ "level": 1, "resolution": 0.703125, "scale": 295497593.05875004 },
-    { "level": 2, "resolution": 0.3515625, "scale": 147748796.52937502 },
-    { "level": 3, "resolution": 0.17578125, "scale": 73874398.264687508 },
-    { "level": 4, "resolution": 0.087890625, "scale": 36937199.132343754 },
-    { "level": 5, "resolution": 0.0439453125, "scale": 18468599.566171877 },
-    { "level": 6, "resolution": 0.02197265625, "scale": 9234299.7830859385 },
-    { "level": 7, "resolution": 0.010986328125, "scale": 4617149.8915429693 },
-    { "level": 8, "resolution": 0.0054931640625, "scale": 2308574.9457714846 },
-    { "level": 9, "resolution": 0.00274658203125, "scale": 1154287.4728857423 },
-    { "level": 10, "resolution": 0.001373291015625, "scale": 577143.73644287116 },
-    { "level": 11, "resolution": 0.0006866455078125, "scale": 288571.86822143558 },
-    { "level": 12, "resolution": 0.00034332275390625, "scale": 144285.93411071779 },
-    { "level": 13, "resolution": 0.000171661376953125, "scale": 72142.967055358895 },
-    { "level": 14, "resolution": 8.58306884765625e-005, "scale": 36071.483527679447 },
-    { "level": 15, "resolution": 4.291534423828125e-005, "scale": 18035.741763839724 },
-    { "level": 16, "resolution": 2.1457672119140625e-005, "scale": 9017.8708819198619 },
-    { "level": 17, "resolution": 1.0728836059570313e-005, "scale": 4508.9354409599309 },
-    { "level": 18, "resolution": 5.3644180297851563e-006, "scale": 2254.4677204799655 }
-  ]
-};
+
 class UpdateZaiHou extends React.Component {
 	constructor (props) {
 		super(props)
@@ -67,7 +37,7 @@ class UpdateZaiHou extends React.Component {
 		const {getFieldDecorator,setFieldsValue} = props.form
 		this.state = { 
 			mapLoaded: false ,
-			mapUrl:"http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/MapServer",
+			mapUrl:MapUrl,
 			loading:true,
 			qidian:'',
 			zhongdian:'',
@@ -139,9 +109,7 @@ class UpdateZaiHou extends React.Component {
 	  		//console.log(this)
 		    e.preventDefault();
 		    this.props.form.validateFields((err, values) => {
-		    	//console.log(err)
-		      	console.log('Received values of form: ', values);
-		      	if(err){
+		    	if(err){
 		      		let a =Modal.error({
 		      			title:'请认真填写完整！',
 		      			onOk(e){
@@ -152,6 +120,7 @@ class UpdateZaiHou extends React.Component {
 		      			}
 		      		})
 		      	}else{
+		      		values.id = this.props.item.id
 		      		this.props.onSubmit(values)
 		      	}
 		    });
@@ -729,11 +698,9 @@ class UpdateZaiHou extends React.Component {
 		
 		//表示没有项目位置，需要新建个项目位置
 		console.log(item)
-		if(item['终点东经']=='0'){
-			this.newZaiHou(item.id);
-		}else{
-			this.updateProject();
-		}
+		
+		this.initMap(item.id);
+
 		this.props.form.setFieldsInitialValue(item)
 	}
 	componentWillUnmount(){
@@ -755,152 +722,7 @@ class UpdateZaiHou extends React.Component {
 			loading:false
 		})
 	}
-	updateProject(){
-		console.log('update')
-		const mapUrl = this.state.mapUrl;
-		const domId = this.state.domId;
-		var imgMap,imgMapMarker;
-		let map,editToolbar,currentLayer,editingEnabled=false,featureLayer1;
-		  	dojoRequire(
-		      	[
-			        "esri/map",
-			        "esri/toolbars/edit",
-			        "esri/toolbars/draw",
-        			"esri/graphic",
-        			"esri/SpatialReference",
-        			"esri/geometry/Point",
-        			"esri/dijit/editing/Add",
-			        
-
-			        "esri/layers/ArcGISDynamicMapServiceLayer",
-			        "esri/layers/FeatureLayer",
-			        "esri/dijit/editing/TemplatePicker",
-
-			        "esri/symbols/SimpleFillSymbol",
-			        "esri/symbols/SimpleLineSymbol",
-			        "esri/symbols/SimpleMarkerSymbol",
-			        "esri/Color", 
-			        "esri/renderers/SimpleRenderer",
-			        
-			        "esri/layers/WebTiledLayer",
-			        "esri/layers/TileInfo",
-
-			        "esri/config",
-			        "dojo/i18n!esri/nls/jsapi",
-
-			        "dojo/_base/array", "dojo/parser", "dojo/keys","dojo/_base/event",
-			        
-			        "dojo/domReady!"
-		      	], 
-				(
-					Map,Edit,Draw,Graphic,SpatialReference,Point,Add,
-					ArcGISDynamicMapServiceLayer, FeatureLayer,TemplatePicker,
-					SimpleFillSymbol,SimpleLineSymbol,SimpleMarkerSymbol, Color, SimpleRenderer,
-					WebTiledLayer,TileInfo,
-					esriConfig, jsapiBundle,
-					arrayUtils, parser, keys,event
-				)=>{
-		      		this.showSpin();
-		      		let reactDom = this;
-		      		console.log(this)
-			        
-			        map = new Map(domId, {
-			        	//basemap:'satellite',
-			          	center: [
-							113.52,
-							34.58
-						],
-						zoom:8,
-			          	slider: false
-			        });
-			        var tileInfo = new TileInfo(tileInfoObj)
-			        
-			       	imgMap = new WebTiledLayer("http://\${subDomain}.tianditu.com/DataServer?T=img_c&X=\${col}&Y=\${row}&L=\${level}", {
-			            "id": "TiandituImg",
-			            "subDomains": ["t0", "t1", "t2"],
-			            "tileInfo": tileInfo,
-			        });
-
-			        //底图标注
-			        imgMapMarker = new WebTiledLayer(
-			        "http://\${subDomain}.tianditu.com/DataServer?T=cia_c&X=\${col}&Y=\${row}&L=\${level}", {
-			            "id": "TiandituImgMarker",
-			            "subDomains": ["t0", "t1", "t2"],
-			            "tileInfo": tileInfo,
-			        });
-
-			        featureLayer1 = new FeatureLayer("http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/35", {
-			          mode: FeatureLayer.MODE_SNAPSHOT,
-			          definitionExpression:`id=${this.state.id}`
-			        });
-
-			        featureLayer1.on("dbl-click", function(evt) {
-		              event.stop(evt);
-		              if (editingEnabled === false) {
-		                editingEnabled = true;
-		                console.log(evt)
-		                reactDom.setState({
-			        		...reactDom.state,
-			        		qidian:evt.graphic.geometry.x,
-			        		zhongdian:evt.graphic.geometry.y
-			        	})
-			        	reactDom.props.form.setFieldsValue({"起点坐标":reactDom.state.qidian})
-			        	reactDom.props.form.setFieldsValue({"终点坐标":reactDom.state.zhongdian})
-		                editToolbar.activate(Edit.MOVE , evt.graphic);
-		              } else {
-		                currentLayer = this;
-		                editToolbar.deactivate();
-		                editingEnabled = false;
-		              }
-		            });
-
-			  		//let symbol = new SimpleFillSymbol("solid", null, new Color([255, 0, 255, 0.75]));
-					let symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 30,
-					    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-					    new Color([255,0,0]), 3),
-					    new Color([0,255,0,0.5]))
-					let symbol2 = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-					    new Color([255,0,0]), 5)
-					let renderer = new SimpleRenderer(symbol2);
-					featureLayer1.setRenderer(renderer);
-			        
-			        editToolbar = new Edit(map)
-			        editToolbar.on("deactivate", function(evt) {
-			        		console.log(evt)
-			            	currentLayer.applyEdits(null, [evt.graphic], null,(suc)=>{
-			            		console.log('suc')
-			            	},(err)=>{
-			            		console.log('err')
-			            	});
-			        });
-
-			        editToolbar.on("graphic-move-stop",function(evt){
-			        	console.log(reactDom)
-			        	console.log(evt)
-			        	reactDom.setState({
-			        		...reactDom.state,
-			        		qidian:evt.graphic.geometry.x,
-			        		zhongdian:evt.graphic.geometry.y
-			        	})
-			        	reactDom.props.form.setFieldsValue({"起点坐标":reactDom.state.qidian})
-			        	reactDom.props.form.setFieldsValue({"终点坐标":reactDom.state.zhongdian})
-			        })
-			        
-			        map.on("layers-add-result", initEditing);
-					map.addLayers([imgMap,imgMapMarker,featureLayer1]);
-			        
-
-			        function initEditing(e){
-						console.log(featureLayer1)
-						map.centerAt(new Point([113.52,34.58],new SpatialReference({ wkid:4326 })))
-			        	//console.log(e.layers[0].layer.graphics.length)
-			        	this.hideSpin()
-			        }
-		      		
-		      	}
-			)
-	}
-	newZaiHou(projectId){
+	initMap(projectId){
 		console.log('new')
 		const mapUrl = this.state.mapUrl;
 		const domId = this.state.domId;
@@ -935,7 +757,7 @@ class UpdateZaiHou extends React.Component {
 		        "esri/config",
 		        "dojo/i18n!esri/nls/jsapi",
 
-		        "dojo/_base/array", "dojo/parser", "dojo/keys","dojo/_base/event",
+		        "dojo/_base/array","dojo/_base/event","dojo/_base/lang","dojo/parser","dijit/registry",
 		        
 		        "dojo/domReady!"
 	      	], 
@@ -945,12 +767,11 @@ class UpdateZaiHou extends React.Component {
 				SimpleFillSymbol,SimpleLineSymbol,SimpleMarkerSymbol, Color, SimpleRenderer,
 				WebTiledLayer,TileInfo,
 				esriConfig, jsapiBundle,
-				arrayUtils, parser, keys,event
+				arrayUtils, event, lang, parser, registry
 			)=>{
 	      		this.showSpin();
 	      		let reactDom = this;
-	      		console.log(this)
-		        
+
 		        map = new Map(domId, {
 		        	//basemap:'satellite',
 		          	/*center: [
@@ -960,9 +781,10 @@ class UpdateZaiHou extends React.Component {
 					zoom:8,
 		          	slider: false
 		        });
-		       	var tileInfo = new TileInfo(tileInfoObj)
-		        
-		       	imgMap = new WebTiledLayer("http://\${subDomain}.tianditu.com/DataServer?T=img_c&X=\${col}&Y=\${row}&L=\${level}", {
+		        map.on("layers-add-result", initEditing);
+
+		       	var tileInfo = new TileInfo(TileInfoObj)
+		       	imgMap = new WebTiledLayer(TDTUrl.ImgUrl, {
 		            "id": "TiandituImg",
 		            "subDomains": ["t0", "t1", "t2"],
 		            "tileInfo": tileInfo,
@@ -970,13 +792,13 @@ class UpdateZaiHou extends React.Component {
 
 		        //底图标注
 		        imgMapMarker = new WebTiledLayer(
-		        "http://\${subDomain}.tianditu.com/DataServer?T=cia_c&X=\${col}&Y=\${row}&L=\${level}", {
+		        	TDTUrl.MarkerUrl, {
 		            "id": "TiandituImgMarker",
 		            "subDomains": ["t0", "t1", "t2"],
 		            "tileInfo": tileInfo,
 		        });
 
-		        featureLayer1 = new FeatureLayer("http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/35", {
+		        featureLayer1 = new FeatureLayer(FeatureLayerUrl, {
 		          mode: FeatureLayer.MODE_SNAPSHOT,
 		          definitionExpression: `id=${projectId}`,
 		          outFields:['*']
@@ -991,69 +813,37 @@ class UpdateZaiHou extends React.Component {
 				    new Color([255,0,0]), 5)
 				let renderer = new SimpleRenderer(symbol2);
 				featureLayer1.setRenderer(renderer);
-				//console.log(featureLayer1)
-				map.on("layers-add-result", initEditing);
+				console.log(featureLayer1)
+				
 		        //map.addLayers([imgMap,imgMapMarker,featureLayer1]);
-		        map.addLayers([imgMap,imgMapMarker]);
+		        map.addLayers([imgMap,imgMapMarker,featureLayer1]);
 		        //map.panUp();
-		        if(templatePicker==undefined){
-		        	templatePicker = new TemplatePicker({
-			            featureLayers: [featureLayer1],
-			            rows: "auto",
-			            columns:1,
-			            style: "height: auto; overflow: auto;position:absolute;z-index:1;bakcground:transparent;",
-			            items:[{label:'点击添加项目',symbol:symbol,description:''}],
-			            useLegend:false,
-
-			        }, `${reactDom.state.templatePickerDivId}`);
-
-			        console.log(templatePicker)
-			        templatePicker.startup();
-			        templatePicker.on("selection-change", function() {
-			            if( templatePicker.getSelected() ) {
-			              selectedTemplate = templatePicker.getSelected();
-			            }
-			            switch (selectedTemplate.featureLayer.geometryType) {
-			              case "esriGeometryPoint":
-			                drawToolbar.activate(Draw.POINT);
-			                break;
-			              case "esriGeometryPolyline":
-			                drawToolbar.activate(Draw.POLYLINE);
-			                break;
-			              case "esriGeometryPolygon":
-			                drawToolbar.activate(Draw.POLYGON);
-			                break;
-			            }
-			            reactDom.setState({
-			            	...reactDom.state,
-			            	mapProp:{
-			            		...reactDom.state.mapProp,add,selectedTemplate,
-			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-			            	}
-			        	})
-			        });
-		        }else{
-		        	templatePicker.startup();
-		        }
 		        
-		        reactDom.setState({
-	            	...reactDom.state,
-	            	mapProp:{
-	            		...reactDom.state.mapProp,
-	            		templatePicker
-	            	}
-		        })
-		        console.log(reactDom)
 		        function initEditing(e){
 		        	console.log('initEditing')
 		        	map.centerAt(new Point([113.52,34.58],new SpatialReference({ wkid:4326 })))
+		        	
+          			editToolbar = new Edit(map);
+          			//编辑操作完成应用编辑
+		            editToolbar.on("deactivate", function(evt) {
+		        		console.log(evt)
+
+		        		reactDom.toApplyEdits(null, [evt.graphic], null)
+		            	reactDom.setState({
+			            	...reactDom.state,
+			            	mapProp:{
+			            		...reactDom.state.mapProp,selectedTemplate,
+			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+			            	}
+		            	})
+			        });
+
 					//双击编辑
 					featureLayer1.on("dbl-click", function(evt) {
 		              	event.stop(evt);
 		              	if (editingEnabled === false) {
 		                	editingEnabled = true;
-		                	console.log(evt)
-		                	
+		                	//console.log(evt)
 		                	editToolbar.activate(Edit.MOVE|Edit.EDIT_VERTICES , evt.graphic);
 		              	} else {
 		                	editToolbar.deactivate();
@@ -1070,13 +860,15 @@ class UpdateZaiHou extends React.Component {
 	            	//ctrl+单击s删除
 		            featureLayer1.on("click", function(evt) {
 		              	event.stop(evt);
-		              	console.log(evt)
+		              	//console.log(evt)
 		              	if (evt.ctrlKey === true || evt.metaKey === true) {  //delete feature if ctrl key is depressed
 		                	featureLayer1.applyEdits(null,null,[evt.graphic]);
 		                	featureLayer1 = this;
 		                	editToolbar.deactivate();
 		                	editingEnabled=false;
+		                	reactDom.setCorridate(0,0,0,0)
 		              	}
+		              	
 		              	reactDom.setState({
 			            	...reactDom.state,
 			            	mapProp:{
@@ -1096,20 +888,46 @@ class UpdateZaiHou extends React.Component {
 		              	
 		            });
 		            
-		            editToolbar = new Edit(map);
-		            //编辑操作完成应用编辑
-		            editToolbar.on("deactivate", function(evt) {
-		        		console.log(evt)
+		            if(templatePicker==undefined){
+		        		templatePicker = new TemplatePicker(
+		        			{
+					            featureLayers: [featureLayer1],
+					            rows: "auto",
+					            columns:1,
+					            style: "height: auto; overflow: auto;position:absolute;z-index:1;bakcground:transparent;",
+					            items:[{label:'点击添加项目',symbol:symbol,description:''}],
+					            useLegend:false,
+				        	}, 
+				        	`${reactDom.state.templatePickerDivId}`
+				        );
+			        }
+		            templatePicker.startup();
+		            drawToolbar = new Draw(map);
 
-		        		reactDom.toApplyEdits(null, [evt.graphic], null)
-		            	reactDom.setState({
+		            templatePicker.on("selection-change", function() {
+			            if( templatePicker.getSelected() ) {
+			              selectedTemplate = templatePicker.getSelected();
+			            }
+			            switch (selectedTemplate.featureLayer.geometryType) {
+			              case "esriGeometryPoint":
+			                drawToolbar.activate(Draw.POINT);
+			                break;
+			              case "esriGeometryPolyline":
+			                drawToolbar.activate(Draw.POLYLINE);
+			                break;
+			              case "esriGeometryPolygon":
+			                drawToolbar.activate(Draw.POLYGON);
+			                break;
+			            }
+			            reactDom.setState({
 			            	...reactDom.state,
 			            	mapProp:{
-			            		...reactDom.state.mapProp,selectedTemplate,
-			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+			            		...reactDom.state.mapProp,
+			            		add,selectedTemplate,map,editToolbar,editingEnabled,featureLayer1,drawToolbar
 			            	}
-		            	})
+			        	})
 			        });
+
 			        editToolbar.on("graphic-move-stop",function(evt){
 			        	console.log(reactDom)
 			        	console.log(evt)
@@ -1147,14 +965,14 @@ class UpdateZaiHou extends React.Component {
 			            	}
 			            })
 			        })
-			       	drawToolbar = new Draw(map);
+			       	
 			        //drawToolbar.activate(Draw.POINT);
 			        drawToolbar.on("draw-end", function(evt) {
 			        	//console.log(evt)
 			            drawToolbar.deactivate();
 			            editToolbar.deactivate();
 			            let newAttributes = selectedTemplate.template.prototype.attributes;
-			            console.log(newAttributes.OBJECTID_1)
+			            //console.log(newAttributes.OBJECTID_1)
 			            newAttributes.id=projectId;
 			            let newGraphic = new Graphic(evt.geometry, null, newAttributes);
 			            console.log(newGraphic)
@@ -1176,18 +994,25 @@ class UpdateZaiHou extends React.Component {
 			        		`${newGraphic.geometry.paths[0][a-1][0]}`,
 			        		`${newGraphic.geometry.paths[0][a-1][1]}`,
 			        	)
-			            reactDom.toApplyEdits([newGraphic], null, null)
+			            reactDom.toApplyEdits([newGraphic], null, null,(succ)=>{
+			            	console.log('编辑成功')
+			            },(err)=>{
+			            	console.log('编辑失败 :')
+			            	console.log(err)
+			            })
 			        });
 
 					reactDom.setState({
 		            	...reactDom.state,
 		            	mapProp:{
-		            		...reactDom.state.mapProp,add,selectedTemplate,
+		            		...reactDom.state.mapProp,templatePicker,add,selectedTemplate,
 		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
 		            	}
 		        	})
+
+		        	reactDom.hideSpin()
 		        }
-	      		reactDom.hideSpin()
+	      		
 	      	}
 		)
 	}

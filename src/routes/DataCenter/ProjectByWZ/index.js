@@ -1,3 +1,5 @@
+//灾后薄弱环节
+
 import React from 'react'
 import {Button,Input,Breadcrumb,Tree,Layout,Tabs,Modal} from 'antd'
 import {connect} from 'dva'
@@ -19,6 +21,7 @@ const proDs = (ds)=>{
 	return ds;
 }
 const ProjectByWZ = (prop)=>{
+	console.log('c: '+new Date().toLocaleString())
 	console.log(prop)
 	const columns = [
 		{ title: '项目名称',  dataIndex: '项目名称', key: '编码', width: 150,},
@@ -182,7 +185,7 @@ const ProjectByWZ = (prop)=>{
 		}
 	}
 	
-	const newProjectProps={
+	const newZaiHouProps={
 		visible:project.newProjectModal.visible,
 		riverInfo:project.riverInfo,
 		handleOk(e){
@@ -212,7 +215,7 @@ const ProjectByWZ = (prop)=>{
 			})
 		}
 	}
-	const updateProjectProps={
+	const updateZaiHouProps={
 		visible:project.updateModal.visible,
 		currentItem:project.updateModal.currentItem,
 		handleCancel(e){
@@ -238,7 +241,7 @@ const ProjectByWZ = (prop)=>{
 		}
 	}
 	
-	const UpdateProjectModal=({handleCancel,visible,onSubmit,currentItem})=>{
+	const UpdateZaiHouModal=({handleCancel,visible,onSubmit,currentItem})=>{
 		return(
 			<Modal
 		        title=""
@@ -256,7 +259,7 @@ const ProjectByWZ = (prop)=>{
 	}
 
 	
-	const NewProjectModal=({visible,handleOk,handleCancel,onSubmit,riverInfo})=>{
+	const NewZaiHouModal=({visible,handleOk,handleCancel,onSubmit,riverInfo})=>{
 		return(
 			<Modal
 	          title=""
@@ -321,8 +324,8 @@ const ProjectByWZ = (prop)=>{
 					</Content>
 				</Layout>
 			</Layout>
-			<NewProjectModal  {...newProjectProps}/>
-			<UpdateProjectModal {...updateProjectProps} />
+			<NewZaiHouModal  {...newZaiHouProps}/>
+			<UpdateZaiHouModal {...updateZaiHouProps} />
 		</div>
 	)
 }

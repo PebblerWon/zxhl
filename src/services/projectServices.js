@@ -4,6 +4,8 @@ import qs from 'qs'
 import { request, config } from '../utils'
 import { HNCity } from '../utils/city'
 import fakeRequest from '../utils/fakeRequest'
+import request2 from '../utils/request2'
+
 const { api } = config
 const { dataCenter } = api
 //const { useFakeData } = config;
@@ -52,7 +54,13 @@ export async function query(params) {
 
 
 export async function update(params) {
-  return request
+  let data = JSON.stringify(params)
+  return await request2(`${dataCenter.updateZaiHou}`,{
+    method:'POST',
+    data:{
+      json:data
+    }
+  })
 }
 export async function remove(params) {
   console.log(params)

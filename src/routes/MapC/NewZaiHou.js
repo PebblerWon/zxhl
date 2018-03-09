@@ -6,12 +6,13 @@ import { hashHistory } from 'react-router'
 import { dojoRequire } from 'esri-loader'
 import {DICT_FIXED_BY_PROVINCE} from '../../utils/city'
 import {api} from '../../utils/config'
+import {TileInfoObj,TDTUrl,FeatureLayerUrl,GiSApiUrl,MapUrl} from './mapConfig'
 import EsriLoader from 'esri-loader-react'
 import styles from './index.less'
 
 const city = DICT_FIXED_BY_PROVINCE('河南省')
 const esriOptions = {
-	url:'http://jcxx.hnslkc.com/arcgis_js_api/library/3.18/3.18/init.js'
+	url:GiSApiUrl
     //url:'https://js.arcgis.com/3.21/'
 }
 const FormItem = Form.Item;
@@ -26,41 +27,9 @@ const formItemLayout = {
 const numberInput={
 	type:'number',
 	min:"0",
-	step:"0.1"
+	step:"0.01"
 }
-var tileInfoObj = {
-  "rows": 256,
-  "cols": 256,
-  "compressionQuality": 0,
-  "origin": {
-    "x": -180,
-    "y": 90
-  },
-  "spatialReference": {
-    "wkid": 4326
-  },
-  "lods": [
-  	{ "level": 0, "resolution": 1.40625, "scale": 590995186.11750008 },
-  	{ "level": 1, "resolution": 0.703125, "scale": 295497593.05875004 },
-    { "level": 2, "resolution": 0.3515625, "scale": 147748796.52937502 },
-    { "level": 3, "resolution": 0.17578125, "scale": 73874398.264687508 },
-    { "level": 4, "resolution": 0.087890625, "scale": 36937199.132343754 },
-    { "level": 5, "resolution": 0.0439453125, "scale": 18468599.566171877 },
-    { "level": 6, "resolution": 0.02197265625, "scale": 9234299.7830859385 },
-    { "level": 7, "resolution": 0.010986328125, "scale": 4617149.8915429693 },
-    { "level": 8, "resolution": 0.0054931640625, "scale": 2308574.9457714846 },
-    { "level": 9, "resolution": 0.00274658203125, "scale": 1154287.4728857423 },
-    { "level": 10, "resolution": 0.001373291015625, "scale": 577143.73644287116 },
-    { "level": 11, "resolution": 0.0006866455078125, "scale": 288571.86822143558 },
-    { "level": 12, "resolution": 0.00034332275390625, "scale": 144285.93411071779 },
-    { "level": 13, "resolution": 0.000171661376953125, "scale": 72142.967055358895 },
-    { "level": 14, "resolution": 8.58306884765625e-005, "scale": 36071.483527679447 },
-    { "level": 15, "resolution": 4.291534423828125e-005, "scale": 18035.741763839724 },
-    { "level": 16, "resolution": 2.1457672119140625e-005, "scale": 9017.8708819198619 },
-    { "level": 17, "resolution": 1.0728836059570313e-005, "scale": 4508.9354409599309 },
-    { "level": 18, "resolution": 5.3644180297851563e-006, "scale": 2254.4677204799655 }
-  ]
-};
+
 class NewZaiHou extends React.Component {
 	constructor (props) {
 		super(props)
@@ -68,7 +37,7 @@ class NewZaiHou extends React.Component {
 		const {getFieldDecorator,setFieldsValue} = props.form
 		this.state = { 
 			mapLoaded: false ,
-			mapUrl:"http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/MapServer",
+			mapUrl:MapUrl,
 			loading:true,
 			qidian:'',
 			zhongdian:'',
@@ -320,7 +289,7 @@ class NewZaiHou extends React.Component {
 					        	{this.props.form.getFieldDecorator('治理河长', {
 						            rules: [{ required: true, message: '不能为空！' }],
 						          	})(
-					            	<Input {...numberInput}  addonAfter="万元"/>
+					            	<Input {...numberInput}  addonAfter="Km²"/>
 					          	)}
 					        </FormItem>
 				      	</Col>
@@ -758,9 +727,9 @@ class NewZaiHou extends React.Component {
 						zoom:8,
 			          	slider: false
 			        });
-			       	var tileInfo = new TileInfo(tileInfoObj)
+			       	var tileInfo = new TileInfo(TileInfoObj)
 			        
-			       	imgMap = new WebTiledLayer("http://\${subDomain}.tianditu.com/DataServer?T=img_c&X=\${col}&Y=\${row}&L=\${level}", {
+			       	imgMap = new WebTiledLayer(TDTUrl.ImgUrl, {
 			            "id": "TiandituImg",
 			            "subDomains": ["t0", "t1", "t2"],
 			            "tileInfo": tileInfo,
@@ -768,13 +737,13 @@ class NewZaiHou extends React.Component {
 
 			        //底图标注
 			        imgMapMarker = new WebTiledLayer(
-			        "http://\${subDomain}.tianditu.com/DataServer?T=cia_c&X=\${col}&Y=\${row}&L=\${level}", {
+			        	TDTUrl.MarkerUrl, {
 			            "id": "TiandituImgMarker",
 			            "subDomains": ["t0", "t1", "t2"],
 			            "tileInfo": tileInfo,
 			        });
 
-			        featureLayer1 = new FeatureLayer("http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/35", {
+			        featureLayer1 = new FeatureLayer(FeatureLayerUrl, {
 			          mode: FeatureLayer.MODE_SNAPSHOT,
 			          definitionExpression: 'id=-1',
 			          outFields:['*']
