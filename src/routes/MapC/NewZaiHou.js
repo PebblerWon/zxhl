@@ -51,10 +51,38 @@ class NewZaiHou extends React.Component {
 			}//存储地图操作的一些变量
 		}
 		//console.log(this.state)
+		this.handleReset = this.handleReset.bind(this)
+		this.handleSubmit = this.handleSubmit.bind(this)
 	}
-	handleReset=(e)=>{
+	handleReset(e){
 		console.log(this)
     	this.props.form.resetFields();
+  	}
+  	handleSubmit(e){
+	    e.preventDefault();
+	    this.props.form.validateFields((err, values) => {
+	      if(!err){
+	      	//为防止将数据信息提交到数据库失败
+	      	//将地图要素的更新放在effect中进行
+	      	console.log('Received values of form: ', values);
+
+	      	var newGraphic = this.state.mapProp.featureLayer1.graphics[0];
+		    newGraphic.id = newGraphic.OBJECTID_1;
+		    //更新id
+		    this.state.mapProp.featureLayer1.applyEdits(null,newGraphic,null)
+		    var projectId = newGraphic.attributes.OBJECTID_1;
+
+	      	values.id=projectId;
+	      	this.props.onSubmit(values)
+	      }
+	    });
+	    //mapProp的featureLayer1保存了编辑过的graphics信息，
+
+	    // var newGraphic = this.state.mapProp.featureLayer1.graphics[0];
+	    // newGraphic.id = newGraphic.OBJECTID_1;
+	    // this.state.mapProp.featureLayer1.applyEdits(null,newGraphic,null)
+	    var projectId = newGraphic.attributes.OBJECTID_1;
+	    console.log(this.state.mapProp)
   	}
 	render () {
 		// show any map errors
@@ -966,32 +994,7 @@ class NewZaiHou extends React.Component {
 	toApplyEdits(add,update,remove,success,error){
 		this.state.mapProp.featureLayer1.applyEdits(add,update,remove,success,error);
 	}
-	handleSubmit = (e)=>{
-	    e.preventDefault();
-	    this.props.form.validateFields((err, values) => {
-	      if(!err){
-	      	//为防止将数据信息提交到数据库失败
-	      	//将地图要素的更新放在effect中进行
-	      	console.log('Received values of form: ', values);
-
-	      	var newGraphic = this.state.mapProp.featureLayer1.graphics[0];
-		    newGraphic.id = newGraphic.OBJECTID_1;
-		    //更新id
-		    this.state.mapProp.featureLayer1.applyEdits(null,newGraphic,null)
-		    var projectId = newGraphic.attributes.OBJECTID_1;
-
-	      	values.id=projectId;
-	      	this.props.onSubmit(values)
-	      }
-	    });
-	    //mapProp的featureLayer1保存了编辑过的graphics信息，
-
-	    // var newGraphic = this.state.mapProp.featureLayer1.graphics[0];
-	    // newGraphic.id = newGraphic.OBJECTID_1;
-	    // this.state.mapProp.featureLayer1.applyEdits(null,newGraphic,null)
-	    var projectId = newGraphic.attributes.OBJECTID_1;
-	    console.log(this.state.mapProp)
-  	}	
+		
 }
 
 export default Form.create()(NewZaiHou)

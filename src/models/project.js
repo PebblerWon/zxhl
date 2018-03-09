@@ -101,8 +101,6 @@ export default {
         window.deleteModalRef.destroy()
     },
     *updateProject({payload},{call,put}){
-      console.log('a: '+new Date().toLocaleString())
-
       const res = yield call(update,payload)
       if(res=='true'){
         message.success("修改成功",3)
@@ -110,8 +108,6 @@ export default {
       }else{
         message.error("修改失败")
       }
-      console.log('b: '+new Date().toLocaleString())
-      
     },
     *getRiverInfo({payload},{call,put}){
       const data = yield call(riverServices.query,{'所属流域':'全部'})

@@ -157,19 +157,6 @@ const ProjectByWZ = (prop)=>{
 			
 		},
 	}
-	/*const huaiHeTableProps={
-		ds:proDs(project.huaiHeTable.ds),
-		loading:project.loading,
-		columns:columns,
-		onRowDoubleClick(e){
-			dispatch({
-				type:'project/showUpdateModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}
-	}*/
 	
 
 	const tableProps={
@@ -217,8 +204,8 @@ const ProjectByWZ = (prop)=>{
 	}
 	const updateZaiHouProps={
 		visible:project.updateModal.visible,
-		currentItem:project.updateModal.currentItem,
-		handleCancel(e){
+		item:project.updateModal.currentItem,
+		onCancel(e){
 			let a = Modal.confirm({
 				title:'你的操作不会被保存，是否继续？',
 				onOk(e){
@@ -234,30 +221,24 @@ const ProjectByWZ = (prop)=>{
 			
 		},
 		onSubmit(e){
+			//提交
 			dispatch({
 				type:'project/updateProject',
 				payload:e
 			})
+
+			//更新数据源
+			dispatch({
+				type:'project/query',
+				payload:{
+					tabs:project.tabs,
+					filter:'',
+					tree:project.tree.selectedKeys,
+					type:projectType
+				}
+			})
 		}
 	}
-	
-	const UpdateZaiHouModal=({handleCancel,visible,onSubmit,currentItem})=>{
-		return(
-			<Modal
-		        title=""
-		        visible={visible}
-		        style={{ top: 20 }}
-		        onCancel={handleCancel}
-		        width='calc(~"100vw - 60px")'
-		        height='calc(~"100vh - 90px")'
-		        footer={null}
-	        >
-	        	<UpdateZaiHou item={currentItem} onCancel={handleCancel} onSubmit={onSubmit} type='guiHua'/>
-	        	{/*<div style={{width:'100vw',height:'100vh',background:'red'}}></div>*/}
-	        </Modal>
-		)
-	}
-
 	
 	const NewZaiHouModal=({visible,handleOk,handleCancel,onSubmit,riverInfo})=>{
 		return(
@@ -325,7 +306,7 @@ const ProjectByWZ = (prop)=>{
 				</Layout>
 			</Layout>
 			<NewZaiHouModal  {...newZaiHouProps}/>
-			<UpdateZaiHouModal {...updateZaiHouProps} />
+			{project.updateModal.visible && <UpdateZaiHou {...updateZaiHouProps} type="updateZaiHou"/>} 
 		</div>
 	)
 }

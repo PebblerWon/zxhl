@@ -8,9 +8,9 @@ const app = dva({
   ...createLoading({
     effects: true,
   }),
-  onError(e) {
-    message.error(e.message, /* duration */3);
-  },
+  //onError(e) {
+  //  message.error(e.message, /* duration */3);
+  //},
 });
 
 // 2. Plugins
