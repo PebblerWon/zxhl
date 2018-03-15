@@ -112,6 +112,8 @@ export default {
         yield put({type:'notLoading'})
     },
     *updateProject({payload},{call,put}){
+      yield put({type:'showUpdateModalSubmitSpin'})
+      yield call(delay,500)
       let data = payload;
       data['所在市'] = payload['市行政区'][0]
       data['所在县'] = payload['市行政区'][1]
@@ -129,6 +131,7 @@ export default {
       }else{
         message.error("修改失败",3)
       }
+      yield put({type:'hideUpdateModalSubmitSpin'})
     },
     *getRiverInfo({payload},{call,put}){
       const data = yield call(riverServices.query,{'所属流域':'全部'})
@@ -163,7 +166,7 @@ export default {
         //console.log('submit from model')
         //console.log(payload)
         yield put({type:'showNewModalSubmitSpin'})
-        yield call(delay,1000)
+        yield call(delay,500)
         let {formData,values} = payload
         for(let key in values){
           if(key=='市行政区'){
@@ -413,6 +416,24 @@ export default {
       return{
         ...state,
         riverInfo:payload
+      }
+    },
+    showUpdateModalSubmitSpin(state){
+      return{
+        ...state,
+        updateModal:{
+          ...state.updateModal,
+          submitSpin:true,
+        }
+      }
+    },
+    hideUpdateModalSubmitSpin(state){
+      return{
+        ...state,
+        updateModal:{
+          ...state.updateModal,
+          submitSpin:false,
+        }
       }
     },
     showNewModalSubmitSpin(state){

@@ -167,6 +167,7 @@ class UpdateProject extends React.Component {
 		        height='calc(~"100vh - 90px")'
 		        footer={null}
 	        >
+	        <Spin size='large' spinning={this.props.submitSpin}>
 		        <div style={{overflow:'hidden'}}>
 			  		<EsriLoader options={esriOptions}/>
 				   	<Modal {...imageModalProps} footer={null}>
@@ -183,9 +184,19 @@ class UpdateProject extends React.Component {
 				    	}
 					</Modal>
 					<Modal {...videoModalProps} footer={null}>
-						<video controls id="video">
-							<source src="http://172.36.16.2:6500/项目照片和视频/0/23-视频-01.mp4" type="video/mp4" />
-						</video>
+						{
+					   			vioUrl.length>0
+								?<Carousel className={styles.carousel}>
+						            {vioUrl.map((src,i)=>(
+						            	<div  key={i}>
+						            		<video controls id="video">
+												<source src={`${config.api.map.projectSource}${src}`} type="video/mp4" />
+											</video>
+					        			</div>
+						            ))}
+						        </Carousel>
+						        :<img src={config.noimage} alt="无视频" style={{margin:"0 auto"}} width="100%" height="100%"/>
+					    }
 					</Modal>
 			      	<div id="templateDiv" style={{float:'left',width:'calc(50vw - 30px)',height:'calc(100vh - 90px)',overflowY:'scroll'}}>
 				      <Form
@@ -554,37 +565,45 @@ class UpdateProject extends React.Component {
 				      		<Row>
 				      			<Col span={12}>
 						        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程照片'>
-				            		<Button onClick={
-				            			(e)=>{
+			            			{
+				            			picUrl.length>0?
+				            			<Button onClick={(e)=>{
 				            				console.log(this)
 				            				this.setState({
 				            					...this.state,
 				            					imageModal:{visible:true,}
 				            				})
 				            			}}>
-				            			<Icon type='upload' />点击查看图片
-				            		</Button>
+				            				<Icon type='upload' />点击查看图片
+				            			</Button>
+				            			:<Button><Icon type='frown-o' />无图片</Button>
+				            		}
 						        </FormItem>
 						      </Col>
 						      <Col span={12}>
 						        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程照片'>
-				            		<Button>
-				            			<Icon type='upload' /><a target='_blank' href="http://172.36.16.2:6500/File/%E8%B1%AB%E5%8F%91%E6%94%B9%E6%8A%95%E8%B5%84[2017]626%E5%8F%B7.pdf">查看批复文件</a>
-				            		</Button>
+				            		{
+				            			fileUrl.length>0?
+				            			fileUrl.map((src,i)=><Button><Icon type='upload' /><a href={`${src}`}>{`文件${i}`}</a></Button>)
+				            			:<Button><Icon type='frown-o' />无文件</Button>
+					            	}
 						        </FormItem>
 						      </Col>
 						      <Col span={12}>
 						        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程视频'>
-						        	<Button onClick={
-				            			(e)=>{
-				            				console.log(this)
-				            				this.setState({
-				            					...this.state,
-				            					videoModal:{visible:true,}
-				            				})
-				            			}}>
-				            			<Icon type='upload' />点击查看视频
-				            		</Button>
+						        	{
+					            			vioUrl.length>0?
+					            			<Button onClick={(e)=>{
+					            				console.log(this)
+					            				this.setState({
+					            					...this.state,
+					            					videoModal:{visible:true,}
+					            				})
+					            			}}>
+					            				<Icon type='upload' />点击查看视频
+					            			</Button>
+					            			:<Button><Icon type='frown-o' />无视频</Button>
+					            		}
 						        </FormItem>
 						      </Col>
 						      <Col span={12}>
@@ -633,6 +652,7 @@ class UpdateProject extends React.Component {
 				  		:{position:'absolute',top:'50%',left:'50%',display:'none'}
 				  	}/>
 				</div>
+			</Spin>
 	    	</Modal>
 	    ) 
 	}

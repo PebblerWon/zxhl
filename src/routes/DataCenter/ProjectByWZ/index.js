@@ -20,21 +20,42 @@ const proDs = (ds)=>{
 	}
 	return ds;
 }
-const ProjectByWZ = (prop)=>{
-	console.log('c: '+new Date().toLocaleString())
-	console.log(prop)
-	const {projectType,project,dispatch} = prop;
-	//需要刷新
-	if(project.needRefresh){
-		dispatch({type:'project/query',
+class ProjectByWZ extends React.Component{
+	constructor(props){
+		super(props)
+		const {project,dispatch,projectType} = this.props
+		if(project.needRefresh){
+			dispatch({type:'project/query',
 				payload:{
 					tabs:project.tabs,
 					filter:'',
 					tree:project.tree.selectedKeys,
 					type:projectType
-		}})
-		dispatch({type:'project/notNeedRefresh'})
+			}})
+			dispatch({type:'project/notNeedRefresh'})
+		}
 	}
+	shouldComponentUpdate(){
+		const {project,dispatch,projectType} = this.props
+		if(project.needRefresh){
+			dispatch({type:'project/query',
+				payload:{
+					tabs:project.tabs,
+					filter:'',
+					tree:project.tree.selectedKeys,
+					type:projectType
+			}})
+			dispatch({type:'project/notNeedRefresh'})
+			return false
+		}
+		return true
+	}
+	render(){
+		//console.log('c: '+new Date().toLocaleString())
+	//console.log(prop)
+	const {projectType,project,dispatch} = this.props;
+	//需要刷新
+	
 
 	const columns = [
 		{ title: '项目名称',  dataIndex: '项目名称', key: '编码', width: 150,},
@@ -207,7 +228,7 @@ const ProjectByWZ = (prop)=>{
 		visible:project.updateModal.visible,
 		riverInfo:project.riverInfo,
 		item:project.updateModal.currentItem,
-
+		submitSpin:project.updateModal.submitSpin,
 		hideModal(e){
 			dispatch({
 				type:'project/hideUpdateModal'
@@ -277,9 +298,8 @@ const ProjectByWZ = (prop)=>{
 			{project.updateModal.visible && <UpdateZaiHou {...updateZaiHouProps} type="updateZaiHou"/>} 
 		</div>
 	)
+	}
 }
-
-
 export default connect(
 	({project,river})=>({project})
 )(ProjectByWZ);

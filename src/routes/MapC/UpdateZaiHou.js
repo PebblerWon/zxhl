@@ -126,9 +126,18 @@ class UpdateZaiHou extends React.Component {
 		})
 	}
 	hideVideoModal(){
-		let myVideo = document.getElementById("video");
+		let myVideo = document.getElementsByTagName("video");
+		console.log(myVideo)
+		for(let i = 0;i<myVideo.length;i++){
+			let item = myVideo[i]
+			if(item.className=="video"){
+				if(item&&item.played)
+					item.pause()
+			}
+		}
+		/*console.log(myVideo)
 		if (myVideo&&myVideo.played) 
-	  		myVideo.pause()
+	  		myVideo.pause()*/
 		this.setState({
 			videoModal:{visible:false},
 		})
@@ -136,7 +145,10 @@ class UpdateZaiHou extends React.Component {
 	
 	render () {
 		// show any map errors
-		var picInfo,imageModal,picUrl=this.props.item.picUrl;
+		var picInfo,imageModal,
+			picUrl = this.props.item.picUrl,
+			vioUrl = this.props.item.vioUrl,
+			fileUrl = this.props.item.fileUrl;
 		const ReactDom = this;
 		const error = this.state.error
 		let input1,input2;
@@ -167,569 +179,589 @@ class UpdateZaiHou extends React.Component {
 		        height='calc(~"100vh - 90px")'
 		        footer={null}
 	        >
-			<div style={{overflow:'hidden'}}>
-		 		<EsriLoader options={esriOptions}/>
-		   		<Modal {...imageModalProps} footer={null}>
-				{
-				   			picUrl.length>0
-							?<Carousel autoplay className={styles.carousel}>
-					            {picUrl.map((src,i)=>(
-					            	<div  key={i}>
-				          				<img src={`${config.api.map.projectSource}${src}`} alt="" style={{margin:"0 auto"}} width="100%" height="100%"/>
-				        			</div>
-					            ))}
-					        </Carousel>
-					        :<img src={config.noimage} alt="图片不存在" style={{margin:"0 auto"}} width="100%" height="100%"/>
-				    	}
-				</Modal>
-				<Modal {...videoModalProps} footer={null}>
-					<video controls id="video">
-						<source src="http://172.36.16.2:6500/项目照片和视频/0/23-视频-01.mp4" type="video/mp4" />
-					</video>
-					{/*<video width='400px' src="./resource/01.mp4" controls="controls"></video>*/}
-				</Modal>
-			    <div id="templateDiv" style={{float:'left',width:'calc(50vw - 30px)',height:'calc(100vh - 90px)',overflowY:'scroll'}}>
-				      <Form
-				      	onSubmit={this.handleSubmit}
-				      	className={styles.form}
-				      >
-				      	<fieldset>
-				      		<legend>项目基本情况</legend>
-				      		<Row>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='项目名称'>
-						        	{this.props.form.getFieldDecorator('项目名称', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='项目类型'>
-						        	{this.props.form.getFieldDecorator('项目类型', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        {/*<FormItem {...formItemLayout} label='所在河流'>
-						        	{this.props.form.getFieldDecorator('所在河流', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>*/}
-						        <FormItem {...formItemLayout} label='流域/河流'>
-						        	{this.props.form.getFieldDecorator('流域河流', {
-							            rules: [{ required: true, message: '不能为空！' }]
-							          	})(
-						            	<Cascader options={this.props.riverInfo} placeholder=""/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='流域面积'>
-						        	{this.props.form.getFieldDecorator('流域面积', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
-						      {/*<Col span={8}>
-						        <FormItem {...formItemLayout} label='所属流域'>
-						        	{this.props.form.getFieldDecorator('所属流域', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>*/}
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='市/县行政区'>
-						        	{this.props.form.getFieldDecorator('市行政区', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	//initialValue:[this.props.item['所在市'],this.props.item['所在县']]
-							          	})(
-						            	<Cascader options={city} placeholder=""/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='起点东经'>
-						        	{this.props.form.getFieldDecorator('起点东经', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input disabled={true}/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='起点北纬'>
-						        	{this.props.form.getFieldDecorator('起点北纬', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input disabled={true}/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='终点东经'>
-						        	{this.props.form.getFieldDecorator('终点东经', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input disabled={true}/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='终点北纬'>
-						        	{this.props.form.getFieldDecorator('终点北纬', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input disabled={true}/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='数据来源'>
-						        	{this.props.form.getFieldDecorator('数据来源', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						    </Row>
-				      	</fieldset>
-				      	<fieldset>
-				      		<legend>河南省200到3000平方公里项目备案</legend>
-				      		<Row>
-				      			<Col span={8}>
-						        <FormItem {...formItemLayout} label='项目分类'>
-						        	{this.props.form.getFieldDecorator('项目分类1', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='建设任务治理河长'>
-						        	{this.props.form.getFieldDecorator('建设任务治理河长', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='投资'>
-						        	{this.props.form.getFieldDecorator('投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
-				      		</Row>
-				      	</fieldset>
-				      	<fieldset>
-				      		<legend>2017年申报治理项目名单</legend>
-				      		<Row>
-				      			<Col span={8}>
-							        <FormItem {...formItemLayout} label='备案长度'>
-							        	{this.props.form.getFieldDecorator('备案长度', {
+	        <Spin size='large' spinning={this.props.submitSpin}>
+				<div style={{overflow:'hidden'}}>
+			 		<EsriLoader options={esriOptions}/>
+			   		<Modal {...imageModalProps} footer={null}>
+						{
+					   			picUrl.length>0
+								?<Carousel autoplay className={styles.carousel}>
+						            {picUrl.map((src,i)=>(
+						            	<div  key={i}>
+					          				<img src={`${config.api.map.projectSource}${src}`} alt="" style={{margin:"0 auto"}} width="100%" height="100%"/>
+					        			</div>
+						            ))}
+						        </Carousel>
+						        :<img src={config.noimage} alt="图片不存在" style={{margin:"0 auto"}} width="100%" height="100%"/>
+					    }
+					</Modal>
+					<Modal {...videoModalProps} footer={null}>
+						{
+					   			vioUrl.length>0
+								?<Carousel className={styles.carousel}>
+						            {vioUrl.map((src,i)=>(
+						            	<div  key={i}>
+						            		<video controls className="video" width="100%" height="80%">
+												<source src={`${config.api.map.projectSource}${src}`} type="video/mp4" />
+											</video>
+					        			</div>
+						            ))}
+						        </Carousel>
+						        :<img src={config.noimage} alt="无视频" style={{margin:"0 auto"}} width="100%" height="100%"/>
+					    }
+					</Modal>
+				    <div id="templateDiv" style={{float:'left',width:'calc(50vw - 30px)',height:'calc(100vh - 90px)',overflowY:'scroll'}}>
+					      <Form
+					      	onSubmit={this.handleSubmit}
+					      	className={styles.form}
+					      >
+					      	<fieldset>
+					      		<legend>项目基本情况</legend>
+					      		<Row>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='项目名称'>
+							        	{this.props.form.getFieldDecorator('项目名称', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='项目类型'>
+							        	{this.props.form.getFieldDecorator('项目类型', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        {/*<FormItem {...formItemLayout} label='所在河流'>
+							        	{this.props.form.getFieldDecorator('所在河流', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>*/}
+							        <FormItem {...formItemLayout} label='流域/河流'>
+							        	{this.props.form.getFieldDecorator('流域河流', {
+								            rules: [{ required: true, message: '不能为空！' }]
+								          	})(
+							            	<Cascader options={this.props.riverInfo} placeholder=""/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='流域面积'>
+							        	{this.props.form.getFieldDecorator('流域面积', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      {/*<Col span={8}>
+							        <FormItem {...formItemLayout} label='所属流域'>
+							        	{this.props.form.getFieldDecorator('所属流域', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>*/}
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='市/县行政区'>
+							        	{this.props.form.getFieldDecorator('市行政区', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	//initialValue:[this.props.item['所在市'],this.props.item['所在县']]
+								          	})(
+							            	<Cascader options={city} placeholder=""/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='起点东经'>
+							        	{this.props.form.getFieldDecorator('起点东经', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input disabled={true}/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='起点北纬'>
+							        	{this.props.form.getFieldDecorator('起点北纬', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input disabled={true}/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='终点东经'>
+							        	{this.props.form.getFieldDecorator('终点东经', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input disabled={true}/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='终点北纬'>
+							        	{this.props.form.getFieldDecorator('终点北纬', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input disabled={true}/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='数据来源'>
+							        	{this.props.form.getFieldDecorator('数据来源', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							    </Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>河南省200到3000平方公里项目备案</legend>
+					      		<Row>
+					      			<Col span={8}>
+							        <FormItem {...formItemLayout} label='项目分类'>
+							        	{this.props.form.getFieldDecorator('项目分类1', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='建设任务治理河长'>
+							        	{this.props.form.getFieldDecorator('建设任务治理河长', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='投资'>
+							        	{this.props.form.getFieldDecorator('投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+					      		</Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>2017年申报治理项目名单</legend>
+					      		<Row>
+					      			<Col span={8}>
+								        <FormItem {...formItemLayout} label='备案长度'>
+								        	{this.props.form.getFieldDecorator('备案长度', {
+									            //rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input {...numberInput}  addonAfter="Km"/>
+								          	)}
+								        </FormItem>
+							      	</Col>
+							      	<Col span={8}>
+							        	<FormItem {...formItemLayout} label='批复投资'>
+							        	{this.props.form.getFieldDecorator('批复投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput}  addonAfter="万元"/>
+							          	)}
+							        	</FormItem>
+							      	</Col>
+					      		</Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>2017年后续治理项目名单</legend>
+					      		<Row>
+						      		<Col span={8}>
+								        <FormItem {...formItemLayout} label='治理河长'>
+								        	{this.props.form.getFieldDecorator('治理河长', {
+									            //rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input {...numberInput}  addonAfter="Km"/>
+								          	)}
+								        </FormItem>
+							      	</Col>
+							        <Col span={8}>
+							          	<FormItem {...formItemLayout} label='批复及初审投资'>
+								          	{this.props.form.getFieldDecorator('批复及初审投资', {
+									              //rules: [{ required: true, message: '不能为空！' }],
+									            	})(
+								              	<Input {...numberInput} addonAfter="万元"/>
+								            )}
+							          	</FormItem>
+							        </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='测算投资'>
+							        	{this.props.form.getFieldDecorator('测算投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='中央资金'>
+							        	{this.props.form.getFieldDecorator('中央资金', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='省级资金'>
+							        	{this.props.form.getFieldDecorator('省级资金', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='备注'>
+							        	{this.props.form.getFieldDecorator('备注', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='中央投资'>
+							        	{this.props.form.getFieldDecorator('中央投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+					      		</Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>原规划内中小河流结转项目</legend>
+					      		<Row>
+					      			<Col span={8}>
+							        <FormItem {...formItemLayout} label='项目分类2'>
+							        	{this.props.form.getFieldDecorator('项目分类2', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='治理河长1'>
+							        	{this.props.form.getFieldDecorator('治理河长1', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="Km"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='保护人口'>
+							        	{this.props.form.getFieldDecorator('保护人口', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="人"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='保护耕地'>
+							        	{this.props.form.getFieldDecorator('保护耕地', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万亩"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='排涝受益面积'>
+							        	{this.props.form.getFieldDecorator('排涝受益面积', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万亩"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='原规划中央投资'>
+							        	{this.props.form.getFieldDecorator('原规划中央投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							       <Col span={8}>
+							        <FormItem {...formItemLayout} label='原规划地方投资'>
+							        	{this.props.form.getFieldDecorator('原规划地方投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='已安排中央投资'>
+							        	{this.props.form.getFieldDecorator('已安排中央投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							       <Col span={8}>
+							        <FormItem {...formItemLayout} label='已安排地方投资'>
+							        	{this.props.form.getFieldDecorator('已安排地方投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='剩余中央投资'>
+							        	{this.props.form.getFieldDecorator('剩余中央投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							       <Col span={8}>
+							        <FormItem {...formItemLayout} label='剩余地方投资'>
+							        	{this.props.form.getFieldDecorator('剩余地方投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='拟调整纳入的规划阶段'>
+							        	{this.props.form.getFieldDecorator('拟调整纳入的规划阶段', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='是否属于享受特殊政策地区'>
+							        	{this.props.form.getFieldDecorator('是否属于享受特殊政策地区', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput}/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='初步设计是否已批复'>
+							        	{this.props.form.getFieldDecorator('初步设计是否已批复', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='项目建设进展'>
+							        	{this.props.form.getFieldDecorator('项目建设进展', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input/>
+							          	)}
+							        </FormItem>
+							      </Col>
+					      		</Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>2017年度投资落实情况及2018项目储备情况</legend>
+					      		<Row>
+					      			<Col span={8}>
+							        <FormItem {...formItemLayout} label='项目分类3'>
+							        	{this.props.form.getFieldDecorator('项目分类3', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='项目区个数'>
+							        	{this.props.form.getFieldDecorator('项目区个数', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput}  addonAfter="个"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='批复或规划综合治理河长'>
+							        	{this.props.form.getFieldDecorator('批复或规划综合治理河长', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
 							            	<Input {...numberInput}  addonAfter="Km"/>
 							          	)}
 							        </FormItem>
-						      	</Col>
-						      	<Col span={8}>
-						        	<FormItem {...formItemLayout} label='批复投资'>
-						        	{this.props.form.getFieldDecorator('批复投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput}  addonAfter="万元"/>
-						          	)}
-						        	</FormItem>
-						      	</Col>
-				      		</Row>
-				      	</fieldset>
-				      	<fieldset>
-				      		<legend>2017年后续治理项目名单</legend>
-				      		<Row>
-					      		<Col span={8}>
-							        <FormItem {...formItemLayout} label='治理河长'>
-							        	{this.props.form.getFieldDecorator('治理河长', {
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='批复或估算总投资'>
+							        	{this.props.form.getFieldDecorator('批复或估算总投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input {...numberInput}  addonAfter="Km"/>
+							            	<Input {...numberInput}  addonAfter="万元"/>
 							          	)}
 							        </FormItem>
-						      	</Col>
-						        <Col span={8}>
-						          	<FormItem {...formItemLayout} label='批复及初审投资'>
-							          	{this.props.form.getFieldDecorator('批复及初审投资', {
-								              //rules: [{ required: true, message: '不能为空！' }],
-								            	})(
-							              	<Input {...numberInput} addonAfter="万元"/>
-							            )}
-						          	</FormItem>
-						        </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='测算投资'>
-						        	{this.props.form.getFieldDecorator('测算投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='中央资金'>
-						        	{this.props.form.getFieldDecorator('中央资金', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='省级资金'>
-						        	{this.props.form.getFieldDecorator('省级资金', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='备注'>
-						        	{this.props.form.getFieldDecorator('备注', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='中央投资'>
-						        	{this.props.form.getFieldDecorator('中央投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-				      		</Row>
-				      	</fieldset>
-				      	<fieldset>
-				      		<legend>原规划内中小河流结转项目</legend>
-				      		<Row>
-				      			<Col span={8}>
-						        <FormItem {...formItemLayout} label='项目分类2'>
-						        	{this.props.form.getFieldDecorator('项目分类2', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='治理河长1'>
-						        	{this.props.form.getFieldDecorator('治理河长1', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="Km"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='保护人口'>
-						        	{this.props.form.getFieldDecorator('保护人口', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="人"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='保护耕地'>
-						        	{this.props.form.getFieldDecorator('保护耕地', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万亩"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='排涝受益面积'>
-						        	{this.props.form.getFieldDecorator('排涝受益面积', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万亩"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='原规划中央投资'>
-						        	{this.props.form.getFieldDecorator('原规划中央投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						       <Col span={8}>
-						        <FormItem {...formItemLayout} label='原规划地方投资'>
-						        	{this.props.form.getFieldDecorator('原规划地方投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='已安排中央投资'>
-						        	{this.props.form.getFieldDecorator('已安排中央投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						       <Col span={8}>
-						        <FormItem {...formItemLayout} label='已安排地方投资'>
-						        	{this.props.form.getFieldDecorator('已安排地方投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='剩余中央投资'>
-						        	{this.props.form.getFieldDecorator('剩余中央投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						       <Col span={8}>
-						        <FormItem {...formItemLayout} label='剩余地方投资'>
-						        	{this.props.form.getFieldDecorator('剩余地方投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='拟调整纳入的规划阶段'>
-						        	{this.props.form.getFieldDecorator('拟调整纳入的规划阶段', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='是否属于享受特殊政策地区'>
-						        	{this.props.form.getFieldDecorator('是否属于享受特殊政策地区', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput}/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='初步设计是否已批复'>
-						        	{this.props.form.getFieldDecorator('初步设计是否已批复', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='项目建设进展'>
-						        	{this.props.form.getFieldDecorator('项目建设进展', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input/>
-						          	)}
-						        </FormItem>
-						      </Col>
-				      		</Row>
-				      	</fieldset>
-				      	<fieldset>
-				      		<legend>2017年度投资落实情况及2018项目储备情况</legend>
-				      		<Row>
-				      			<Col span={8}>
-						        <FormItem {...formItemLayout} label='项目分类3'>
-						        	{this.props.form.getFieldDecorator('项目分类3', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='项目区个数'>
-						        	{this.props.form.getFieldDecorator('项目区个数', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput}  addonAfter="个"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='批复或规划综合治理河长'>
-						        	{this.props.form.getFieldDecorator('批复或规划综合治理河长', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput}  addonAfter="Km"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='批复或估算总投资'>
-						        	{this.props.form.getFieldDecorator('批复或估算总投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput}  addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='其中中央投资'>
-						        	{this.props.form.getFieldDecorator('其中中央投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='目前进度'>
-						        	{this.props.form.getFieldDecorator('目前进度', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						       <Col span={8}>
-						        <FormItem {...formItemLayout} label='批复文号'>
-						        	{this.props.form.getFieldDecorator('批复文号', {
-							            rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='2017资金落实合计'>
-						        	{this.props.form.getFieldDecorator('2017资金落实合计', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input   {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						       <Col span={8}>
-						        <FormItem {...formItemLayout} label='2017资金落实中央投资'>
-						        	{this.props.form.getFieldDecorator('2017资金落实中央投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='2017资金落实省级投资'>
-						        	{this.props.form.getFieldDecorator('2017资金落实省级投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						       <Col span={8}>
-						        <FormItem {...formItemLayout} label='2017资金落实市县投资'>
-						        	{this.props.form.getFieldDecorator('2017资金落实市县投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input  {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-				      		</Row>
-				      	</fieldset>
-				      	<fieldset>
-				      		<legend>其他</legend>
-				      		<Row>
-				      			<Col span={12}>
-						        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程照片'>
-				            		<Button onClick={
-				            			(e)=>{
-				            				console.log(this)
-				            				this.setState({
-				            					...this.state,
-				            					imageModal:{visible:true,}
-				            				})
-				            			}}>
-				            			<Icon type='upload' />点击查看图片
-				            		</Button>
-						        </FormItem>
-						      </Col>
-						      <Col span={12}>
-						        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程照片'>
-				            		<Button>
-				            			<Icon type='upload' /><a target='_blank' href="http://172.36.16.2:6500/File/%E8%B1%AB%E5%8F%91%E6%94%B9%E6%8A%95%E8%B5%84[2017]626%E5%8F%B7.pdf">查看批复文件</a>
-				            		</Button>
-						        </FormItem>
-						      </Col>
-						      <Col span={12}>
-						        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程视频'>
-						        	<Button onClick={
-				            			(e)=>{
-				            				console.log(this)
-				            				this.setState({
-				            					...this.state,
-				            					videoModal:{visible:true,}
-				            				})
-				            			}}>
-				            			<Icon type='upload' />点击查看视频
-				            		</Button>
-						        </FormItem>
-						      </Col>
-				      		</Row>
-				      	</fieldset>
-				      	<Row style={{marginTop:'10px'}}>
-			      			<Col span={4} push={16}><Button htmlType="reset" onClick={this.handleCancel}>取消</Button></Col>
-			      			<Col span={4} push={16}><Button type='primary' htmlType="submit">确定</Button></Col>
-				      	</Row>
-				      </Form>
-			    </div>
-		  		<div id={this.state.domId} style={{width:'calc(50vw - 30px)',height:'calc(100vh - 90px)',float:'left',position:'relative'}}>
-		  			<div id={`${this.state.templatePickerDivId}`}></div>
-		  			<div style={{position:'absolute',top:'10px',right:'10px',zIndex:1,fontSize:'20px',background:'white'}}>
-		  			按住Ctrl键并点击要素可以进行删除操作
-		  			</div>
-		  		</div>
-		  		<Spin size='large' style={
-		  			this.state.loading?{position:'absolute',top:'50%',left:'50%',display:'block'}
-		  			:{position:'absolute',top:'50%',left:'50%',display:'none'}
-		  		}/>
-			</div>
-		</Modal>)
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='其中中央投资'>
+							        	{this.props.form.getFieldDecorator('其中中央投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='目前进度'>
+							        	{this.props.form.getFieldDecorator('目前进度', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							       <Col span={8}>
+							        <FormItem {...formItemLayout} label='批复文号'>
+							        	{this.props.form.getFieldDecorator('批复文号', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='2017资金落实合计'>
+							        	{this.props.form.getFieldDecorator('2017资金落实合计', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input   {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							       <Col span={8}>
+							        <FormItem {...formItemLayout} label='2017资金落实中央投资'>
+							        	{this.props.form.getFieldDecorator('2017资金落实中央投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='2017资金落实省级投资'>
+							        	{this.props.form.getFieldDecorator('2017资金落实省级投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							       <Col span={8}>
+							        <FormItem {...formItemLayout} label='2017资金落实市县投资'>
+							        	{this.props.form.getFieldDecorator('2017资金落实市县投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input  {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+					      		</Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>其他</legend>
+					      		<Row>
+					      			<Col span={12}>
+							        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程照片'>
+					            		{
+					            			picUrl.length>0?
+					            			<Button onClick={(e)=>{
+					            				console.log(this)
+					            				this.setState({
+					            					...this.state,
+					            					imageModal:{visible:true,}
+					            				})
+					            			}}>
+					            				<Icon type='upload' />点击查看图片
+					            			</Button>
+					            			:<Button><Icon type='frown-o' />无图片</Button>
+					            		}
+							        </FormItem>
+							      </Col>
+							      <Col span={12}>
+							        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程文件'>
+					            		{
+					            			fileUrl.length>0?
+					            			fileUrl.map((src,i)=><Button><Icon type='upload' /><a href={`${src}`}>{`文件${i}`}</a></Button>)
+					            			:<Button><Icon type='frown-o' />无文件</Button>
+					            		}
+							        </FormItem>
+							      </Col>
+							      <Col span={12}>
+							        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程视频'>
+							        	{
+					            			vioUrl.length>0?
+					            			<Button onClick={(e)=>{
+					            				console.log(this)
+					            				this.setState({
+					            					...this.state,
+					            					videoModal:{visible:true,}
+					            				})
+					            			}}>
+					            				<Icon type='upload' />点击查看视频
+					            			</Button>
+					            			:<Button><Icon type='frown-o' />无视频</Button>
+					            		}
+							        </FormItem>
+							      </Col>
+					      		</Row>
+					      	</fieldset>
+					      	<Row style={{marginTop:'10px'}}>
+				      			<Col span={4} push={16}><Button htmlType="reset" onClick={this.handleCancel}>取消</Button></Col>
+				      			<Col span={4} push={16}><Button type='primary' htmlType="submit">确定</Button></Col>
+					      	</Row>
+					      </Form>
+				    </div>
+			  		<div id={this.state.domId} style={{width:'calc(50vw - 30px)',height:'calc(100vh - 90px)',float:'left',position:'relative'}}>
+			  			<div id={`${this.state.templatePickerDivId}`}></div>
+			  			<div style={{position:'absolute',top:'10px',right:'10px',zIndex:1,fontSize:'20px',background:'white'}}>
+			  			按住Ctrl键并点击要素可以进行删除操作
+			  			</div>
+			  		</div>
+			  		<Spin size='large' style={
+			  			this.state.loading?{position:'absolute',top:'50%',left:'50%',display:'block'}
+			  			:{position:'absolute',top:'50%',left:'50%',display:'none'}
+			  		}/>
+				</div>
+			</Spin>
+			</Modal>
+		)
 	}
 
 	componentDidMount () {
