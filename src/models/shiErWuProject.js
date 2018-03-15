@@ -1,6 +1,12 @@
-//查询信息 规划项目MODEL
+//查询信息 十二五项目
+import {message} from 'antd'
+import {query,remove,update,newProject} from '../services/projectServices'
+import riverServices from '../services/riverServices'
+import {config } from '../utils'
 
-import {query} from '../services/projectServices'
+const { api,PROJECTTYPE } = config
+const delay = timeout => new Promise(resolve => setTimeout(resolve, timeout));
+const TYPE = PROJECTTYPE.ShiErWuProjectType
 
 export default {
 
@@ -40,21 +46,25 @@ export default {
     updateModal:{
       visible:false,
       currentItem:null,
-    },
-    deleteModal:{
-      visible:false,
+      submitSpin:false,
     },
     detailModal:{
       visible:false,
     },
     newProjectModal:{
       visible:false,
-    }
+      submitSuccess:{},
+      submitSpin:false,
+    },
+    riverInfo:[],//保存表单填写过程中用到的所有河流列表信息
+    deleteItem:null,
+    needRefresh:false,
   },
   //获取项目数据
   subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
       dispatch({type:'query'})
+      dispatch({type:'getRiverInfo'})
     },
   },
 
@@ -62,7 +72,7 @@ export default {
     *fetch({ payload }, { call, put }) {  // eslint-disable-line
       yield put({ type: 'save' });
     },
-    *query({payload={tabs:'淮河流域',filter:'',tree:['河南省'],type:'十二五项目'}},{call,put}){
+    *query({payload={tabs:'淮河流域',filter:'',tree:['河南省'],type:TYPE}},{call,put}){
       const map={'淮河流域':'huaiHeTable','黄河流域':'huangHeTable','长江流域':'changJiangTable','海河流域':'haiHeTable','全部':'allTable'}
       yield put({type:'isLoading'})
       
@@ -87,23 +97,102 @@ export default {
       }
     },
     *remove({payload},{call,put}){
-        const res = yield call(remove,{...payload})
-        console.log(message)
+        console.log(payload)
+        yield put({type:'isLoading'})
+        const res = yield call(remove,{
+          id:payload['项目编号'],
+          '项目类型':TYPE,
+        })
         if(res){
           message.success('删除成功')
         }else{
           message.error('删除失败')
         }
-        window.deleteModalRef.destroy()
+        yield put({type:'needRefresh'})
+        yield put({type:'notLoading'})
     },
     *updateProject({payload},{call,put}){
-      console.log('model project')
-      console.log(payload)
+      let data = payload;
+      data['所在市'] = payload['市行政区'][0]
+      data['所在县'] = payload['市行政区'][1]
+      data['所属流域']  = payload['流域河流'][0]
+      data['所在河流']  = payload['流域河流'][1]
+      delete payload['市行政区']
+      const res = yield call(update,{
+        '项目类型':TYPE,
+        data:data
+      })
+      if(res=='true'){
+        message.success("修改成功",3)
+        yield put({type:'hideUpdateModal'})
+        yield put({type:'needRefresh'})
+      }else{
+        message.error("修改失败",3)
+      }
+    },
+    *getRiverInfo({payload},{call,put}){
+      const data = yield call(riverServices.query,{'所属流域':'全部'})
+      let rivers=[
+        {value: '淮河流域',label: '淮河流域',children:[]},
+        {value: '黄河流域',label: '黄河流域',children:[]},
+        {value: '长江流域',label: '长江流域',children:[]},
+        {value: '海河流域',label: '海河流域',children:[]},
+      ];
+      data.forEach((item)=>{
+        let riverName = item['河流名称']
+        let liuYu = item['所属流域']
+        rivers.forEach(item=>{
+          if(item.value == liuYu){
+            var notHas = item.children.every(item=>{
+              return(item.value!=riverName)
+            })
 
-      yield put({type:'hideUpdateModal'})
+            if(notHas){
+              item.children.push({
+                'value':riverName,
+                'label':riverName
+              })
+            }
+          }
+        })
+        
+      })
+      yield put({type:'riverInfo',payload:rivers})
     },
     *newProjectSubmit({payload},{call,put}){
-      yield put({type:'hideNewModal'})
+        //console.log('submit from model')
+        //console.log(payload)
+        yield put({type:'showNewModalSubmitSpin'})
+        yield call(delay,1000)
+        let {formData,values} = payload
+        for(let key in values){
+          if(key=='市行政区'){
+            formData.append('所在市',values['市行政区']?values['市行政区'][0]:"")
+            formData.append('所在县',values['市行政区']?values['市行政区'][1]:"")
+          }else if (key=='流域河流'){
+            formData.append('所属流域',values['流域河流']?values['流域河流'][0]:"")
+            formData.append('所在河流',values['流域河流']?values['流域河流'][1]:"")
+          }else if(key==undefined){
+            formData.append(key,"")
+          }else{
+            formData.append(key,values[key])
+          }
+        }
+        formData.append("项目类型","")
+        const a = yield call(newProject,{
+          '项目类型':TYPE,
+          data:formData
+        })
+        //console.log(a)
+        if(a=='true'){
+          message.success("修改成功",3)
+          yield put({type:'hideNewModal'})
+          yield put({type:'needRefresh'})
+        }else{
+          message.error("修改失败",3)
+          //yield put({type:'hideNewModal'})
+        }
+        yield put({type:'hideNewModalSubmitSpin'})
     }
   },
 
@@ -188,6 +277,7 @@ export default {
       return{
         ...state,
         detailModal:{
+          ...state.detailModal,
           visible:true
         }
       }
@@ -196,6 +286,7 @@ export default {
       return{
         ...state,
         detailModal:{
+          ...state.detailModal,
           visible:false
         }
       }
@@ -204,6 +295,7 @@ export default {
       return{
         ...state,
         updateModal:{
+          ...state.updateModal,
           visible:true,
           currentItem:payload.currentItem
         }
@@ -213,6 +305,7 @@ export default {
       return{
         ...state,
         updateModal:{
+          ...state.updateModal,
           visible:false,
           currentItem:null,
         }
@@ -222,6 +315,7 @@ export default {
       return{
         ...state,
         newProjectModal:{
+          ...state.newProjectModal,
           visible:true
         }
       }
@@ -230,11 +324,14 @@ export default {
       return{
         ...state,
         newProjectModal:{
+          ...state.newProjectModal,
           visible:false
         }
       }
     },
-    
+    updateProject(state){
+      return{...state}
+    },
     setDeleteItem(state,{payload}){
       return{
         ...state,
@@ -269,7 +366,8 @@ export default {
                     var a = item[key].toString();
                     var b = a.indexOf(filter);
                     var c = filter.indexOf(a);
-                    if(a.indexOf(filter)>-1||filter.indexOf(a)>-1){
+                    //if(a.indexOf(filter)>-1||filter.indexOf(a)>-1){
+                    if(a.indexOf(filter)>-1){
                       targetDs.push(item)
                       break;
                     }
@@ -286,7 +384,8 @@ export default {
                 var a = item[key].toString();
                 var b = a.indexOf(filter);
                 var c = filter.indexOf(a);
-                if(a.indexOf(filter)>-1||filter.indexOf(a)>-1){
+                //if(a.indexOf(filter)>-1||filter.indexOf(a)>-1){
+                if(a.indexOf(filter)>-1){
                   find = true;
                   targetDs.push(item)
                   break;
@@ -310,6 +409,42 @@ export default {
           ...newState,
       }
     },
+    riverInfo(state,{payload}){
+      return{
+        ...state,
+        riverInfo:payload
+      }
+    },
+    showNewModalSubmitSpin(state){
+      return{
+        ...state,
+        newProjectModal:{
+          ...state.newProjectModal,
+          submitSpin:true,
+        }
+      }
+    },
+    hideNewModalSubmitSpin(state){
+      return{
+        ...state,
+        newProjectModal:{
+          ...state.newProjectModal,
+          submitSpin:false,
+        }
+      }
+    },
+    needRefresh(state){
+      return {
+        ...state,
+        needRefresh:true
+      }
+    },
+    notNeedRefresh(state){
+      return{
+        ...state,
+        needRefresh:false
+      }
+    }
   },
 
 }

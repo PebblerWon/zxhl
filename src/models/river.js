@@ -248,7 +248,8 @@ export default {
                 var a = item[key].toString();
                 var b = a.indexOf(filter);
                 var c = filter.indexOf(a);
-                if(a.indexOf(filter)>-1||filter.indexOf(a)>-1){
+                //if(a.indexOf(filter)>-1||filter.indexOf(a)>-1){
+                if(a.indexOf(filter)>-1){
                   find = true;
                   targetDs.push(item)
                   break;

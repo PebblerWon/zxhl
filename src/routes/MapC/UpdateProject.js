@@ -37,9 +37,11 @@ class UpdateProject extends React.Component {
 			mapLoaded: false ,
 			mapUrl:MapUrl,
 			loading:true,
-			qidian:'',
-			zhongdian:'',
-			id:1,
+			qidian_x:'',
+    		qidian_y:'',
+    		zhongdian_x:'',
+    		zhongdian_y:'',
+			id:props.item['项目编号'],
 			domId:`${props.type}updateMap`,
 			templatePickerDivId:`updateProjecttemplate_${Math.floor(Math.random()*1000)}`,
 			imageModal:{
@@ -53,12 +55,61 @@ class UpdateProject extends React.Component {
 				newGraphic:undefined,templatePicker:undefined,
 			}//存储地图操作的一些变量
 		}
+
+		this.handleSubmit = this.handleSubmit.bind(this)
+		this.handleCancel = this.handleCancel.bind(this)
+
 		//console.log(this.state)
 		this.showImageModal = this.showImageModal.bind(this)
 		this.hideImageModal = this.hideImageModal.bind(this)
 		this.showVideoModal = this.showVideoModal.bind(this)
 		this.hideVideoModal = this.hideVideoModal.bind(this)
+
+		this.showSpin = this.showSpin.bind(this)
+		this.hideSpin = this.hideSpin.bind(this)
+		this.initMap = this.initMap.bind(this)
+		this.setCorridate = this.setCorridate.bind(this)
+		this.toApplyEdits = this.toApplyEdits.bind(this)
 	}
+	handleSubmit(e){
+  		//console.log(this)
+	    e.preventDefault();
+	    this.props.form.validateFields((err, values) => {
+	    	//console.log(err)
+	      	//console.log(values);
+	      	
+	      	if(err){
+	      		let a =Modal.error({
+	      			title:'请认真填写完整！',
+	      			onOk(e){
+	      				a.destroy()
+	      			},
+	      			onCancel(e){
+	      				a.destroy()
+	      			}
+	      		})
+	      	}else{
+		      	values['项目编号']=this.props.item['项目编号']
+	      		this.props.onSubmit(values)
+	      	}
+	      	
+	    });
+  	}
+
+	handleCancel(e){
+		let that = this;
+		let a = Modal.confirm({
+			title:'你的操作不会被保存，是否继续？',
+			onOk(e){
+				a.destroy();
+				that.props.hideModal()
+			},
+			onCancel(){
+				a.destroy()
+			}
+		})
+	}
+  	
 	showImageModal(){
 		this.setState({
 			imageModal:{visible:true},
@@ -99,34 +150,7 @@ class UpdateProject extends React.Component {
 	  		onOk:this.showVideoModal,
   			onCancel:this.hideVideoModal
 	  	}
-	  	const handleReset=(e)=>{
-			//console.log(this)
-	    	//ReactDom.props.form.resetFields();
-	    	this.props.onCancel();
-	  	}
-	  	const handleSubmit=(e)=>{
-	  		//console.log(this)
-		    e.preventDefault();
-		    this.props.form.validateFields((err, values) => {
-		    	//console.log(err)
-		      	console.log('Received values of form: ', values);
-		      	if(err){
-		      		let a =Modal.error({
-		      			title:'请认真填写完整！',
-		      			onOk(e){
-		      				a.destroy()
-		      			},
-		      			onCancel(e){
-		      				a.destroy()
-		      			}
-		      		})
-		      	}else{
-			      	//svalues.id=projectId;
-		      		this.props.onSubmit(values)
-		      	}
-		      	
-		    });
-	  	}
+	  	
 		if (error) {
 		  return <div className='container'>
 		    <div className='alert alert-danger alert-map'>{error}</div>
@@ -138,7 +162,7 @@ class UpdateProject extends React.Component {
 		        title=""
 		        visible={this.props.visible}
 		        style={{ top: 20 }}
-		        onCancel={this.props.onCancel}
+		        onCancel={this.handleCancel}
 		        width='calc(~"100vw - 60px")'
 		        height='calc(~"100vh - 90px")'
 		        footer={null}
@@ -151,7 +175,7 @@ class UpdateProject extends React.Component {
 							?<Carousel autoplay className={styles.carousel}>
 					            picUrl.map((src,i)=>(
 					            	<div  key={i}>
-				          				<img src={src} alt="" style={{margin:"0 auto"}} width="100%" height="100%"/>
+				          				<img src={`${config.api.map.projectSource}${src}`} alt="" style={{margin:"0 auto"}} width="100%" height="100%"/>
 				        			</div>
 					            ))
 					        </Carousel>
@@ -165,7 +189,7 @@ class UpdateProject extends React.Component {
 					</Modal>
 			      	<div id="templateDiv" style={{float:'left',width:'calc(50vw - 30px)',height:'calc(100vh - 90px)',overflowY:'scroll'}}>
 				      <Form
-				      	onSubmit={handleSubmit}
+				      	onSubmit={this.handleSubmit}
 				      	className={styles.form}
 				      >
 				      	<fieldset>
@@ -181,18 +205,25 @@ class UpdateProject extends React.Component {
 						        </FormItem>
 						      </Col>
 						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='所在河流'>
+						        {/*<FormItem {...formItemLayout} label='所在河流'>
 						        	{this.props.form.getFieldDecorator('所在河流', {
 							            rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
+						          	)}
+						        </FormItem>*/}
+						        <FormItem {...formItemLayout} label='流域/河流'>
+						        	{this.props.form.getFieldDecorator('流域河流', {
+							            rules: [{ required: true, message: '不能为空！' }]
+							          	})(
+						            	<Cascader options={this.props.riverInfo} placeholder=""/>
 						          	)}
 						        </FormItem>
 						      </Col>
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='市/县行政区'>
 						        	{this.props.form.getFieldDecorator('市行政区', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Cascader options={city} placeholder=""/>
 						          	)}
@@ -202,7 +233,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='前期工作'>
 						        	{this.props.form.getFieldDecorator('前期工作', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -211,7 +242,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='规划投资'>
 						        	{this.props.form.getFieldDecorator('规划投资', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput} addonAfter="万元"/>
 						          	)}
@@ -220,7 +251,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='初设单位'>
 						        	{this.props.form.getFieldDecorator('初设单位', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -229,7 +260,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='初设进展'>
 						        	{this.props.form.getFieldDecorator('初设进展', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -238,15 +269,15 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='批复情况'>
 						        	{this.props.form.getFieldDecorator('批复情况', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
 						        </FormItem>
 						      </Col>
 						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='起点坐标'>
-						        	{this.props.form.getFieldDecorator('起点坐标', {
+						        <FormItem {...formItemLayout} label='起点东经'>
+						        	{this.props.form.getFieldDecorator('起点东经', {
 							            rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input disabled={true}/>
@@ -254,8 +285,26 @@ class UpdateProject extends React.Component {
 						        </FormItem>
 						      </Col>
 						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='终点坐标'>
-						        	{this.props.form.getFieldDecorator('终点坐标', {
+						        <FormItem {...formItemLayout} label='起点北纬'>
+						        	{this.props.form.getFieldDecorator('起点北纬', {
+							            rules: [{ required: true, message: '不能为空！' }],
+							          	})(
+						            	<Input disabled={true}/>
+						          	)}
+						        </FormItem>
+						      </Col>
+						      <Col span={8}>
+						        <FormItem {...formItemLayout} label='终点东经'>
+						        	{this.props.form.getFieldDecorator('终点东经', {
+							            rules: [{ required: true, message: '不能为空！' }],
+							          	})(
+						            	<Input disabled={true}/>
+						          	)}
+						        </FormItem>
+						      </Col>
+						      <Col span={8}>
+						        <FormItem {...formItemLayout} label='终点北纬'>
+						        	{this.props.form.getFieldDecorator('终点北纬', {
 							            rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input disabled={true}/>
@@ -270,7 +319,7 @@ class UpdateProject extends React.Component {
 				      			<Col span={8}>
 						        <FormItem {...formItemLayout} label='治理长度'>
 						        	{this.props.form.getFieldDecorator('治理长度', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput}  addonAfter="Km"/>
 						          	)}
@@ -279,7 +328,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='新建堤防'>
 						        	{this.props.form.getFieldDecorator('新建堤防', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -288,7 +337,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='加固堤防'>
 						        	{this.props.form.getFieldDecorator('加固堤防', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -297,7 +346,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='清淤'>
 						        	{this.props.form.getFieldDecorator('清淤', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -306,7 +355,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='护坡护岸'>
 						        	{this.props.form.getFieldDecorator('护坡护岸', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -315,7 +364,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='其他'>
 						        	{this.props.form.getFieldDecorator('其他', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -324,7 +373,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='防洪标准'>
 						        	{this.props.form.getFieldDecorator('防洪标准', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -333,7 +382,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='除涝标准'>
 						        	{this.props.form.getFieldDecorator('除涝标准', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -347,7 +396,7 @@ class UpdateProject extends React.Component {
 				      			<Col span={8}>
 						        <FormItem {...formItemLayout} label='保护城镇'>
 						        	{this.props.form.getFieldDecorator('保护城镇', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -356,7 +405,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='保护人口'>
 						        	{this.props.form.getFieldDecorator('保护人口', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput}  addonAfter="万人"/>
 						          	)}
@@ -365,7 +414,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='保护耕地'>
 						        	{this.props.form.getFieldDecorator('保护耕地', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput}  addonAfter="万亩"/>
 						          	)}
@@ -374,7 +423,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='排涝收益'>
 						        	{this.props.form.getFieldDecorator('排涝收益', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput}   addonAfter="万亩"/>
 						          	)}
@@ -388,7 +437,7 @@ class UpdateProject extends React.Component {
 				      			<Col span={8}>
 						        <FormItem {...formItemLayout} label='批复资金'>
 						        	{this.props.form.getFieldDecorator('批复资金', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput}  addonAfter="万元"/>
 						          	)}
@@ -397,7 +446,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='总投资'>
 						        	{this.props.form.getFieldDecorator('总投资', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput} addonAfter="万元"/>
 						          	)}
@@ -406,7 +455,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='移民征地'>
 						        	{this.props.form.getFieldDecorator('移民征地', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput} addonAfter="万元"/>
 						          	)}
@@ -415,7 +464,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='拆迁补偿'>
 						        	{this.props.form.getFieldDecorator('拆迁补偿', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput} addonAfter="万元"/>
 						          	)}
@@ -424,7 +473,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='省级投资'>
 						        	{this.props.form.getFieldDecorator('省级投资', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput} addonAfter="万元"/>
 						          	)}
@@ -433,7 +482,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='市县投资'>
 						        	{this.props.form.getFieldDecorator('市县投资', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput} addonAfter="万元"/>
 						          	)}
@@ -442,7 +491,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='中央投资'>
 						        	{this.props.form.getFieldDecorator('中央投资', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput} addonAfter="万元"/>
 						          	)}
@@ -456,7 +505,7 @@ class UpdateProject extends React.Component {
 				      			<Col span={8}>
 						        <FormItem {...formItemLayout} label='绩效评分'>
 						        	{this.props.form.getFieldDecorator('绩效评分', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -465,7 +514,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='竣工审计'>
 						        	{this.props.form.getFieldDecorator('竣工审计', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -474,7 +523,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='竣工时间'>
 						        	{this.props.form.getFieldDecorator('竣工时间', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -483,7 +532,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='验收单位'>
 						        	{this.props.form.getFieldDecorator('验收单位', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -492,7 +541,7 @@ class UpdateProject extends React.Component {
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='验收文号'>
 						        	{this.props.form.getFieldDecorator('中央投资', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -550,7 +599,7 @@ class UpdateProject extends React.Component {
 						      <Col span={12}>
 						        <FormItem {...formItemLayout} labelCol={{span:6}} wrapperCol={{span:18}} label='上报人'>
 						        	{this.props.form.getFieldDecorator('上报人', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -559,7 +608,7 @@ class UpdateProject extends React.Component {
 						      <Col span={12}>
 						        <FormItem {...formItemLayout} labelCol={{span:6}} wrapperCol={{span:18}} label='审核人'>
 						        	{this.props.form.getFieldDecorator('审核人', {
-							            rules: [{ required: true, message: '不能为空！' }],
+							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
 						          	)}
@@ -568,8 +617,8 @@ class UpdateProject extends React.Component {
 				      		</Row>
 				      	</fieldset>
 				      	<Row style={{marginTop:'10px'}}>
-			      			<Col span={4} push={16}><Button htmlType="reset" onClick={handleReset}>取消</Button></Col>
-			      			<Col span={4} push={16}><Button type='primary' htmlType="submit">确定</Button></Col>
+			      			<Col span={4} push={16}><Button htmlType="reset" onClick={this.handleCancel}>取消</Button></Col>
+			      			<Col span={4} push={16}><Button type='primary' htmlType="submit" onClick={this.handleSubmit}>确定</Button></Col>
 				      	</Row>
 				      </Form>
 			      	</div>
@@ -597,7 +646,8 @@ class UpdateProject extends React.Component {
 		//如果item !=null表示是编辑一个项目
 		
 		this.initMap(item['项目编号'])
-
+		item['市行政区'] = [item['所在市'].trim(),item['所在县'].trim()]
+		item['流域河流'] = [item['所属流域'].trim(),item['所在河流'].trim()]
 		this.props.form.setFieldsInitialValue(item)
 	}
 	componentWillUnmount(){
@@ -714,6 +764,23 @@ class UpdateProject extends React.Component {
 		        map.addLayers([imgMap,imgMapMarker,featureLayer1]);
 		        //map.panUp();
 		        
+		        function _setZuoBiao(evt){
+					var a = evt.graphic.geometry.paths[0].length;
+		        	reactDom.setCorridate(
+		        		`${evt.graphic.geometry.paths[0][0][0]}`,
+		        		`${evt.graphic.geometry.paths[0][0][1]}`,
+		        		`${evt.graphic.geometry.paths[0][a-1][0]}`,
+		        		`${evt.graphic.geometry.paths[0][a-1][1]}`,
+		        	)
+		        	reactDom.setState({
+		            	...reactDom.state,
+		            	mapProp:{
+		            		...reactDom.state.mapProp,selectedTemplate,
+		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+		            	}
+		            })
+				}
+
 		        function initEditing(e){
 		        	console.log('initEditing')
 		        	map.centerAt(new Point([113.52,34.58],new SpatialReference({ wkid:4326 })))
@@ -790,7 +857,7 @@ class UpdateProject extends React.Component {
 					            rows: "auto",
 					            columns:1,
 					            style: "height: auto; overflow: auto;position:absolute;z-index:1;bakcground:transparent;",
-					            items:[{label:'点击添加项目',symbol:symbol,description:''}],
+					            items:[{label:'点击添加项目',description:''}],
 					            useLegend:false,
 				        	}, 
 				        	`${reactDom.state.templatePickerDivId}`
@@ -824,41 +891,10 @@ class UpdateProject extends React.Component {
 			        });
 
 			        editToolbar.on("graphic-move-stop",function(evt){
-			        	console.log(reactDom)
-			        	console.log(evt)
-			        	var a = evt.graphic.geometry.paths[0].length;
-			        	reactDom.setCorridate(
-			        		`${evt.graphic.geometry.paths[0][0][0]}`,
-			        		`${evt.graphic.geometry.paths[0][0][1]}`,
-			        		`${evt.graphic.geometry.paths[0][a-1][0]}`,
-			        		`${evt.graphic.geometry.paths[0][a-1][1]}`,
-			        	)
-			        	reactDom.setState({
-			            	...reactDom.state,
-			            	mapProp:{
-			            		...reactDom.state.mapProp,selectedTemplate,
-			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-			            	}
-			            })
+			        	_setZuoBiao(evt)
 			        })
 			        editToolbar.on("vertex-move",function(evt){
-			        	console.log(reactDom)
-			        	console.log(evt)
-			        	var a = evt.graphic.geometry.paths[0].length;
-			        	reactDom.setCorridate(
-			        		`${evt.graphic.geometry.paths[0][0][0]}`,
-			        		`${evt.graphic.geometry.paths[0][0][1]}`,
-			        		`${evt.graphic.geometry.paths[0][a-1][0]}`,
-			        		`${evt.graphic.geometry.paths[0][a-1][1]}`,
-			        	)
-			        	
-			        	reactDom.setState({
-			            	...reactDom.state,
-			            	mapProp:{
-			            		...reactDom.state.mapProp,selectedTemplate,
-			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-			            	}
-			            })
+			        	_setZuoBiao(evt)
 			        })
 			       	
 			        //drawToolbar.activate(Draw.POINT);
@@ -871,10 +907,10 @@ class UpdateProject extends React.Component {
 			            newAttributes.id=projectId;
 			            let newGraphic = new Graphic(evt.geometry, null, newAttributes);
 			            console.log(newGraphic)
-			            add = new Add({
+			            /*add = new Add({
 			            	featureLayer:featureLayer1,
 			            	addedGraphics:[newGraphic]
-			            })
+			            })*/
 			            reactDom.setState({
 			            	...reactDom.state,
 			            	mapProp:{
@@ -882,19 +918,22 @@ class UpdateProject extends React.Component {
 			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar,newGraphic
 			            	}
 			            })
-			            var a = newGraphic.geometry.paths[0].length;
-			        	reactDom.setCorridate(
-			        		`${newGraphic.geometry.paths[0][0][0]}`,
-			        		`${newGraphic.geometry.paths[0][0][1]}`,
-			        		`${newGraphic.geometry.paths[0][a-1][0]}`,
-			        		`${newGraphic.geometry.paths[0][a-1][1]}`,
-			        	)
+
 			            reactDom.toApplyEdits([newGraphic], null, null,(succ)=>{
 			            	console.log('编辑成功')
 			            },(err)=>{
 			            	console.log('编辑失败 :')
 			            	console.log(err)
 			            })
+
+			            var a = evt.geometry.paths[0].length;
+			        	reactDom.setCorridate(
+			        		`${newGraphic.geometry.paths[0][0][0]}`,
+			        		`${newGraphic.geometry.paths[0][0][1]}`,
+			        		`${newGraphic.geometry.paths[0][a-1][0]}`,
+			        		`${newGraphic.geometry.paths[0][a-1][1]}`,
+			        	)
+			           
 			        });
 
 					reactDom.setState({
@@ -920,8 +959,10 @@ class UpdateProject extends React.Component {
     		zhongdian_x:`${x2}`,
     		zhongdian_y:`${y2}`,
     	})
-        reactDom.props.form.setFieldsValue({"起点坐标":`${reactDom.state.qidian_x},${reactDom.state.qidian_y}`})
-		reactDom.props.form.setFieldsValue({"终点坐标":`${reactDom.state.zhongdian_x},${reactDom.state.zhongdian_y}`})
+        reactDom.props.form.setFieldsValue({"起点东经":reactDom.state.qidian_x})
+		reactDom.props.form.setFieldsValue({"起点北纬":reactDom.state.qidian_y})
+		reactDom.props.form.setFieldsValue({"终点东经":reactDom.state.zhongdian_x})
+		reactDom.props.form.setFieldsValue({"终点北纬":reactDom.state.zhongdian_y})
 	}
 	toApplyEdits(add,update,remove,success,error){
 		this.state.mapProp.featureLayer1.applyEdits(add,update,remove,success,error);

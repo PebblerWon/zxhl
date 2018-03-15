@@ -39,8 +39,10 @@ class UpdateZaiHou extends React.Component {
 			mapLoaded: false ,
 			mapUrl:MapUrl,
 			loading:true,
-			qidian:'',
-			zhongdian:'',
+			qidian_x:'',
+    		qidian_y:'',
+    		zhongdian_x:'',
+    		zhongdian_y:'',
 			id:props.item.id,
 			domId:`${props.type}updateMap`,
 			templatePickerDivId:`updateZaihoutemplate_${Math.floor(Math.random()*1000)}`,
@@ -55,14 +57,59 @@ class UpdateZaiHou extends React.Component {
 				newGraphic:undefined,templatePicker:undefined,
 			}//存储地图操作的一些变量
 		}
+
+		this.handleSubmit = this.handleSubmit.bind(this)
+		this.handleCancel = this.handleCancel.bind(this)
+
+
 		this.showImageModal = this.showImageModal.bind(this)
 		this.hideImageModal = this.hideImageModal.bind(this)
 		this.showVideoModal = this.showVideoModal.bind(this)
 		this.hideVideoModal = this.hideVideoModal.bind(this)
+		this.showSpin = this.showSpin.bind(this)
+		this.hideSpin = this.hideSpin.bind(this)
+		this.initMap = this.initMap.bind(this)
+		this.setCorridate = this.setCorridate.bind(this)
+		this.toApplyEdits = this.toApplyEdits.bind(this)
 
-		this.handleReset = this.handleReset.bind(this)
-		this.handleSubmit = this.handleSubmit.bind(this)
+		
 	}
+	handleSubmit(e){
+		//console.log(this)
+		e.preventDefault();
+		this.props.form.validateFields((err, values) => {
+			if(err){
+		  		let a =Modal.error({
+		  			title:'请认真填写完整！',
+		  			onOk(e){
+		  				a.destroy()
+		  			},
+		  			onCancel(e){
+		  				a.destroy()
+		  			}
+		  		})
+		  	}else{
+		  		values.id = this.props.item.id
+		  		this.props.onSubmit(values)
+		  	}
+		});
+	}
+
+	handleCancel(e){
+		let that = this;
+		let a = Modal.confirm({
+			title:'你的操作不会被保存，是否继续？',
+			onOk(e){
+				a.destroy();
+				that.props.hideModal()
+			},
+			onCancel(){
+				a.destroy()
+			}
+		})
+
+	}
+
 	showImageModal(){
 		this.setState({
 			imageModal:{visible:true},
@@ -86,38 +133,13 @@ class UpdateZaiHou extends React.Component {
 			videoModal:{visible:false},
 		})
 	}
-	handleReset(e){
-			//console.log(this)
-	    	//ReactDom.props.form.resetFields();
-	    	this.props.onCancel();
-	  	}
-	handleSubmit(e){
-		//console.log(this)
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-    	if(err){
-      		let a =Modal.error({
-      			title:'请认真填写完整！',
-      			onOk(e){
-      				a.destroy()
-      			},
-      			onCancel(e){
-      				a.destroy()
-      			}
-      		})
-      	}else{
-      		values.id = this.props.item.id
-      		this.props.onSubmit(values)
-      	}
-    });
-	}
+	
 	render () {
 		// show any map errors
-		let picInfo=[],imageModal,picUrl=this.props.item.picUrl;
+		var picInfo,imageModal,picUrl=this.props.item.picUrl;
 		const ReactDom = this;
 		const error = this.state.error
 		let input1,input2;
-
 		const imageModalProps={
   			visible:this.state.imageModal.visible,
   			onOk:this.showImageModal,
@@ -140,7 +162,7 @@ class UpdateZaiHou extends React.Component {
 		        title=""
 		        visible={this.props.visible}
 		        style={{ top: 20 }}
-		        onCancel={this.props.onCancel}
+		        onCancel={this.handleCancel}
 		        width='calc(~"100vw - 60px")'
 		        height='calc(~"100vh - 90px")'
 		        footer={null}
@@ -149,16 +171,16 @@ class UpdateZaiHou extends React.Component {
 		 		<EsriLoader options={esriOptions}/>
 		   		<Modal {...imageModalProps} footer={null}>
 				{
-		   			picUrl.length>0
-					?<Carousel autoplay className={styles.carousel}>
-			            picUrl.map((src,i)=>(
-			            	<div  key={i}>
-		          				<img src={src} alt="" style={{margin:"0 auto"}} width="100%" height="100%"/>
-		        			</div>
-			            ))
-			        </Carousel>
-			        :<img src={config.noimage} alt="图片不存在" style={{margin:"0 auto"}} width="100%" height="100%"/>
-		    	}
+				   			picUrl.length>0
+							?<Carousel autoplay className={styles.carousel}>
+					            {picUrl.map((src,i)=>(
+					            	<div  key={i}>
+				          				<img src={`${config.api.map.projectSource}${src}`} alt="" style={{margin:"0 auto"}} width="100%" height="100%"/>
+				        			</div>
+					            ))}
+					        </Carousel>
+					        :<img src={config.noimage} alt="图片不存在" style={{margin:"0 auto"}} width="100%" height="100%"/>
+				    	}
 				</Modal>
 				<Modal {...videoModalProps} footer={null}>
 					<video controls id="video">
@@ -193,11 +215,18 @@ class UpdateZaiHou extends React.Component {
 						        </FormItem>
 						      </Col>
 						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='所在河流'>
+						        {/*<FormItem {...formItemLayout} label='所在河流'>
 						        	{this.props.form.getFieldDecorator('所在河流', {
 							            rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
+						          	)}
+						        </FormItem>*/}
+						        <FormItem {...formItemLayout} label='流域/河流'>
+						        	{this.props.form.getFieldDecorator('流域河流', {
+							            rules: [{ required: true, message: '不能为空！' }]
+							          	})(
+						            	<Cascader options={this.props.riverInfo} placeholder=""/>
 						          	)}
 						        </FormItem>
 						      </Col>
@@ -210,7 +239,7 @@ class UpdateZaiHou extends React.Component {
 						          	)}
 						        </FormItem>
 						      </Col>
-						      <Col span={8}>
+						      {/*<Col span={8}>
 						        <FormItem {...formItemLayout} label='所属流域'>
 						        	{this.props.form.getFieldDecorator('所属流域', {
 							            rules: [{ required: true, message: '不能为空！' }],
@@ -218,12 +247,12 @@ class UpdateZaiHou extends React.Component {
 						            	<Input />
 						          	)}
 						        </FormItem>
-						      </Col>
+						      </Col>*/}
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='市/县行政区'>
 						        	{this.props.form.getFieldDecorator('市行政区', {
 							            rules: [{ required: true, message: '不能为空！' }],
-							          	initialValue:[this.props.item['所在市'],this.props.item['所在县']]
+							          	//initialValue:[this.props.item['所在市'],this.props.item['所在县']]
 							          	})(
 						            	<Cascader options={city} placeholder=""/>
 						          	)}
@@ -684,7 +713,7 @@ class UpdateZaiHou extends React.Component {
 				      		</Row>
 				      	</fieldset>
 				      	<Row style={{marginTop:'10px'}}>
-			      			<Col span={4} push={16}><Button htmlType="reset" onClick={this.handleReset}>取消</Button></Col>
+			      			<Col span={4} push={16}><Button htmlType="reset" onClick={this.handleCancel}>取消</Button></Col>
 			      			<Col span={4} push={16}><Button type='primary' htmlType="submit">确定</Button></Col>
 				      	</Row>
 				      </Form>
@@ -713,7 +742,8 @@ class UpdateZaiHou extends React.Component {
 		console.log(item)
 		
 		this.initMap(item.id);
-
+		item['市行政区'] = [item['所在市'].trim(),item['所在县'].trim()]
+		item['流域河流'] = [item['所属流域'].trim(),item['所在河流'].trim()]
 		this.props.form.setFieldsInitialValue(item)
 	}
 	componentWillUnmount(){
@@ -786,12 +816,7 @@ class UpdateZaiHou extends React.Component {
 	      		let reactDom = this;
 
 		        map = new Map(domId, {
-		        	//basemap:'satellite',
-		          	/*center: [
-						113.52,
-						34.58
-					],*/
-					zoom:8,
+		        	zoom:8,
 		          	slider: false
 		        });
 		        map.on("layers-add-result", initEditing);
@@ -818,20 +843,34 @@ class UpdateZaiHou extends React.Component {
 		        });
 
 		  		//let symbol = new SimpleFillSymbol("solid", null, new Color([255, 0, 255, 0.75]));
-				let symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 30,
-				    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-				    new Color([255,0,0]), 3),
-				    new Color([0,255,0,0.5]))
 				let symbol2 = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
 				    new Color([255,0,0]), 5)
 				let renderer = new SimpleRenderer(symbol2);
 				featureLayer1.setRenderer(renderer);
 				console.log(featureLayer1)
 				
-		        //map.addLayers([imgMap,imgMapMarker,featureLayer1]);
 		        map.addLayers([imgMap,imgMapMarker,featureLayer1]);
 		        //map.panUp();
 		        
+		        function _setZuoBiao(evt){
+					//console.log(reactDom)
+		        	//console.log(evt)
+		        	var a = evt.graphic.geometry.paths[0].length;
+		        	reactDom.setCorridate(
+		        		`${evt.graphic.geometry.paths[0][0][0]}`,
+		        		`${evt.graphic.geometry.paths[0][0][1]}`,
+		        		`${evt.graphic.geometry.paths[0][a-1][0]}`,
+		        		`${evt.graphic.geometry.paths[0][a-1][1]}`,
+		        	)
+		        	reactDom.setState({
+		            	...reactDom.state,
+		            	mapProp:{
+		            		...reactDom.state.mapProp,selectedTemplate,
+		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+		            	}
+		            })
+				}
+
 		        function initEditing(e){
 		        	console.log('initEditing')
 		        	map.centerAt(new Point([113.52,34.58],new SpatialReference({ wkid:4326 })))
@@ -891,28 +930,23 @@ class UpdateZaiHou extends React.Component {
 			        	})
 		            });
 		            featureLayer1.on("graphic-add", function(evt) {
-		            	//id为空表示这个是新加的元素
-		            	console.log(evt);
+		            	/*console.log(evt);
 		            	if(!evt.graphic.attributes.id){
 		            		
 		            		//evt.graphic.attributes.id = evt.graphic.attributes.OBJECTID_1;
 		            		//featureLayer1.applyEdits(null,evt.graphic,null)
 		            	}
-		              	
+		              	*/
 		            });
-		            
 		            if(templatePicker==undefined){
-		        		templatePicker = new TemplatePicker(
-		        			{
-					            featureLayers: [featureLayer1],
-					            rows: "auto",
-					            columns:1,
-					            style: "height: auto; overflow: auto;position:absolute;z-index:1;bakcground:transparent;",
-					            items:[{label:'点击添加项目',symbol:symbol,description:''}],
-					            useLegend:false,
-				        	}, 
-				        	`${reactDom.state.templatePickerDivId}`
-				        );
+		        		templatePicker = new TemplatePicker({
+					        featureLayers: [featureLayer1],
+					        rows: "auto",
+					        columns:1,
+					        style: "height: auto; overflow: auto;position:absolute;z-index:1;bakcground:transparent;",
+					        items:[{label:'点击添加项目',description:''}],
+					        useLegend:false,
+				        },`${reactDom.state.templatePickerDivId}`);
 			        }
 		            templatePicker.startup();
 		            drawToolbar = new Draw(map);
@@ -942,43 +976,13 @@ class UpdateZaiHou extends React.Component {
 			        });
 
 			        editToolbar.on("graphic-move-stop",function(evt){
-			        	console.log(reactDom)
-			        	console.log(evt)
-			        	var a = evt.graphic.geometry.paths[0].length;
-			        	reactDom.setCorridate(
-			        		`${evt.graphic.geometry.paths[0][0][0]}`,
-			        		`${evt.graphic.geometry.paths[0][0][1]}`,
-			        		`${evt.graphic.geometry.paths[0][a-1][0]}`,
-			        		`${evt.graphic.geometry.paths[0][a-1][1]}`,
-			        	)
-			        	reactDom.setState({
-			            	...reactDom.state,
-			            	mapProp:{
-			            		...reactDom.state.mapProp,selectedTemplate,
-			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-			            	}
-			            })
+			        	_setZuoBiao(evt)
 			        })
-			        editToolbar.on("vertex-move",function(evt){
-			        	console.log(reactDom)
-			        	console.log(evt)
-			        	var a = evt.graphic.geometry.paths[0].length;
-			        	reactDom.setCorridate(
-			        		`${evt.graphic.geometry.paths[0][0][0]}`,
-			        		`${evt.graphic.geometry.paths[0][0][1]}`,
-			        		`${evt.graphic.geometry.paths[0][a-1][0]}`,
-			        		`${evt.graphic.geometry.paths[0][a-1][1]}`,
-			        	)
-			        	
-			        	reactDom.setState({
-			            	...reactDom.state,
-			            	mapProp:{
-			            		...reactDom.state.mapProp,selectedTemplate,
-			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-			            	}
-			            })
-			        })
-			       	
+
+			        editToolbar.on("vertex-move-stop",function(evt){
+				        _setZuoBiao(evt)
+				    })
+
 			        //drawToolbar.activate(Draw.POINT);
 			        drawToolbar.on("draw-end", function(evt) {
 			        	//console.log(evt)
@@ -989,10 +993,10 @@ class UpdateZaiHou extends React.Component {
 			            newAttributes.id=projectId;
 			            let newGraphic = new Graphic(evt.geometry, null, newAttributes);
 			            console.log(newGraphic)
-			            add = new Add({
+			            /*add = new Add({
 			            	featureLayer:featureLayer1,
 			            	addedGraphics:[newGraphic]
-			            })
+			            })*/
 			            reactDom.setState({
 			            	...reactDom.state,
 			            	mapProp:{
@@ -1000,19 +1004,22 @@ class UpdateZaiHou extends React.Component {
 			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar,newGraphic
 			            	}
 			            })
-			            var a = newGraphic.geometry.paths[0].length;
+
+			            reactDom.toApplyEdits([newGraphic], null, null,(succ)=>{
+			            	console.log('编辑成功')
+			            	},(err)=>{
+			            		console.log('编辑失败 :')
+			            		console.log(err)
+			            })
+
+			            var a = evt.geometry.paths[0].length;
 			        	reactDom.setCorridate(
 			        		`${newGraphic.geometry.paths[0][0][0]}`,
 			        		`${newGraphic.geometry.paths[0][0][1]}`,
 			        		`${newGraphic.geometry.paths[0][a-1][0]}`,
 			        		`${newGraphic.geometry.paths[0][a-1][1]}`,
 			        	)
-			            reactDom.toApplyEdits([newGraphic], null, null,(succ)=>{
-			            	console.log('编辑成功')
-			            },(err)=>{
-			            	console.log('编辑失败 :')
-			            	console.log(err)
-			            })
+			            
 			        });
 
 					reactDom.setState({
@@ -1023,6 +1030,7 @@ class UpdateZaiHou extends React.Component {
 		            	}
 		        	})
 
+					
 		        	reactDom.hideSpin()
 		        }
 	      		

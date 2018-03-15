@@ -23,6 +23,19 @@ const proDs = (ds)=>{
 const ProjectByWZ = (prop)=>{
 	console.log('c: '+new Date().toLocaleString())
 	console.log(prop)
+	const {projectType,project,dispatch} = prop;
+	//需要刷新
+	if(project.needRefresh){
+		dispatch({type:'project/query',
+				payload:{
+					tabs:project.tabs,
+					filter:'',
+					tree:project.tree.selectedKeys,
+					type:projectType
+		}})
+		dispatch({type:'project/notNeedRefresh'})
+	}
+
 	const columns = [
 		{ title: '项目名称',  dataIndex: '项目名称', key: '编码', width: 150,},
 	   	{ title: '所在市',  dataIndex: '所在市', key: '所在市', width: 70,},
@@ -45,13 +58,14 @@ const ProjectByWZ = (prop)=>{
 							}
 						})
 				    } else if (e.key === 'delete') {
-				      window.deleteModalRef = Modal.confirm({
+				      let deleteModalRef = Modal.confirm({
 				        title: '你真的想删除该条记录吗?',
 				        onOk (e) {
 				        	dispatch({
 				        		type:'project/remove',
 				        		payload:record
 				        	})
+				        	deleteModalRef.destroy()
 				        },
 				        onCancel(){
 				        	deleteModalRef.destroy()
@@ -68,7 +82,7 @@ const ProjectByWZ = (prop)=>{
 			}
 		},
 	];
-	const {projectType,project,dispatch} = prop;
+	
 	let searchRef ;
 	const map={'淮河流域':'huaiHeTable','黄河流域':'huangHeTable','长江流域':'changJiangTable','海河流域':'haiHeTable','全部':'allTable'}
 
@@ -175,27 +189,14 @@ const ProjectByWZ = (prop)=>{
 	const newZaiHouProps={
 		visible:project.newProjectModal.visible,
 		riverInfo:project.riverInfo,
-		handleOk(e){
+		submitSpin:project.newProjectModal.submitSpin,
+		hideModal(e){
 			dispatch({
 				type:'project/hideNewModal'
 			})
 		},
-		handleCancel(e){
-			let a = Modal.error({
-		        title:'你的操作不会被保存，是否继续？',
-				onOk(e){
-					a.destroy();
-					dispatch({
-						type:'project/hideNewModal'
-					})
-				},
-				onCancel(){
-					a.destroy()
-				}
-			})
-			
-		},
 		onSubmit(e){
+			console.log('submit')
 			dispatch({
 				type:'project/newProjectSubmit',
 				payload:e
@@ -204,21 +205,13 @@ const ProjectByWZ = (prop)=>{
 	}
 	const updateZaiHouProps={
 		visible:project.updateModal.visible,
+		riverInfo:project.riverInfo,
 		item:project.updateModal.currentItem,
-		onCancel(e){
-			let a = Modal.confirm({
-				title:'你的操作不会被保存，是否继续？',
-				onOk(e){
-					a.destroy();
-					dispatch({
-						type:'project/hideUpdateModal'
-					})
-				},
-				onCancel(){
-					a.destroy()
-				}
+
+		hideModal(e){
+			dispatch({
+				type:'project/hideUpdateModal'
 			})
-			
 		},
 		onSubmit(e){
 			//提交
@@ -226,37 +219,10 @@ const ProjectByWZ = (prop)=>{
 				type:'project/updateProject',
 				payload:e
 			})
-
-			//更新数据源
-			dispatch({
-				type:'project/query',
-				payload:{
-					tabs:project.tabs,
-					filter:'',
-					tree:project.tree.selectedKeys,
-					type:projectType
-				}
-			})
+			
 		}
 	}
-	
-	const NewZaiHouModal=({visible,handleOk,handleCancel,onSubmit,riverInfo})=>{
-		return(
-			<Modal
-	          title=""
-	          style={{ top: 20 }}
-	          visible={visible}
-	          onOk={handleOk}
-	          onCancel={handleCancel}
-	          width='calc(~"100vw - 60px")'
-	          height='calc(~"100vh - 90px")'
-	          footer={null}
-	        >
-	        	<NewZaiHou item={null} onSubmit={onSubmit} type='guiHua'riverInfo={riverInfo}/>
-	        </Modal>
-		)
-	}
-	
+
 	return(
 		<div className={conStyle.layout}>
 			<Layout className='layout1'>
@@ -305,7 +271,9 @@ const ProjectByWZ = (prop)=>{
 					</Content>
 				</Layout>
 			</Layout>
-			<NewZaiHouModal  {...newZaiHouProps}/>
+
+			{/*用一个随机数表示新添加的要素*/}
+			{project.newProjectModal.visible && <NewZaiHou {...newZaiHouProps} type="newZaiHou" newFeatureName={`${Math.random()*1000}`}/>} 
 			{project.updateModal.visible && <UpdateZaiHou {...updateZaiHouProps} type="updateZaiHou"/>} 
 		</div>
 	)

@@ -1,7 +1,7 @@
 
 // modules/Map.js
 import React from 'react'
-import { Spin ,Form,Button,Input,Row,Col,Upload, message, Icon,InputNumber,Cascader  } from 'antd';
+import { Spin ,Form,Button,Input,Row,Col,Upload, message, Icon,InputNumber,Cascader,Modal  } from 'antd';
 import { hashHistory } from 'react-router'
 import { dojoRequire } from 'esri-loader'
 import {DICT_FIXED_BY_PROVINCE} from '../../utils/city'
@@ -33,61 +33,135 @@ class NewProject extends React.Component {
 		console.log(props)
 		const {getFieldDecorator,setFieldsValue} = props.form
 		super(props)
-		this.state = { 
+		this.state = {
+			submitSpin:false, 
 			mapLoaded: false ,
 			mapUrl:MapUrl,
 			loading:true,
-			qidian:'',
-			zhongdian:'',
-			id:1,
+			qidian_x:'',
+    		qidian_y:'',
+    		zhongdian_x:'',
+    		zhongdian_y:'',
+			id:-1,
+			newFeatureName:props.newFeatureName,
 			domId:`${props.type}newMap`,
 			templatePickerDivId:`newProjecttemplate_${Math.floor(Math.random()*1000)}`,
 			mapProp:{
 				map:undefined,editToolbar:undefined,add:undefined,selectedTemplate:undefined,
-				editingEnabled:undefined,featureLayer1:undefined,drawToolbar:undefined
-			}//存储地图操作的一些变量
+				editingEnabled:undefined,featureLayer1:undefined,drawToolbar:undefined,
+				newGraphic:undefined,templatePicker:undefined,
+			},//存储地图操作的一些变量
+			fileList:[]//存储待上传的文件
 		}
 		//console.log(this.state)
+		//console.log(this.state)
+		this.handleReset = this.handleReset.bind(this)
+		this.handleSubmit = this.handleSubmit.bind(this)
+		this.handleCancel = this.handleCancel.bind(this)
+
+		this.showSpin = this.showSpin.bind(this)
+		this.hideSpin = this.hideSpin.bind(this)
+		this.newProject = this.newProject.bind(this)
+		this.setCorridate = this.setCorridate.bind(this)
+		this.toApplyEdits = this.toApplyEdits.bind(this)
 	}
-	handleReset=(e)=>{
+	handleReset(e){
 		console.log(this)
     	this.props.form.resetFields();
   	}
+  	handleSubmit(e){
+	    e.preventDefault();
+	    if(this.state.id==-1){
+	    	let a = Modal.error({
+		        title:'请在地图上绘制要素',
+				
+				onCancel(){
+					a.destroy()
+				}
+			})
+			return
+	    }
+	    this.props.form.validateFields((err, values) => {
+	      if(!err){
+	      	console.log(values);
+		    let newGraphic = this.state.mapProp.newGraphic
+	      	var projectId = newGraphic.attributes.OBJECTID_1;
+	      	const { fileList } = this.state;
+	    	const formData = new FormData();
+	    	fileList.forEach((file) => {
+	      		formData.append('Files[]', file);
+	    	});
+	    	console.log(formData)
+		    values.id=projectId;
+	      	this.props.onSubmit({
+		      	formData:formData,
+		      	values:values
+		    })
+	      }
+	    });
+  	}
+
+  	handleCancel(e){
+  		e.preventDefault();
+  		let that = this;
+  		let a = Modal.confirm({
+	        title:'你的操作不会被保存，是否继续？',
+			onOk(e){
+				a.destroy()
+				let newGraphic = that.state.mapProp.newGraphic
+		  		console.log('del')
+		  		console.log(newGraphic)
+		  		if(newGraphic){
+		  			that.state.mapProp.featureLayer1.applyEdits(null,null,[newGraphic])
+		  		}
+		  		that.props.hideModal();
+			},
+			onCancel(){
+				a.destroy()
+			}
+		})
+  	}
+
 	render () {
 		// show any map errors
+		const reactDom = this;
 		const error = this.state.error
 		let input1,input2;
 		const uploadProps={
 			name: 'file',
 		  	action: `${api.fileUpload}`,
-		  	headers: {
-		    	//authorization: 'authorization-text',
-		  	},
-		  	data:{
-		  		id:'abcd',
-		  	},
+		  	fileList: reactDom.state.fileList,
+		  	accept:'image/*,application/pdf,video/*',
 		  	beforeUpload(file){
-		  		const isJPG = file.type === 'image/jpeg';
-				if (!isJPG) {
-				  	message.error('你只能上传图片!',5);
+		  		console.log(file.type)
+		  		let fileType = file.type.toString()
+		  		console.log(fileType)
+		  		console.log(fileType.indexOf('image'))
+		  		const accepted = fileType.indexOf('image') >-1||fileType.indexOf('video') >-1||fileType.indexOf('application/pdf') >-1;
+				if (!accepted) {
+				  	message.error('你只能上传图片/视频/pdf!',5);
+				  	return false
 				}
-				const isLt2M = file.size / 1024 / 1024 < 5;
-				if (!isLt2M) {
+				const isLt5M = file.size / 1024 / 1024 < 5;
+				if (!isLt5M) {
 				  	message.error('上传文件大小需小于5MB!',5);
+					return false
 				}
-				return isJPG && isLt2M;
+				reactDom.setState(({ fileList }) => ({
+		          	fileList: [...fileList, file],
+		        }));
+				return false;
 		  	},
-		  	onChange(info) {
-		  		console.log(info)
-		    	if (info.file.status !== 'uploading') {
-		      		console.log(info.file, info.fileList);
-		    	}
-		    	if (info.file.status === 'done') {
-		      		message.success(`${info.file.name} file uploaded successfully`);
-		    	} else if (info.file.status === 'error') {
-		      		message.error(`${info.file.name} file upload failed.`);
-		    	}
-		  	},
+		  	onRemove: (file) => {
+        		this.setState(({ fileList }) => {
+		          	const index = fileList.indexOf(file);
+		          	const newFileList = fileList.slice();
+		          	newFileList.splice(index, 1);
+		          	return {
+		            	fileList: newFileList,
+		          	};
+	        	});
+    		}
 		}
 		if (error) {
 		  return <div className='container'>
@@ -95,437 +169,486 @@ class NewProject extends React.Component {
 		    <button className='btn btn-default' onClick={hashHistory.goBack}>Go back</button>
 		  </div>
 		}
-		return <div style={{overflow:'hidden'}}>
-		  <EsriLoader options={esriOptions}/>
-		   
-	      <div id="templateDiv" style={{float:'left',width:'calc(50vw - 30px)',height:'calc(100vh - 90px)',overflowY:'scroll'}}>
-		      <Form
-		      	onSubmit={this.handleSubmit}
-		      	className={styles.form}
-		      >
-		      	<fieldset>
-		      		<legend>项目基本情况</legend>
-		      		<Row>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='项目名称'>
-				        	{this.props.form.getFieldDecorator('项目名称', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='所在河流'>
-				        	{this.props.form.getFieldDecorator('所在河流', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='市/县行政区'>
-				        	{this.props.form.getFieldDecorator('市行政区', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Cascader options={city} placeholder=""/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      {/*<Col span={8}>
-				        <FormItem {...formItemLayout} label='县行政区'>
-				        	{this.props.form.getFieldDecorator('县行政区', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>*/}
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='前期工作'>
-				        	{this.props.form.getFieldDecorator('前期工作', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='规划投资'>
-				        	{this.props.form.getFieldDecorator('规划投资', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="万元"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='初设单位'>
-				        	{this.props.form.getFieldDecorator('初设单位', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='初设进展'>
-				        	{this.props.form.getFieldDecorator('初设进展', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='批复情况'>
-				        	{this.props.form.getFieldDecorator('批复情况', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='起点坐标'>
-				        	{this.props.form.getFieldDecorator('起点坐标', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='终点坐标'>
-				        	{this.props.form.getFieldDecorator('终点坐标', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				    </Row>
-		      	</fieldset>
-		      	<fieldset>
-		      		<legend>主要工程措施</legend>
-		      		<Row>
-		      			<Col span={8}>
-				        <FormItem {...formItemLayout} label='治理长度'>
-				        	{this.props.form.getFieldDecorator('治理长度', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="Km"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='新建堤防'>
-				        	{this.props.form.getFieldDecorator('新建堤防', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='加固堤防'>
-				        	{this.props.form.getFieldDecorator('加固堤防', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='清淤'>
-				        	{this.props.form.getFieldDecorator('清淤', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='护坡护岸'>
-				        	{this.props.form.getFieldDecorator('护坡护岸', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='其他'>
-				        	{this.props.form.getFieldDecorator('其他', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='防洪标准'>
-				        	{this.props.form.getFieldDecorator('防洪标准', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='除涝标准'>
-				        	{this.props.form.getFieldDecorator('除涝标准', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-		      		</Row>
-		      	</fieldset>
-		      	<fieldset>
-		      		<legend>治理效果</legend>
-		      		<Row>
-		      			<Col span={8}>
-				        <FormItem {...formItemLayout} label='保护城镇'>
-				        	{this.props.form.getFieldDecorator('保护城镇', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='保护人口'>
-				        	{this.props.form.getFieldDecorator('保护人口', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="万人"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='保护耕地'>
-				        	{this.props.form.getFieldDecorator('保护耕地', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="万亩"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='排涝收益'>
-				        	{this.props.form.getFieldDecorator('排涝收益', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput}  addonAfter="万亩"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-		      		</Row>
-		      	</fieldset>
-		      	<fieldset>
-		      		<legend>资金情况</legend>
-		      		<Row>
-		      			<Col span={8}>
-				        <FormItem {...formItemLayout} label='批复资金'>
-				        	{this.props.form.getFieldDecorator('批复资金', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="万元"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='总投资'>
-				        	{this.props.form.getFieldDecorator('总投资', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="万元"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='移民征地'>
-				        	{this.props.form.getFieldDecorator('移民征地', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="万元"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='拆迁补偿'>
-				        	{this.props.form.getFieldDecorator('拆迁补偿', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="万元"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='省级投资'>
-				        	{this.props.form.getFieldDecorator('省级投资', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="万元"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='市县投资'>
-				        	{this.props.form.getFieldDecorator('市县投资', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="万元"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='中央投资'>
-				        	{this.props.form.getFieldDecorator('中央投资', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input {...numberInput} addonAfter="万元"/>
-				          	)}
-				        </FormItem>
-				      </Col>
-		      		</Row>
-		      	</fieldset>
-		      	<fieldset>
-		      		<legend>工程验收</legend>
-		      		<Row>
-		      			<Col span={8}>
-				        <FormItem {...formItemLayout} label='绩效评分'>
-				        	{this.props.form.getFieldDecorator('绩效评分', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='竣工审计'>
-				        	{this.props.form.getFieldDecorator('竣工审计', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='竣工时间'>
-				        	{this.props.form.getFieldDecorator('竣工时间', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='验收单位'>
-				        	{this.props.form.getFieldDecorator('验收单位', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='验收文号'>
-				        	{this.props.form.getFieldDecorator('中央投资', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-		      		</Row>
-		      	</fieldset>
-		      	<fieldset>
-		      		<legend>其他</legend>
-		      		<Row>
-		      			<Col span={12}>
-				        <FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='工程照片'>
-				        	{this.props.form.getFieldDecorator('工程照片')(
-				            	<Upload {...uploadProps}>
-				            		<Button>
-				            			<Icon type='upload' />点击上传
-				            		</Button>
-				            	</Upload>
-				          	)}
-				        </FormItem></Col>
-				        <Col span={12}>
-				        <FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='批复文件'>
-				        	{this.props.form.getFieldDecorator('批复文件')(
-				            	<Upload {...uploadProps}>
-				            		<Button>
-				            			<Icon type='upload' />点击上传
-				            		</Button>
-				            	</Upload>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={12}>
-				        <FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='工程视频'>
-				        	{this.props.form.getFieldDecorator('工程视频')(
-				            	<Upload {...uploadProps}>
-				            		<Button>
-				            			<Icon type='upload' />点击上传
-				            		</Button>
-				            	</Upload>
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={8}>
-				        <FormItem {...formItemLayout} label='批复文号'>
-				        	{this.props.form.getFieldDecorator('中央投资',{
-				            	 rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      </Row>
-				      <Row>
-				      <Col span={12}>
-				        <FormItem {...formItemLayout} label='上报人' labelCol={{span:6}} wrapperCol={{span:7}} >
-				        	{this.props.form.getFieldDecorator('中央投资', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-				      <Col span={12}>
-				        <FormItem {...formItemLayout} label='审核人' labelCol={{span:6}} wrapperCol={{span:7}} >
-				        	{this.props.form.getFieldDecorator('中央投资', {
-					            rules: [{ required: true, message: '不能为空！' }],
-					          	})(
-				            	<Input />
-				          	)}
-				        </FormItem>
-				      </Col>
-		      		</Row>
-		      	</fieldset>
-		      	<Row style={{marginTop:'10px'}}>
-	      			<Col span={4} push={16}><Button htmlType="reset" onClick={this.handleReset}>取消</Button></Col>
-	      			<Col span={4} push={16}><Button type='primary' htmlType="submit">确定</Button></Col>
-		      	</Row>
-		      </Form>
-	      </div>
-		  <div id={this.state.domId} style={{width:'calc(50vw - 30px)',height:'calc(100vh - 90px)',float:'left',position:'relative'}}>
-		  	<div id={`${this.state.templatePickerDivId}`}></div>
-		  	<div style={{position:'absolute',top:'10px',right:'10px',zIndex:1,fontSize:'20px',background:'white'}}>
-		  		按住Ctrl键并点击要素可以进行删除操作
-		  	</div>
-		  </div>
-		  <Spin size='large' style={
-		  	this.state.loading?{position:'absolute',top:'50%',left:'50%',display:'block'}
-		  	:{position:'absolute',top:'50%',left:'50%',display:'none'}
-		  }/>
-		</div>
+		return(
+			<Modal
+		        title=""
+		        visible={this.props.visible}
+		        style={{ top: 20 }}
+		        onCancel={this.handleCancel}
+		        width='calc(~"100vw - 60px")'
+		        height='calc(~"100vh - 90px")'
+		        footer={null}
+	        >
+	        <Spin size='large' spinning={this.props.submitSpin}>
+			 	<div style={{overflow:'hidden'}}>
+			  		<EsriLoader options={esriOptions}/>
+			   
+		      		<div id="templateDiv" style={{float:'left',width:'calc(50vw - 30px)',height:'calc(100vh - 90px)',overflowY:'scroll'}}>
+				      	<Form
+				      		onSubmit={this.handleSubmit}
+				      		className={styles.form}
+				      	>
+					      	<fieldset>
+					      		<legend>项目基本情况</legend>
+					      		<Row>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='项目名称'>
+							        	{this.props.form.getFieldDecorator('项目名称', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        {/*<FormItem {...formItemLayout} label='所在河流'>
+							        	{this.props.form.getFieldDecorator('所在河流', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>*/}
+							        <FormItem {...formItemLayout} label='流域/河流'>
+							        	{this.props.form.getFieldDecorator('流域河流', {
+								            rules: [{ required: true, message: '不能为空！' }]
+								          	})(
+							            	<Cascader options={this.props.riverInfo} placeholder=""/>
+							          	)}
+								    </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='市/县行政区'>
+							        	{this.props.form.getFieldDecorator('市行政区', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Cascader options={city} placeholder=""/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      {/*<Col span={8}>
+							        <FormItem {...formItemLayout} label='县行政区'>
+							        	{this.props.form.getFieldDecorator('县行政区', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>*/}
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='前期工作'>
+							        	{this.props.form.getFieldDecorator('前期工作', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='规划投资'>
+							        	{this.props.form.getFieldDecorator('规划投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='初设单位'>
+							        	{this.props.form.getFieldDecorator('初设单位', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='初设进展'>
+							        	{this.props.form.getFieldDecorator('初设进展', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='批复情况'>
+							        	{this.props.form.getFieldDecorator('批复情况', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+								        <FormItem {...formItemLayout} label='起点东经'>
+								        	{this.props.form.getFieldDecorator('起点东经', {
+									            rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input disabled={true}/>
+								          	)}
+								        </FormItem>
+								      </Col>
+								      <Col span={8}>
+								        <FormItem {...formItemLayout} label='起点北纬'>
+								        	{this.props.form.getFieldDecorator('起点北纬', {
+									            rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input disabled={true}/>
+								          	)}
+								        </FormItem>
+								      </Col>
+								      <Col span={8}>
+								        <FormItem {...formItemLayout} label='终点东经'>
+								        	{this.props.form.getFieldDecorator('终点东经', {
+									            rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input disabled={true}/>
+								          	)}
+								        </FormItem>
+								      </Col>
+								      <Col span={8}>
+								        <FormItem {...formItemLayout} label='终点北纬'>
+								        	{this.props.form.getFieldDecorator('终点北纬', {
+									            rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input disabled={true}/>
+								          	)}
+								        </FormItem>
+								      </Col>
+							    </Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>主要工程措施</legend>
+					      		<Row>
+					      			<Col span={8}>
+							        <FormItem {...formItemLayout} label='治理长度'>
+							        	{this.props.form.getFieldDecorator('治理长度', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="Km"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='新建堤防'>
+							        	{this.props.form.getFieldDecorator('新建堤防', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='加固堤防'>
+							        	{this.props.form.getFieldDecorator('加固堤防', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='清淤'>
+							        	{this.props.form.getFieldDecorator('清淤', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='护坡护岸'>
+							        	{this.props.form.getFieldDecorator('护坡护岸', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='其他'>
+							        	{this.props.form.getFieldDecorator('其他', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='防洪标准'>
+							        	{this.props.form.getFieldDecorator('防洪标准', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='除涝标准'>
+							        	{this.props.form.getFieldDecorator('除涝标准', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+					      		</Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>治理效果</legend>
+					      		<Row>
+					      			<Col span={8}>
+							        <FormItem {...formItemLayout} label='保护城镇'>
+							        	{this.props.form.getFieldDecorator('保护城镇', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='保护人口'>
+							        	{this.props.form.getFieldDecorator('保护人口', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万人"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='保护耕地'>
+							        	{this.props.form.getFieldDecorator('保护耕地', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万亩"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='排涝收益'>
+							        	{this.props.form.getFieldDecorator('排涝收益', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput}  addonAfter="万亩"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+					      		</Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>资金情况</legend>
+					      		<Row>
+					      			<Col span={8}>
+							        <FormItem {...formItemLayout} label='批复资金'>
+							        	{this.props.form.getFieldDecorator('批复资金', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='总投资'>
+							        	{this.props.form.getFieldDecorator('总投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='移民征地'>
+							        	{this.props.form.getFieldDecorator('移民征地', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='拆迁补偿'>
+							        	{this.props.form.getFieldDecorator('拆迁补偿', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='省级投资'>
+							        	{this.props.form.getFieldDecorator('省级投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='市县投资'>
+							        	{this.props.form.getFieldDecorator('市县投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='中央投资'>
+							        	{this.props.form.getFieldDecorator('中央投资', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input {...numberInput} addonAfter="万元"/>
+							          	)}
+							        </FormItem>
+							      </Col>
+					      		</Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>工程验收</legend>
+					      		<Row>
+					      			<Col span={8}>
+							        <FormItem {...formItemLayout} label='绩效评分'>
+							        	{this.props.form.getFieldDecorator('绩效评分', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='竣工审计'>
+							        	{this.props.form.getFieldDecorator('竣工审计', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='竣工时间'>
+							        	{this.props.form.getFieldDecorator('竣工时间', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='验收单位'>
+							        	{this.props.form.getFieldDecorator('验收单位', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='验收文号'>
+							        	{this.props.form.getFieldDecorator('验收文号', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+					      		</Row>
+					      	</fieldset>
+					      	<fieldset>
+					      		<legend>其他</legend>
+					      		<Row>
+					      			<Col span={12}>
+						      			<FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='文件上传'>
+											        	<Upload {...uploadProps}>
+										            		<Button>
+										            			<Icon type='upload' />点击上传
+										            		</Button>
+										            	</Upload>
+										</FormItem>
+									</Col>
+					      			{/*<Col span={12}>
+							        <FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='工程照片'>
+							        	{this.props.form.getFieldDecorator('工程照片')(
+							            	<Upload {...uploadProps}>
+							            		<Button>
+							            			<Icon type='upload' />点击上传
+							            		</Button>
+							            	</Upload>
+							          	)}
+							        </FormItem></Col>*/}
+							        {/*<Col span={12}>
+							        <FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='批复文件'>
+							        	{this.props.form.getFieldDecorator('批复文件')(
+							            	<Upload {...uploadProps}>
+							            		<Button>
+							            			<Icon type='upload' />点击上传
+							            		</Button>
+							            	</Upload>
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={12}>
+							        <FormItem labelCol={{span:6}} wrapperCol={{span:15}} label='工程视频'>
+							        	{this.props.form.getFieldDecorator('工程视频')(
+							            	<Upload {...uploadProps}>
+							            		<Button>
+							            			<Icon type='upload' />点击上传
+							            		</Button>
+							            	</Upload>
+							          	)}
+							        </FormItem>
+							      </Col>*/}
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='批复文号'>
+							        	{this.props.form.getFieldDecorator('批复文号',{
+							            	 rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      </Row>
+							      <Row>
+							      <Col span={12}>
+							        <FormItem {...formItemLayout} label='上报人' labelCol={{span:6}} wrapperCol={{span:7}} >
+							        	{this.props.form.getFieldDecorator('上报人', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+							      <Col span={12}>
+							        <FormItem {...formItemLayout} label='审核人' labelCol={{span:6}} wrapperCol={{span:7}} >
+							        	{this.props.form.getFieldDecorator('审核人', {
+								            rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input />
+							          	)}
+							        </FormItem>
+							      </Col>
+					      		</Row>
+					      	</fieldset>
+					      	<Row style={{marginTop:'10px'}}>
+				      			<Col span={4} push={16}><Button htmlType="reset" onClick={this.handleCancel}>取消</Button></Col>
+				      			<Col span={4} push={16}><Button type='primary' htmlType="submit">确定</Button></Col>
+					      	</Row>
+			      		</Form>
+		      		</div>
+			  		<div id={this.state.domId} style={{width:'calc(50vw - 30px)',height:'calc(100vh - 90px)',float:'left',position:'relative'}}>
+				  		<div id={`${this.state.templatePickerDivId}`}></div>
+				  		<div style={{position:'absolute',top:'10px',right:'10px',zIndex:1,fontSize:'20px',background:'white'}}>
+				  			按住Ctrl键并点击要素可以进行删除操作
+				  		</div>
+			  		</div>
+				  	<Spin size='large' style={
+				  		this.state.loading?{position:'absolute',top:'50%',left:'50%',display:'block'}
+					  	:{position:'absolute',top:'50%',left:'50%',display:'none'}
+					  }/>
+				</div>
+			</Spin>
+			</Modal>
+		)
+		
 	}
 	componentDidMount () {
 		/*console.log('loading modules')
@@ -549,12 +672,12 @@ class NewProject extends React.Component {
 		})
 	}
 	newProject(){
-		this.showSpin()
+		
 		const mapUrl = this.state.mapUrl;
 		const domId = this.state.domId;
 		var imgMap,imgMapMarker;
 		//let map,editToolbar,editingEnabled=false,featureLayer1,drawToolbar;
-		var {map,editToolbar,editingEnabled,featureLayer1,drawToolbar,add,selectedTemplate}={...this.state.mapProp}
+		var {map,editToolbar,editingEnabled,featureLayer1,drawToolbar,add,selectedTemplate,templatePicker}={...this.state.mapProp}
 		editingEnabled=false
 
 	  	dojoRequire(
@@ -596,18 +719,18 @@ class NewProject extends React.Component {
 				esriConfig, jsapiBundle,
 				arrayUtils, parser, keys,event
 			)=>{
-	      		
+	      		this.showSpin()
 	      		let reactDom = this;
-	      		console.log(this)
 		        
 		        map = new Map(domId, {
 		        	//basemap:'satellite',
 					zoom:8,
 		          	slider: false
 		        });
-		        
+		        map.on("layers-add-result", initEditing);
+
+
 		        var tileInfo = new TileInfo(TileInfoObj)
-		        
 		       	imgMap = new WebTiledLayer(TDTUrl.ImgUrl, {
 		            "id": "TiandituImg",
 		            "subDomains": ["t0", "t1", "t2"],
@@ -621,12 +744,61 @@ class NewProject extends React.Component {
 		            "subDomains": ["t0", "t1", "t2"],
 		            "tileInfo": tileInfo,
 		        });
+
 		        featureLayer1 = new FeatureLayer(FeatureLayerUrl, {
 		          	mode: FeatureLayer.MODE_SNAPSHOT,
-		          	definitionExpression: 'id=-1',
+		          	definitionExpression: `NAME='${reactDom.state.newFeatureName}'`,
 		          	outFields:['*']
 		        });
-		        featureLayer1.on("dbl-click", function(evt) {
+		        
+		  		
+				let symbol2 = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+				    new Color([255,0,0]), 5)
+				let renderer = new SimpleRenderer(symbol2);
+				featureLayer1.setRenderer(renderer);
+				//console.log(featureLayer1)
+				map.addLayers([imgMap,imgMapMarker,featureLayer1]);
+				
+		        function _setZuoBiao(evt){
+					//console.log(reactDom)
+		        	//console.log(evt)
+		        	var a = evt.graphic.geometry.paths[0].length;
+		        	reactDom.setCorridate(
+		        		`${evt.graphic.geometry.paths[0][0][0]}`,
+		        		`${evt.graphic.geometry.paths[0][0][1]}`,
+		        		`${evt.graphic.geometry.paths[0][a-1][0]}`,
+		        		`${evt.graphic.geometry.paths[0][a-1][1]}`,
+		        	)
+		        	reactDom.setState({
+		            	...reactDom.state,
+		            	mapProp:{
+		            		...reactDom.state.mapProp,selectedTemplate,
+		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+		            	}
+		            })
+				}
+
+		        function initEditing(e){
+					console.log('initEditing')
+					map.centerAt(new Point([113.52,34.58],new SpatialReference({ wkid:4326 })))
+					
+					editToolbar = new Edit(map);
+					//编辑操作完成应用编辑
+		            editToolbar.on("deactivate", function(evt) {
+		        		console.log(evt)
+
+		        		reactDom.toApplyEdits(null, [evt.graphic], null)
+		            	reactDom.setState({
+			            	...reactDom.state,
+			            	mapProp:{
+			            		...reactDom.state.mapProp,selectedTemplate,
+			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+			            	}
+		            	})
+			        });
+
+		            //双击编辑
+			        featureLayer1.on("dbl-click", function(evt) {
 		              	event.stop(evt);
 		              	if (editingEnabled === false) {
 		                	editingEnabled = true;
@@ -648,137 +820,123 @@ class NewProject extends React.Component {
 			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
 			            	}
 			            })
-	            });
-	            //ctrl+单击s删除
-		        featureLayer1.on("click", function(evt) {
-	              	event.stop(evt);
-	              	console.log(evt)
-	              	if (evt.ctrlKey === true || evt.metaKey === true) {  //delete feature if ctrl key is depressed
-	                	featureLayer1.applyEdits(null,null,[evt.graphic]);
-	                	featureLayer1 = this;
-	                	editToolbar.deactivate();
-	                	editingEnabled=false;
-	              	}
-	              	reactDom.setState({
-		            	...reactDom.state,
-		            	mapProp:{
-		            		...reactDom.state.mapProp,add,selectedTemplate,
-		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-		            	}
-		        	})
-	            });
-		  		//let symbol = new SimpleFillSymbol("solid", null, new Color([255, 0, 255, 0.75]));
-				let symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 30,
-				    new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-				    new Color([255,0,0]), 3),
-				    new Color([0,255,0,0.5]))
-				let symbol2 = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-				    new Color([255,0,0]), 5)
-				let renderer = new SimpleRenderer(symbol2);
-				featureLayer1.setRenderer(renderer);
+	            	});
 
-				var templatePicker = new TemplatePicker({
-		            featureLayers: [featureLayer1],
-		            rows: "auto",
-		            columns:1,
-		            style: "height: auto; overflow: auto;position:absolute;z-index:1;bakcground:transparent;",
-		            items:[{label:'点击添加项目',symbol:symbol,description:''}],
-		            useLegend:false,
+		            //ctrl+单击s删除
+			        featureLayer1.on("click", function(evt) {
+		              	event.stop(evt);
+		              	console.log(evt)
+		              	if (evt.ctrlKey === true || evt.metaKey === true) {  //delete feature if ctrl key is depressed
+		                	featureLayer1.applyEdits(null,null,[evt.graphic]);
+		                	featureLayer1 = this;
+		                	editToolbar.deactivate();
+		                	editingEnabled=false;
+		              	}
+		              	reactDom.setState({
+			            	...reactDom.state,
+			            	id:-1,
+			            	mapProp:{
+			            		...reactDom.state.mapProp,add,selectedTemplate,
+			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+			            	}
+			        	})
+		            });
 
-		        }, `${reactDom.state.templatePickerDivId}`);
-		        
-		        templatePicker.on("selection-change", function() {
-		            if( templatePicker.getSelected() ) {
-		              selectedTemplate = templatePicker.getSelected();
-		            }
-		            switch (selectedTemplate.featureLayer.geometryType) {
-		              case "esriGeometryPoint":
-		                drawToolbar.activate(Draw.POINT);
-		                break;
-		              case "esriGeometryPolyline":
-		                drawToolbar.activate(Draw.POLYLINE);
-		                break;
-		              case "esriGeometryPolygon":
-		                drawToolbar.activate(Draw.POLYGON);
-		                break;
-		            }
-		            reactDom.setState({
-		            	...reactDom.state,
-		            	mapProp:{
-		            		...reactDom.state.mapProp,add,selectedTemplate,
-		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-		            	}
-		        	})
-		        });
-	            editToolbar = new Edit(map);
-	            //编辑操作完成应用编辑
-	            editToolbar.on("deactivate", function(evt) {
-	        		console.log(evt)
+		            featureLayer1.on("graphic-add", function(evt) {
+			            	//console.log(evt);
+			            	if(!evt.graphic.attributes.id){
+			            		
+			            		//evt.graphic.attributes.id = evt.graphic.attributes.OBJECTID_1;
+			            		//featureLayer1.applyEdits(null,evt.graphic,null)
+			            	}
+			              	
+			        });
 
-	        		reactDom.toApplyEdits(null, [evt.graphic], null)
-	            	reactDom.setState({
-		            	...reactDom.state,
-		            	mapProp:{
-		            		...reactDom.state.mapProp,selectedTemplate,
-		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-		            	}
-	            	})
-		        });
-		        editToolbar.on("graphic-move-stop",function(evt){
-		        	console.log(reactDom)
-		        	console.log(evt)
-		        	var a = evt.graphic.geometry.paths[0].length;
-		        	reactDom.setState({
-		        		...reactDom.state,
-		        		qidian:`${evt.graphic.geometry.paths[0][0][0]},${evt.graphic.geometry.paths[0][0][1]}`,
-		        		zhongdian:`${evt.graphic.geometry.paths[0][a-1][0]},${evt.graphic.geometry.paths[0][a-1][1]}`,
-		        	})
-		        	reactDom.setState({
-		            	...reactDom.state,
-		            	mapProp:{
-		            		...reactDom.state.mapProp,selectedTemplate,
-		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-		            	}
-		            })
-		            reactDom.props.form.setFieldsValue({"起点坐标":reactDom.state.qidian})
-	        		reactDom.props.form.setFieldsValue({"终点坐标":reactDom.state.zhongdian})
-		        })
-		       	drawToolbar = new Draw(map);
-		        //drawToolbar.activate(Draw.POINT);
-		        drawToolbar.on("draw-end", function(evt) {
-		        	//console.log(evt)
-		            drawToolbar.deactivate();
-		            editToolbar.deactivate();
-		            let newAttributes = selectedTemplate.template.prototype.attributes;
-		            newAttributes.id=-1
-		            let newGraphic = new Graphic(evt.geometry, null, newAttributes);
-		            console.log(newGraphic)
-		            add = new Add({
-		            	featureLayer:featureLayer1,
-		            	addedGraphics:[newGraphic]
-		            })
-		            reactDom.setState({
-		            	...reactDom.state,
-		            	mapProp:{
-		            		...reactDom.state.mapProp,add,selectedTemplate,
-		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
-		            	}
-		            })
-		            reactDom.toApplyEdits([newGraphic], null, null)
-		        });
+			        if(templatePicker==undefined){
+		            	templatePicker = new TemplatePicker({
+				            featureLayers: [featureLayer1],
+				            rows: "auto",
+				            columns:1,
+				            style: "height: auto; overflow: auto;position:absolute;z-index:1;bakcground:transparent;",
+				            items:[{label:'点击添加项目',description:''}],
+				            useLegend:false,
 
-				//console.log(featureLayer1)
-				map.on("layers-add-result", initEditing);
-				//map.addLayer(layer)
-				//map.addLayer(imgMap)
-		        map.addLayers([imgMap,imgMapMarker,featureLayer1]);
-		        
-		        function initEditing(e){
-					//双击编辑
-					reactDom.hideSpin()
-					map.centerAt(new Point([113.52,34.58],new SpatialReference({ wkid:4326 })))
-					
+			    		}, `${reactDom.state.templatePickerDivId}`);
+			        }
 					templatePicker.startup();
+					drawToolbar = new Draw(map);
+					console.log('hide')
+					templatePicker.on("selection-change", function() {
+			            if( templatePicker.getSelected() ) {
+			              selectedTemplate = templatePicker.getSelected();
+			            }
+			            switch (selectedTemplate.featureLayer.geometryType) {
+			              case "esriGeometryPoint":
+			                drawToolbar.activate(Draw.POINT);
+			                break;
+			              case "esriGeometryPolyline":
+			                drawToolbar.activate(Draw.POLYLINE);
+			                break;
+			              case "esriGeometryPolygon":
+			                drawToolbar.activate(Draw.POLYGON);
+			                break;
+			            }
+			            reactDom.setState({
+			            	...reactDom.state,
+			            	mapProp:{
+			            		...reactDom.state.mapProp,add,selectedTemplate,
+			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
+			            	}
+			        	})
+			        });
+
+					editToolbar.on("graphic-move-stop",function(evt){
+			        	_setZuoBiao(evt)
+			        })
+
+			        editToolbar.on("vertex-move-stop",function(evt){
+				       	_setZuoBiao(evt)
+				    })
+
+			        drawToolbar.on("draw-end", function(evt) {
+			        	//console.log(evt)
+			            drawToolbar.deactivate();
+			            editToolbar.deactivate();
+			            let newAttributes = selectedTemplate.template.prototype.attributes;
+			            newAttributes.NAME = reactDom.state.newFeatureName
+			            
+			            let newGraphic = new Graphic(evt.geometry, null, newAttributes);
+			           	reactDom.setState({
+			            	...reactDom.state,
+			            	mapProp:{
+			            		...reactDom.state.mapProp,add,selectedTemplate,
+			            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar,newGraphic
+			            	}
+			            })
+			            reactDom.toApplyEdits([newGraphic], null, null,(succ)=>{
+			            	reactDom.state.mapProp.newGraphic.attributes.id = succ[0].objectId
+			            	//featureLayer1.graphics[0].attributes.id.
+		            		reactDom.toApplyEdits(null,[reactDom.state.mapProp.newGraphic], null,(succ)=>{
+		            			console.log(succ)
+		            			reactDom.setState({
+		            				...reactDom.state,
+		            				id:reactDom.state.mapProp.newGraphic.attributes.id
+		            			})
+		            		})
+			            	
+			            	},(err)=>{
+			            	console.log('添加失败 :')
+			            	console.log(err)
+				        })
+
+				        var a = evt.geometry.paths[0].length;
+				        reactDom.setCorridate(
+				        		`${newGraphic.geometry.paths[0][0][0]}`,
+				        		`${newGraphic.geometry.paths[0][0][1]}`,
+				        		`${newGraphic.geometry.paths[0][a-1][0]}`,
+				        		`${newGraphic.geometry.paths[0][a-1][1]}`,
+				        )
+			        });
 
 					reactDom.setState({
 		            	...reactDom.state,
@@ -787,27 +945,32 @@ class NewProject extends React.Component {
 		            		map,editToolbar,editingEnabled,featureLayer1,drawToolbar
 		            	}
 		        	})
+
+		        	reactDom.hideSpin()
 		        }
 	      		
 	      	}
 		)
 	}
-	toApplyAdd(add,update,remove,success,error){
-		this.state.mapProp.add.performRedo();
-		//this.state.mapProp.featureLayer1.applyEdits(add,update,remove,success,error);
-		this.state.mapProp.featureLayer1.refresh();
-		console.log(this.state.mapProp.featureLayer1)
+
+	setCorridate(x1,y1,x2,y2){
+		let reactDom = this;
+		reactDom.setState({
+    		...reactDom.state,
+    		qidian_x:`${x1}`,
+    		qidian_y:`${y1}`,
+    		zhongdian_x:`${x2}`,
+    		zhongdian_y:`${y2}`,
+    	})
+        reactDom.props.form.setFieldsValue({"起点东经":reactDom.state.qidian_x})
+		reactDom.props.form.setFieldsValue({"起点北纬":reactDom.state.qidian_y})
+		reactDom.props.form.setFieldsValue({"终点东经":reactDom.state.zhongdian_x})
+		reactDom.props.form.setFieldsValue({"终点北纬":reactDom.state.zhongdian_y})
 	}
 	toApplyEdits(add,update,remove,success,error){
 		this.state.mapProp.featureLayer1.applyEdits(add,update,remove,success,error);
 	}
-	handleSubmit = (e)=>{
-	    e.preventDefault();
-	    this.props.form.validateFields((err, values) => {
-	      console.log('Received values of form: ', values);
-	    });
-	    console.log(this.state.mapProp)
-  	}	
+	
 }
 
 export default Form.create()(NewProject)

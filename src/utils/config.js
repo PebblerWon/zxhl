@@ -3,10 +3,10 @@ const APIV1 = '/api'
 const APIV2 = '/api'
 module.exports = {
   useFakeData:false,
-  name: 'AntD Admin',
+  name: '',
   noimage:'/resource/noimage.jpg',
   prefix: 'antdAdmin',
-  footerText: 'Ant Design Admin  © 2017 zuiidea',
+  //footerText: 'Ant Design Admin  © 2017 zuiidea',
   logo: '/logo.png',
   iconFontCSS: '/iconfont.css',
   iconFontJS: '/iconfont.js',
@@ -32,8 +32,17 @@ module.exports = {
       riverUpdate:`${APIV1}/InfoDataPostWS.asmx/UpdateRiverInfo`,
       project:`${APIV1}/RiverInfoWS.asmx/SearchInfoByTypeAndBasinAndCity`,
       shiErWuproject:`${APIV1}/RiverInfoWS.asmx/SearchInfoByTypeAndBasinAndCity`,
+      
+
       updateZaiHou:`${APIV1}/InfoDataPostWS.asmx/UpdatePostDisasterInfo`,
-      projectDeleteFeature:'http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/30/deleteFeatures'
+      updateShiErWu:`${APIV1}/InfoDataPostWS.asmx/UpdatePro125Info_New`,
+      projectDeleteFeature:'http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/30/deleteFeatures',
+    
+      newZaiHou:`${APIV1}/NewZaiHou.ashx`,
+      newShiErWu:`${APIV1}/NewShiErWu.ashx`,
+
+      deleteZaiHou:`${APIV1}/DeleteZaiHou.ashx`,
+      deleteShiErWu:`${APIV1}/DeleteShiErWu.ashx`,
     },
     sign:{
       SignIn:`${APIV1}/RiverInfoWS.asmx/Login`,
@@ -71,9 +80,13 @@ module.exports = {
     map:{
       getInfoById:`${APIV1}/InfoDataPostWS.asmx/returnProAndPostDisasterInfo`,
       //projectSource:`http://172.36.16.2:6500/项目照片和视频/`
-      projectSource:`http://zxhl2.hnslkc.com:81/项目照片和视频/`
-      //projectSource:`http://172.66.16.190:6500/项目照片和视频/`
+      //projectSource:`http://zxhl2.hnslkc.com:81/项目照片和视频/`
+      projectSource:`http://172.36.16.2:6500/`
     },
-    fileUpload:`${APIV1}/Handler1.ashx`,
+    fileUpload:`${APIV1}/NewZaiHou.ashx`,
+  },
+  PROJECTTYPE:{
+      ShiErWuProjectType:'十二五项目',
+      ZaiHouProjectType:'灾后薄弱环节'
   },
 }

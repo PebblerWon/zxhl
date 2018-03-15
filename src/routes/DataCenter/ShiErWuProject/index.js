@@ -20,6 +20,19 @@ const proDs = (ds)=>{
 }
 const ShiErWuProject = (prop)=>{
 	console.log(prop)
+	const {projectType,shierwuproject,dispatch} = prop;
+	//需要刷新
+	if(shierwuproject.needRefresh){
+		dispatch({type:'shierwuproject/query',
+				payload:{
+					tabs:shierwuproject.tabs,
+					filter:'',
+					tree:shierwuproject.tree.selectedKeys,
+					type:projectType
+		}})
+		dispatch({type:'shierwuproject/notNeedRefresh'})
+	}
+
 	const columns = [
 		{ title: '项目名称',  dataIndex: '项目名称', key: '编码', width: 150,},
 	   	{ title: '所在市',  dataIndex: '所在市', key: '所在市', width: 70,},
@@ -42,13 +55,14 @@ const ShiErWuProject = (prop)=>{
 							}
 						})
 				    } else if (e.key === 'delete') {
-				      window.deleteModalRef = Modal.confirm({
+				      let deleteModalRef = Modal.confirm({
 				        title: '你真的想删除该条记录吗?',
 				        onOk (e) {
 				        	dispatch({
 				        		type:'shierwuproject/remove',
 				        		payload:record
 				        	})
+				        	deleteModalRef.destroy()
 				        },
 				        onCancel(){
 				        	deleteModalRef.destroy()
@@ -65,7 +79,7 @@ const ShiErWuProject = (prop)=>{
 			}
 		},
 	];
-	const {projectType,shierwuproject,dispatch} = prop;
+	
 	let searchRef ;
 	const map={'淮河流域':'huaiHeTable','黄河流域':'huangHeTable','长江流域':'changJiangTable','海河流域':'haiHeTable','全部':'allTable'}
 
@@ -155,19 +169,6 @@ const ShiErWuProject = (prop)=>{
 		},
 	}
 	
-	/*const allTableProps={
-		ds:proDs(shierwuproject.allTable.ds),
-		loading:shierwuproject.loading,
-		columns:columns,
-		onRowDoubleClick(e){
-			dispatch({
-				type:'shierwuproject/showUpdateModal',
-				payload:{
-					currentItem:e
-				}
-			})
-		}
-	}*/
 
 	const tableProps={
 		loading:shierwuproject.loading,
@@ -184,25 +185,12 @@ const ShiErWuProject = (prop)=>{
 
 	const newProjectProps={
 		visible:shierwuproject.newProjectModal.visible,
-		handleOk(e){
+		riverInfo:shierwuproject.riverInfo,
+		submitSpin:shierwuproject.newProjectModal.submitSpin,
+		hideModal(e){
 			dispatch({
 				type:'shierwuproject/hideNewModal'
 			})
-		},
-		handleCancel(e){
-			let a = Modal.error({
-		        title:'你的操作不会被保存，是否继续？',
-				onOk(e){
-					a.destroy();
-					dispatch({
-						type:'shierwuproject/hideNewModal'
-					})
-				},
-				onCancel(){
-					a.destroy()
-				}
-			})
-			
 		},
 		onSubmit(e){
 			dispatch({
@@ -213,62 +201,30 @@ const ShiErWuProject = (prop)=>{
 	}
 	const updateProjectProps={
 		visible:shierwuproject.updateModal.visible,
-		currentItem:shierwuproject.updateModal.currentItem,
-		handleCancel(e){
-			let a = Modal.confirm({
-				title:'你的操作不会被保存，是否继续？',
-				onOk(e){
-					a.destroy();
-					dispatch({
-						type:'shierwuproject/hideUpdateModal'
-					})
-				},
-				onCancel(){
-					a.destroy()
-				}
+		riverInfo:shierwuproject.riverInfo,
+		item:shierwuproject.updateModal.currentItem,
+		hideModal(e){
+			dispatch({
+				type:'shierwuproject/hideUpdateModal'
 			})
-			
 		},
 		onSubmit(e){
+			//提交
 			dispatch({
 				type:'shierwuproject/updateProject',
 				payload:e
 			})
+			//更新数据源
+			dispatch({
+				type:'shierwuproject/query',
+				payload:{
+					tabs:shierwuproject.tabs,
+					filter:'',
+					tree:shierwuproject.tree.selectedKeys,
+					type:projectType
+				}
+			})
 		}
-	}
-
-	const UpdateProjectModal=({handleCancel,visible,onSubmit,currentItem})=>{
-		return(
-			<Modal
-	            title=""
-	            visible={visible}
-	            style={{ top: 20 }}
-	            onCancel={handleCancel}
-	            width='calc(~"100vw - 60px")'
-	            height='calc(~"100vh - 90px")'
-	            footer={null}
-	        >
-	        	<UpdateProject item={currentItem}  onCancel={handleCancel} onSubmit={onSubmit} type='shiErWu'/>
-	        	</Modal>
-		)
-	}
-
-	
-	const NewProjectModal=({visible,handleOk,handleCancel,onSubmit})=>{
-		return(
-			<Modal
-	          title=""
-	          style={{ top: 20 }}
-	          visible={visible}
-	          onOk={handleOk}
-	          onCancel={handleCancel}
-	          width='calc(~"100vw - 60px")'
-	          height='calc(~"100vh - 90px")'
-	          footer={null}
-	        >
-	        	<NewProject item={null} onSubmit={onSubmit} type='shiErWu'/>
-	        </Modal>
-		)
 	}
 	
 	return(
@@ -321,13 +277,13 @@ const ShiErWuProject = (prop)=>{
 					</Content>
 				</Layout>
 			</Layout>
-			<NewProjectModal  {...newProjectProps}/>
-			<UpdateProjectModal {...updateProjectProps} />
+			{shierwuproject.newProjectModal.visible && <NewProject {...newProjectProps} type="shiErWu" newFeatureName={`${Math.random()*1000}`}/>} 
+			{shierwuproject.updateModal.visible && <UpdateProject {...updateProjectProps} type="shiErWu"/>} 
 		</div>
 	)
 }
 
 
 export default connect(
-	({shierwuproject})=>({shierwuproject})
+	({shierwuproject,river})=>({shierwuproject})
 )(ShiErWuProject);
