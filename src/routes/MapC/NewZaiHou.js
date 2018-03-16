@@ -302,6 +302,15 @@ class NewZaiHou extends React.Component {
 							          	)}
 							        </FormItem>
 							      </Col>
+							      <Col span={8}>
+							        <FormItem {...formItemLayout} label='数据来源'>
+							        	{this.props.form.getFieldDecorator('数据来源', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<Input/>
+							          	)}
+							        </FormItem>
+							      </Col>
 							    </Row>
 					      	</fieldset>
 					      	<fieldset>
@@ -312,7 +321,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('项目分类1', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input {...numberInput}/>
+							            	<Input/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -321,7 +330,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('建设任务治理河长', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input />
+							            	<Input {...numberInput} addonAfter="Km"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -330,7 +339,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input />
+							            	<Input {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -344,7 +353,7 @@ class NewZaiHou extends React.Component {
 								        	{this.props.form.getFieldDecorator('备案长度', {
 									            //rules: [{ required: true, message: '不能为空！' }],
 									          	})(
-								            	<Input />
+								            	<Input {...numberInput} addonAfter="Km"/>
 								          	)}
 								        </FormItem>
 							      	</Col>
@@ -353,7 +362,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('批复投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input {...numberInput}  addonAfter="万人"/>
+							            	<Input {...numberInput}  addonAfter="万元"/>
 							          	)}
 							        	</FormItem>
 							      	</Col>
@@ -367,7 +376,7 @@ class NewZaiHou extends React.Component {
 								        	{this.props.form.getFieldDecorator('治理河长', {
 									            //rules: [{ required: true, message: '不能为空！' }],
 									          	})(
-								            	<Input {...numberInput}  addonAfter="Km²"/>
+								            	<Input {...numberInput}  addonAfter="Km"/>
 								          	)}
 								        </FormItem>
 							      	</Col>
@@ -412,7 +421,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('备注', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input {...numberInput} addonAfter="万元"/>
+							            	<Input/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -444,7 +453,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('治理河长1', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input />
+							            	<Input {...numberInput} addonAfter="Km"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -453,7 +462,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('保护人口', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input />
+							            	<Input {...numberInput} addonAfter="万人"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -462,7 +471,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('保护耕地', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input />
+							            	<Input {...numberInput} addonAfter="Km²"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -471,7 +480,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('排涝受益面积', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  {...numberInput} addonAfter="Km²"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -480,7 +489,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('原规划中央投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -489,16 +498,25 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('原规划地方投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
+							      <Col span={8}>
+							        	<FormItem {...formItemLayout} label='原规划总投资'>
+								        	{this.props.form.getFieldDecorator('原规划总投资', {
+									            //rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input  {...numberInput} addonAfter="万元"/>
+								          	)}
+							        	</FormItem>
+							      	</Col>
 							      <Col span={8}>
 							        <FormItem {...formItemLayout} label='已安排中央投资'>
 							        	{this.props.form.getFieldDecorator('已安排中央投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -507,7 +525,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('已安排地方投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -516,7 +534,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('剩余中央投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -525,7 +543,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('剩余地方投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -534,7 +552,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('拟调整纳入的规划阶段', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input />
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -543,7 +561,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('是否属于享受特殊政策地区', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  />
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -552,7 +570,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('初步设计是否已批复', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  />
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -561,7 +579,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('项目建设进展', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input />
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -593,7 +611,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('批复或规划综合治理河长', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input />
+							            	<Input {...numberInput} addonAfter="Km"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -602,7 +620,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('批复或估算总投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input />
+							            	<Input {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -611,7 +629,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('其中中央投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -620,7 +638,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('目前进度', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  />
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -629,7 +647,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('批复文号', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  />
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -638,7 +656,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('2017资金落实合计', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  />
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -647,7 +665,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('2017资金落实中央投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -656,7 +674,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('2017资金落实省级投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -665,7 +683,7 @@ class NewZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('2017资金落实市县投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input  {...numberInput} addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>

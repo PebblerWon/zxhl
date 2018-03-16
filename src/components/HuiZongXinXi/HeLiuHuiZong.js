@@ -38,6 +38,38 @@ const columnsRender2 = (text,record,index)=>{
 	}
 	
 }
+/*const columnsRender1 = (text,record,index)=>{
+    if(record.children){
+        return {
+            children:text,
+                props:{
+                    colSpan:11
+            }
+        }
+    }else{
+        return{
+            children:text,
+            props:{}
+        }
+    }
+    
+}
+const columnsRender2 = (text,record,index)=>{
+    if(record.children){
+        return {
+            children:text,
+            props:{
+                colSpan:0
+            }
+        }
+    }else{
+        return{
+            children:text,
+            props:{}
+        }
+    }
+    
+}*/
 const columns = [
   		{
             title:'河流名称',
@@ -166,12 +198,12 @@ const subTableProps={
 	pagination:false,
 }
 const HeLiuHuiZong=(props)=>{
-    const {dataSource,title,scrollX,scrollY,exportProps,loading}=props
+    const {dataSource,title,exportProps,loading}=props
     const tableProps={
         loading,
         title:(text)=><TableTitle text={title} />,
         bordered:true,
-        scroll:{x:true,y:'500px'},
+        scroll:{x:true,y:window.innerHeight-380},
         pagination:false,
         columns:columns,
         expandedRowRender:(record)=>{

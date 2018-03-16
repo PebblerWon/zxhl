@@ -31,8 +31,8 @@ const RiverByWZ = ({river,dispatch})=>{
 		{ title: '河流长度(Km)', dataIndex: '河流长度', key: '河流长度',width:120 },
 		{ title: '治理项目', dataIndex: '治理项目', key: '治理项目',width:100, },
 		{ title: '规划项目', dataIndex: '规划项目', key: '规划项目', width:100,},
-		{ title: '流经地', dataIndex: '流经地', key: '流经地',width:200, },
-		{
+		{ title: '流经地', dataIndex: '流经地', key: '流经地',width:250, },
+		/*{
 			title: '操作',
 			key: 'operation',
 		 	width:50,
@@ -66,7 +66,7 @@ const RiverByWZ = ({river,dispatch})=>{
 						{ key: 'delete', name: '删除' }, 
 					]}/>
 			}
-		},
+		},*/
 	];
 	const map={'淮河流域':'huaiHeTable','黄河流域':'huangHeTable','长江流域':'changJiangTable','海河流域':'haiHeTable','全部':'allTable'}
 	const tabsProps={

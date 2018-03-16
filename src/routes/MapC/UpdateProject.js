@@ -127,16 +127,25 @@ class UpdateProject extends React.Component {
 	}
 	hideVideoModal(){
 		
-		let myVideo = document.getElementById("video");
-		if (myVideo&&myVideo.played) 
-	  		myVideo.pause()
+		let myVideo = document.getElementsByTagName("video");
+		console.log(myVideo)
+		for(let i = 0;i<myVideo.length;i++){
+			let item = myVideo[i]
+			if(item.className=="video"){
+				if(item&&item.played)
+					item.pause()
+			}
+		}
 		this.setState({
 			videoModal:{visible:false},
 		})
 	}
 	render () {
 		// show any map errors
-		let picInfo=[],imageModal,picUrl=this.props.item.picUrl;
+		let picInfo=[],imageModal,
+			picUrl=this.props.item.picUrl,
+			vioUrl = this.props.item.vioUrl,
+			fileUrl = this.props.item.fileUrl;
 		const error = this.state.error
 		let input1,input2;
 
@@ -174,11 +183,11 @@ class UpdateProject extends React.Component {
 				   		{
 				   			picUrl.length>0
 							?<Carousel autoplay className={styles.carousel}>
-					            picUrl.map((src,i)=>(
+					            {picUrl.map((src,i)=>(
 					            	<div  key={i}>
 				          				<img src={`${config.api.map.projectSource}${src}`} alt="" style={{margin:"0 auto"}} width="100%" height="100%"/>
 				        			</div>
-					            ))
+					            ))}
 					        </Carousel>
 					        :<img src={config.noimage} alt="图片不存在" style={{margin:"0 auto"}} width="100%" height="100%"/>
 				    	}
@@ -581,7 +590,7 @@ class UpdateProject extends React.Component {
 						        </FormItem>
 						      </Col>
 						      <Col span={12}>
-						        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程照片'>
+						        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程文件'>
 				            		{
 				            			fileUrl.length>0?
 				            			fileUrl.map((src,i)=><Button><Icon type='upload' /><a href={`${src}`}>{`文件${i}`}</a></Button>)

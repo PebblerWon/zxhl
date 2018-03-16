@@ -135,12 +135,13 @@ const subTableProps={
 	pagination:false,
 }
 const Table3=({dataSource,exportProps,loading})=>{
+    console.log(dataSource)
 	const a = proDs(dataSource);
     console.log(a)
     const tableProps={
         title:(text)=><TableTitle text={`河南省流域面积200～3000平方公里中小河流治理项目备案表`} />,
         bordered:true,
-        scroll:{x:true,y:true},
+        scroll:{y:window.innerHeight-360},
         pagination:false,
         columns:columns,
         expandedRowRender:(record)=>{

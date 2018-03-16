@@ -259,7 +259,7 @@ const Table4=({dataSource,exportProps,loading})=>{
     const tableProps={
         title:(text)=><TableTitle text={`原规划内中小河流治理结转项目表（不含调整和补充项目）`} />,
         bordered:true,
-        scroll:{x:2210,y:true},
+        scroll:{x:2210,y:window.innerHeight-360},
         pagination:false,
         columns:columns,
         expandedRowRender:(record)=>{

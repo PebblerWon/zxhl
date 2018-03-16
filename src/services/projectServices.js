@@ -39,18 +39,18 @@ export async function query(params) {
       resData = await request(`${dataCenter.shiErWuproject}?${qs.stringify({'proType':params['项目类型'],'basin':'','city':params['所属地市']})}`)
       //resData = fakeData1
     }else if(params['项目类型']==PROJECTTYPE.ZaiHouProjectType){
-      resData = await request(`${dataCenter.shiErWuproject}?${qs.stringify({'proType':params['项目类型'],'basin':'','city':params['所属地市']})}`)
+      resData = await request(`${dataCenter.project}?${qs.stringify({'proType':params['项目类型'],'basin':'','city':params['所属地市']})}`)
     }
   }else{
     if(params['项目类型']==PROJECTTYPE.ShiErWuProjectType){
       resData = await request(`${dataCenter.shiErWuproject}?${qs.stringify({'proType':params['项目类型'],'basin':params['所属流域'],'city':params['所属地市']})}`)
       //resData = fakeData1
     }else if(params['项目类型']==PROJECTTYPE.ZaiHouProjectType){
-      resData = await request(`${dataCenter.shiErWuproject}?${qs.stringify({'proType':params['项目类型'],'basin':params['所属流域'],'city':params['所属地市']})}`)
+      resData = await request(`${dataCenter.project}?${qs.stringify({'proType':params['项目类型'],'basin':params['所属流域'],'city':params['所属地市']})}`)
     }
   }
   
-  //console.log(resData)
+  console.log(resData)
   return resData;
 }
 

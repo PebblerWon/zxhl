@@ -39,6 +39,38 @@ const columnsRender2 = (text,record,index)=>{
 	
 }
 
+/*const columnsRender1 = (text,record,index)=>{
+	if(record.children){
+		return {
+			children:text,
+				props:{
+					colSpan:21
+				}
+		}
+	}else{
+		return{
+			children:text,
+			props:{}
+		}
+	}
+	
+}
+const columnsRender2 = (text,record,index)=>{
+	if(record.children){
+		return {
+			children:text,
+				props:{
+					colSpan:0
+				}
+		}
+	}else{
+		return{
+			children:text,
+			props:{}
+		}
+	}
+	
+}*/
 const columns = [
 	{
 		title:'项目名称',
@@ -221,7 +253,7 @@ const ZhengQuHuiZong=(props)=>{
     const tableProps={
         title:(text)=><TableTitle text={title} />,
         bordered:true,
-        scroll:{x:'1800px',y:'500px'},
+        scroll:{x:'1800px',y:window.innerHeight-380},
         pagination:false,
         columns:columns,
         expandedRowRender:(record)=><Table {...subTableProps} dataSource={record.dataSource} className='subTable'/>,

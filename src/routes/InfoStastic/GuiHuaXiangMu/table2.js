@@ -111,7 +111,7 @@ const Table2 = ({dataSource,exportProps,loading})=>{
         bordered:true,
         pagination:false,
         dataSource:proDs(dataSource),
-        scroll:{y:true},
+        scroll:{y:window.innerHeight-360},
         columns:columns,
         size:'small',
         loading:loading

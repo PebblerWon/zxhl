@@ -133,6 +133,7 @@ const Table1 = ({dataSource,exportProps,loading})=>{
 	const tableProps={
 		title:()=><TableTitle text={`河南省2017年后续中小河流治理项目名单`} />,
 		bordered:true,
+		scroll:{y:window.innerHeight-360},
 		pagination:false,
 		dataSource:proDs(dataSource),
 		columns:columns,
