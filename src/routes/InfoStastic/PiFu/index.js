@@ -23,10 +23,10 @@ const proDs = (ds)=>{
 		}
 	}
 	//
-	for(let i = 0;i<ds.length;i++){
+	/*for(let i = 0;i<ds.length;i++){
 		ds[i].children = ds[i].dataSource;
 		//delete ds[i].dataSource;
-	}
+	}*/
 	return ds;
 }
 const PiFuXiangMu = ({huizongpifu,dispatch})=>{

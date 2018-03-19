@@ -21,7 +21,7 @@ export default {
   effects: {
     *query({ payload }, { call, put }) {  // eslint-disable-line
       
-      yield put({ type: 'showLoginLoading' })
+      yield put({ type: 'showLoginLoading'})
       const data = yield call(query,{
         userName:payload.userName,
         password:payload.password

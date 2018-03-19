@@ -36,6 +36,7 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
     visible:menuPopoverVisible,
     onVisibleChange:switchMenuPopover
   }
+  
     return (
     	<div className={styles.headerContent}>
         {isNavbar?
@@ -57,14 +58,14 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
             <Col span={12}>
               <Menu mode="horizontal" className={styles.menu} style={{float: 'right'}}>
                     <SubMenu title={<span> <Icon type="user" />{user['姓名']}</span>}>
-                      <Menu.Item key="userManage">
+                      {/*<Menu.Item key="userManage">
                         用户管理
-                      </Menu.Item>
+                      </Menu.Item>*/}
                       <Menu.Item key="logout">
                         <a onClick={(e)=>{console.log(e)}}>退出</a>
                       </Menu.Item>
                     </SubMenu>
-                </Menu>
+              </Menu>
             </Col>
             </Row>
           </div>
@@ -82,14 +83,14 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
   				          <SubMenu title={<span> <Icon type="user" />
   				            {user['姓名']}</span>}
   				          >
-                      <Menu.Item key="userManage">
+                      {/*<Menu.Item key="userManage">
                         用户管理
-                      </Menu.Item>
+                      </Menu.Item>*/}
   				            <Menu.Item key="logout">
-  				              <a onClick={(e)=>{console.log(e)}}>退出</a>
+  				              <a onClick={(e)=>{logout()}}>退出</a>
   				            </Menu.Item>
   				          </SubMenu>
-  			        </Menu>
+  			      </Menu>
       			</Col>
       		</Row></div>
         }

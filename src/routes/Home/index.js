@@ -13,14 +13,15 @@ const Home=()=>{
       <Tabs
         tabPosition='left'
       >
-        {/*<TabPane tab={<Link to="/home/baseSituation">基本情况</Link>} key="1">*/}
-        <TabPane tab="基本情况" key="1">
-          <BaseSituation />
-        </TabPane>
-        {/*<TabPane tab={<Link to="/home/PlanProject">规划项目</Link>} key="2">*/}
         <TabPane tab="灾后薄弱环节" key="2">
           <PlanProject />
         </TabPane>
+        {/*<TabPane tab={<Link to="/home/baseSituation">基本情况</Link>} key="1">*/}
+        <TabPane tab="十二五项目" key="1">
+          <BaseSituation />
+        </TabPane>
+        {/*<TabPane tab={<Link to="/home/PlanProject">规划项目</Link>} key="2">*/}
+        
       </Tabs>
     </div>)
     

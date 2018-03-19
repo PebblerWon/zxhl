@@ -59,6 +59,7 @@ module.exports = {
       contable1:`${APIV1}/RiverInfoWS.asmx/CollectInfoByCity`,
       contable2:`${APIV1}/RiverInfoWS.asmx/CollectInfoByRiver`,
       contable3:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainPro`,
+      
       zaiHouXiangMu:{
         table1:`${APIV1}/RiverInfoWS.asmx/CollectInfoOfPostDisaster_B1`,
         table2:`${APIV1}/RiverInfoWS.asmx/CollectInfoOfPostDisaster_B2`,

@@ -61,6 +61,16 @@ class ShiErWuProject extends React.Component{
 		   	{ title: '所在县',  dataIndex: '所在县', key: '所在县', width: 70,},
 			{ title: '所属流域',  dataIndex: '所属流域', key: '所属流域',width: 100,},
 			{ title: '所在河流', dataIndex: '所在河流', key: '所在河流', width: 100 },
+			{ title: '治理年度', dataIndex: '治理年度', key: '治理年度', width: 70 ,
+				render:(text,record)=>{
+					let d = new Date(text)
+					if(d.toString()==="Invalid Date"){
+						return text
+					}else{
+						return d.getFullYear()
+					}
+				}
+			},
 			{
 				title: '操作',
 				key: 'operation',

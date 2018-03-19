@@ -306,15 +306,7 @@ class UpdateZaiHou extends React.Component {
 							          	)}
 							        </FormItem>
 							      </Col>
-							      <Col span={8}>
-							        <FormItem {...formItemLayout} label='数据来源'>
-							        	{this.props.form.getFieldDecorator('数据来源', {
-								            //rules: [{ required: true, message: '不能为空！' }],
-								          	})(
-							            	<Input/>
-							          	)}
-							        </FormItem>
-							      </Col>
+							      
 							    </Row>
 					      	</fieldset>
 					      	<fieldset>
@@ -457,7 +449,7 @@ class UpdateZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('保护人口', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input {...numberInput} addonAfter="人"/>
+							            	<Input type='number' min="0" step="1" addonAfter="人"/>
 							          	)}
 							        </FormItem>
 							      </Col>

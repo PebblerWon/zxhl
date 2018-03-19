@@ -14,6 +14,9 @@ const Header = ({dispatch,header})=> {
     user:header.user,
     menuClick(e){
       dispatch({type:'header/test',action:e})
+    },
+    logout(e){
+      dispatch({type:'header/logout',action:e})
     }
   }
   const popoverProps={

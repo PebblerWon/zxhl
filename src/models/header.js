@@ -3,6 +3,8 @@ import {routerRedux } from 'dva/router'
 import {query} from '../services/headerServices.js'
 import {config} from '../utils'
 import {getCookie,setCookie} from '../utils/cookie'
+
+
 export default {
 
   namespace: 'header',
@@ -68,12 +70,8 @@ export default {
       }
     },
     *logout ({payload,}, { call, put }) {
-      const data = yield call(logout, parse(payload))
-      if (data.success) {
-        yield put({ type: 'query' })
-      } else {
-        throw (data)
-      }
+      yield put(routerRedux.push('/login'))
+      
     },
     *changeNavbar ({payload,}, { put, select }) {
       const { header } = yield(select(_ => _))

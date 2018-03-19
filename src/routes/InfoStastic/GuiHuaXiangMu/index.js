@@ -100,7 +100,7 @@ const GuiHuaXiangMu = ({huizongguihua,dispatch})=>{
 		exportProps:{
 			type:"primary",
 	        onClick(e,d){
-	            dispatch({type:'huizongguihua/exportExcel',payload:'table4'});
+	            dispatch({type:'huizongguihua/exportExcel',payload:'table5'});
 	        }
 		}
 	}
