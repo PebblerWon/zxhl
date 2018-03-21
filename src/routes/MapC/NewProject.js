@@ -496,7 +496,7 @@ class NewProject extends React.Component {
 							        	{this.props.form.getFieldDecorator('竣工时间', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input />
+							            	<DatePicker  format={dateFormat} />
 							          	)}
 							        </FormItem>
 							      </Col>

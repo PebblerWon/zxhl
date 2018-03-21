@@ -57,10 +57,10 @@ class ShiErWuProject extends React.Component{
 
 		const columns = [
 			{ title: '项目名称',  dataIndex: '项目名称', key: '编码', width: 150,},
-		   	{ title: '所在市',  dataIndex: '所在市', key: '所在市', width: 70,},
-		   	{ title: '所在县',  dataIndex: '所在县', key: '所在县', width: 70,},
-			{ title: '所属流域',  dataIndex: '所属流域', key: '所属流域',width: 100,},
-			{ title: '所在河流', dataIndex: '所在河流', key: '所在河流', width: 100 },
+		   	{ title: '所在市',  dataIndex: '地级行政区', key: '所在市', width: 70,},
+		   	{ title: '所在县',  dataIndex: '县级行政区', key: '所在县', width: 70,},
+			{ title: '所属流域',  dataIndex: '所在水资源一级区', key: '所属流域',width: 100,},
+			{ title: '所在河流', dataIndex: '所在河流名称', key: '所在河流', width: 100 },
 			{ title: '治理年度', dataIndex: '治理年度', key: '治理年度', width: 70 ,
 				render:(text,record)=>{
 					let d = new Date(text)

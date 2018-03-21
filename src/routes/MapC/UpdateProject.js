@@ -2,6 +2,7 @@
 // modules/Map.js
 import React from 'react'
 import { Spin ,Form,Button,Input,Row,Col,Upload, message, Icon,InputNumber,Cascader ,Modal ,Carousel,DatePicker} from 'antd';
+import moment from 'moment';
 import { hashHistory } from 'react-router'
 import { dojoRequire } from 'esri-loader'
 import config from '../../utils/config'
@@ -42,7 +43,7 @@ class UpdateProject extends React.Component {
     		qidian_y:'',
     		zhongdian_x:'',
     		zhongdian_y:'',
-			id:props.item['项目编号'],
+			id:props.item['id'],
 			domId:`${props.type}updateMap`,
 			templatePickerDivId:`updateProjecttemplate_${Math.floor(Math.random()*1000)}`,
 			imageModal:{
@@ -90,7 +91,7 @@ class UpdateProject extends React.Component {
 	      			}
 	      		})
 	      	}else{
-		      	values['项目编号']=this.props.item['项目编号']
+		      	values['id']=this.props.item['id']
 	      		this.props.onSubmit(values)
 	      	}
 	      	
@@ -521,7 +522,7 @@ class UpdateProject extends React.Component {
 						        	{this.props.form.getFieldDecorator('竣工时间', {
 							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
-						            	<Input />
+						            	<DatePicker  format={dateFormat} />
 						          	)}
 						        </FormItem>
 						      </Col>
@@ -892,9 +893,13 @@ class UpdateProject extends React.Component {
 		//如果item ==null表示是新建一个项目
 		//如果item !=null表示是编辑一个项目
 		
-		this.initMap(item['项目编号'])
-		item['市行政区'] = [item['所在市'].trim(),item['所在县'].trim()]
-		item['流域河流'] = [item['所属流域'].trim(),item['所在河流'].trim()]
+		this.initMap(item['id'])
+		item['市行政区'] = [item['地级行政区'].trim(),item['县级行政区'].trim()]
+		item['流域河流'] = [item['所在水资源一级区'].trim(),item['所在河流名称'].trim()]
+		
+		item['开工时间'] = moment(item['开工时间'],dateFormat);
+		//item['治理年度'] = moment(item['治理年度'],dateFormat);
+		item['竣工时间'] = moment(item['竣工时间'],dateFormat);
 		this.props.form.setFieldsInitialValue(item)
 	}
 	componentWillUnmount(){

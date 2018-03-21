@@ -177,8 +177,13 @@ export default {
         }else if (key=='流域河流'){
           formData.append('所属流域',values['流域河流']?values['流域河流'][0]:"")
           formData.append('所在河流',values['流域河流']?values['流域河流'][1]:"")
-        }else if(key==undefined){
-          formData.append(key,"")
+        }else if(key=="开工时间"||key=="治理年度"||key=="竣工时间"){
+            let a = new Date(values[key])
+            if(a.toString()!="Invalid Date"){
+              formData.append(key,a.format("yyyy/MM/dd"))
+            }else{
+              formData.append(key,values[key])
+            }
         }else{
           formData.append(key,values[key])
         }

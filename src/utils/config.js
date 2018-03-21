@@ -35,7 +35,7 @@ module.exports = {
       
 
       updateZaiHou:`${APIV1}/InfoDataPostWS.asmx/UpdatePostDisasterInfo`,
-      updateShiErWu:`${APIV1}/InfoDataPostWS.asmx/UpdatePro125Info_New`,
+      updateShiErWu:`${APIV1}/UpdateShiErWu.ashx`,
       projectDeleteFeature:'http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/30/deleteFeatures',
     
       newZaiHou:`${APIV1}/NewZaiHou.ashx`,
@@ -54,7 +54,7 @@ module.exports = {
       heliu:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainPro`,
       gongchengcuoshi:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainPro`,
       table1excelDownload:`${APIV1}/RiverInfoWS.asmx/CollectInfoByCityDownload`,
-      table2excelDownload:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainProDownload`,
+      table2excelDownload:`${APIV1}/RiverInfoWS.asmx/CollectInfoByRiverDownload`,
       table3excelDownload:`${APIV1}/RiverInfoWS.asmx/CollectInfoByMainProDownload`,
       contable1:`${APIV1}/RiverInfoWS.asmx/CollectInfoByCity`,
       contable2:`${APIV1}/RiverInfoWS.asmx/CollectInfoByRiver`,
@@ -71,11 +71,11 @@ module.exports = {
         //table3Download:`http://172.36.16.2:6500/api/TempExcel/河南省200到3000平方公里项目备案表.xls`,
         //table4Download:`http://172.36.16.2:6500/api/TempExcel/原规划内中小河流结转项目.xls`,
         //table5Download:`http://172.36.16.2:6500/api/TempExcel/2017年度投资落实情况及2018项目储备情况.xls`,
-        table1Download:`http://zxhl.hnslkc.com/api/TempExcel/2017年后续治理项目名单.xls`,
-        table2Download:`http://zxhl.hnslkc.com/api/TempExcel/2017年申报治理项目名录.xls`,
-        table3Download:`http://zxhl.hnslkc.com/api/TempExcel/河南省200到3000平方公里项目备案表.xls`,
-        table4Download:`http://zxhl.hnslkc.com/api/TempExcel/原规划内中小河流结转项目.xls`,
-        table5Download:`http://zxhl.hnslkc.com/api/TempExcel/2017年度投资落实情况及2018项目储备情况.xls`,
+        table1Download:`${APIV1}/ZaiHouExcelDownload.asmx/Table1`,
+        table2Download:`${APIV1}/ZaiHouExcelDownload.asmx/Table2`,
+        table3Download:`${APIV1}/ZaiHouExcelDownload.asmx/Table3`,
+        table4Download:`${APIV1}/ZaiHouExcelDownload.asmx/Table4`,
+        table5Download:`${APIV1}/ZaiHouExcelDownload.asmx/Table5`,
       }
     },
     map:{

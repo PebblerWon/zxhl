@@ -114,15 +114,29 @@ export default {
     *updateProject({payload},{call,put}){
       yield put({type:'showUpdateModalSubmitSpin'})
       yield call(delay,500)
-      let data = payload;
-      data['所在市'] = payload['市行政区'][0]
-      data['所在县'] = payload['市行政区'][1]
-      data['所属流域']  = payload['流域河流'][0]
-      data['所在河流']  = payload['流域河流'][1]
-      delete payload['市行政区']
+      let values = payload;
+      let formData = new FormData();
+      for(let key in values){
+          if(key=='市行政区'){
+            formData.append('地级行政区',values['市行政区']?values['市行政区'][0]:"")
+            formData.append('县级行政区',values['市行政区']?values['市行政区'][1]:"")
+          }else if (key=='流域河流'){
+            formData.append('所在水资源一级区',values['流域河流']?values['流域河流'][0]:"")
+            formData.append('所在河流名称',values['流域河流']?values['流域河流'][1]:"")
+          }else if(key=="开工时间"||key=="治理年度"||key=="竣工时间"){
+            let a = new Date(values[key])
+            if(a.toString()!="Invalid Date"){
+              formData.append(key,a.format("yyyy/MM/dd"))
+            }else{
+              formData.append(key,values[key])
+            }
+          }else{
+            formData.append(key,values[key])
+          }
+      }
       const res = yield call(update,{
         '项目类型':TYPE,
-        data:data
+        data:formData
       })
       if(res=='true'){
         message.success("修改成功",3)
@@ -170,13 +184,18 @@ export default {
         let {formData,values} = payload
         for(let key in values){
           if(key=='市行政区'){
-            formData.append('所在市',values['市行政区']?values['市行政区'][0]:"")
-            formData.append('所在县',values['市行政区']?values['市行政区'][1]:"")
+            formData.append('地级行政区',values['市行政区']?values['市行政区'][0]:"")
+            formData.append('县级行政区',values['市行政区']?values['市行政区'][1]:"")
           }else if (key=='流域河流'){
-            formData.append('所属流域',values['流域河流']?values['流域河流'][0]:"")
-            formData.append('所在河流',values['流域河流']?values['流域河流'][1]:"")
-          }else if(key==undefined){
-            formData.append(key,"")
+            formData.append('所在水资源一级区',values['流域河流']?values['流域河流'][0]:"")
+            formData.append('所在河流名称',values['流域河流']?values['流域河流'][1]:"")
+          }else if(key=="开工时间"||key=="治理年度"||key=="竣工时间"){
+            let a = new Date(values[key])
+            if(a.toString()!="Invalid Date"){
+              formData.append(key,a.format("yyyy/MM/dd"))
+            }else{
+              formData.append(key,values[key])
+            }
           }else{
             formData.append(key,values[key])
           }
