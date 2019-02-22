@@ -34,7 +34,7 @@ module.exports = {
       shiErWuproject:`${APIV1}/RiverInfoWS.asmx/SearchInfoByTypeAndBasinAndCity`,
       
 
-      updateZaiHou:`${APIV1}/InfoDataPostWS.asmx/UpdatePostDisasterInfo`,
+      updateZaiHou:`${APIV1}/UpdateZaiHou.ashx`,
       updateShiErWu:`${APIV1}/UpdateShiErWu.ashx`,
       projectDeleteFeature:'http://jcxx.hnslkc.com:6080/arcgis/rest/services/中小河流/FeatureServer/30/deleteFeatures',
     

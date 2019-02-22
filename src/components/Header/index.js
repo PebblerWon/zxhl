@@ -62,7 +62,7 @@ const HeaderC = ({current,menuClick,isNavbar,menuPopoverVisible,switchMenuPopove
                         用户管理
                       </Menu.Item>*/}
                       <Menu.Item key="logout">
-                        <a onClick={(e)=>{console.log(e)}}>退出</a>
+                        <a onClick={(e)=>{logout()}}>退出</a>
                       </Menu.Item>
                     </SubMenu>
               </Menu>

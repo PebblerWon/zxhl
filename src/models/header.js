@@ -44,8 +44,8 @@ export default {
       }else{
         data = JSON.parse(getCookie('curuser'))
       }
-      //console.log(data)
-      if (data.status && data.user) {
+      console.log(data)
+      if (data && data.status && data.user) {
         //console.log(true)
         yield put({
           type: 'querySuccess',

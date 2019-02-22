@@ -100,7 +100,7 @@ export default {
         console.log(payload)
         yield put({type:'isLoading'})
         const res = yield call(remove,{
-          id:payload['项目编号'],
+          id:payload['id'],
           '项目类型':TYPE,
         })
         if(res){
@@ -124,11 +124,15 @@ export default {
             formData.append('所在水资源一级区',values['流域河流']?values['流域河流'][0]:"")
             formData.append('所在河流名称',values['流域河流']?values['流域河流'][1]:"")
           }else if(key=="开工时间"||key=="治理年度"||key=="竣工时间"){
-            let a = new Date(values[key])
-            if(a.toString()!="Invalid Date"){
-              formData.append(key,a.format("yyyy/MM/dd"))
+            if(values[key]==null||values[key]===undefined){
+              formData.append(key,"")
             }else{
-              formData.append(key,values[key])
+                let a = new Date(values[key])
+                if(a.toString()!="Invalid Date"){
+                  formData.append(key,a.format("yyyy/MM/dd"))
+                }else{
+                  formData.append(key,"")
+                }
             }
           }else{
             formData.append(key,values[key])
@@ -190,11 +194,15 @@ export default {
             formData.append('所在水资源一级区',values['流域河流']?values['流域河流'][0]:"")
             formData.append('所在河流名称',values['流域河流']?values['流域河流'][1]:"")
           }else if(key=="开工时间"||key=="治理年度"||key=="竣工时间"){
-            let a = new Date(values[key])
-            if(a.toString()!="Invalid Date"){
-              formData.append(key,a.format("yyyy/MM/dd"))
+            if(values[key]==null||values[key]===undefined){
+              formData.append(key,"")
             }else{
-              formData.append(key,values[key])
+                let a = new Date(values[key])
+                if(a.toString()!="Invalid Date"){
+                  formData.append(key,a.format("yyyy/MM/dd"))
+                }else{
+                  formData.append(key,"")
+                }
             }
           }else{
             formData.append(key,values[key])

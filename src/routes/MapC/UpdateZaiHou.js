@@ -1,7 +1,8 @@
 
 // modules/Map.js
 import React from 'react'
-import { Spin ,Form,Button,Input,Row,Col,Upload, message, Icon,InputNumber,Cascader ,Modal ,Carousel,Select} from 'antd';
+import { Spin ,Form,Button,Input,Row,Col,Upload, message, Icon,InputNumber,Cascader ,Modal ,Carousel,Select,DatePicker} from 'antd';
+import moment from 'moment';
 import { hashHistory } from 'react-router'
 import { dojoRequire } from 'esri-loader'
 import config from '../../utils/config'
@@ -10,7 +11,7 @@ import {TileInfoObj,TDTUrl,FeatureLayerUrl,GiSApiUrl,MapUrl} from './mapConfig'
 import EsriLoader from 'esri-loader-react'
 import styles from './index.less'
 
-
+const dateFormat = 'YYYY/MM/DD';
 const city = DICT_FIXED_BY_PROVINCE('河南省')
 const esriOptions = {
     url:GiSApiUrl
@@ -232,11 +233,12 @@ class UpdateZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('数据来源', {
 								            rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Select>
+							            	<Select mode="multiple">
 							            		<Option value='河南省200到3000平方公里项目备案'>河南省200到3000平方公里项目备案</Option>
-							            		<Option value='2017年申报治理项目名单'>2017年申报治理项目名单</Option>
+							            		<Option value='2017年申报治理项目名录'>2017年申报治理项目名录</Option>
 							            		<Option value='2017年后续治理项目名单'>2017年后续治理项目名单</Option>
 							            		<Option value='原规划内中小河流结转项目'>原规划内中小河流结转项目</Option>
+							            		<Option value='2017年度投资落实情况及2018项目储备情况'>2017年度投资落实情况及2018项目储备情况</Option>
 							            	</Select>
 							          	)}
 							        </FormItem>
@@ -246,7 +248,7 @@ class UpdateZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('流域河流', {
 								            rules: [{ required: true, message: '不能为空！' }]
 								          	})(
-							            	<Cascader options={this.props.riverInfo} placeholder=""/>
+							            	<Cascader options={this.props.riverInfo} placeholder="" disabled={true}/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -269,7 +271,15 @@ class UpdateZaiHou extends React.Component {
 							          	)}
 							        </FormItem>
 							      </Col>
-							    
+							    <Col span={8}>
+							        <FormItem {...formItemLayout} label='治理年度'>
+							        	{this.props.form.getFieldDecorator('治理年度', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<DatePicker  format={dateFormat} />
+							          	)}
+							        </FormItem>
+							      </Col>
 							      <Col span={8}>
 							        <FormItem {...formItemLayout} label='起点东经'>
 							        	{this.props.form.getFieldDecorator('起点东经', {
@@ -326,7 +336,7 @@ class UpdateZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('建设任务治理河长', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input />
+							            	<Input  {...numberInput} addonAfter="Km"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -335,7 +345,7 @@ class UpdateZaiHou extends React.Component {
 							        	{this.props.form.getFieldDecorator('投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input />
+							            	<Input {...numberInput}  addonAfter="万元"/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -544,11 +554,11 @@ class UpdateZaiHou extends React.Component {
 							        </FormItem>
 							      </Col>
 							      <Col span={8}>
-							        <FormItem {...formItemLayout} label='是否属于享受特殊政策地区'>
-							        	{this.props.form.getFieldDecorator('是否属于享受特殊政策地区', {
+							        <FormItem {...formItemLayout} label='是否是属于享受特殊政策地区'>
+							        	{this.props.form.getFieldDecorator('是否是属于享受特殊政策地区', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
-							            	<Input  {...numberInput}/>
+							            	<Input/>
 							          	)}
 							        </FormItem>
 							      </Col>
@@ -640,7 +650,7 @@ class UpdateZaiHou extends React.Component {
 							      </Col>
 							      <Col span={8}>
 							        <FormItem {...formItemLayout} label='2017资金落实合计'>
-							        	{this.props.form.getFieldDecorator('2017资金落实合计', {
+							        	{this.props.form.getFieldDecorator('C2017年资金落实合计', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
 							            	<Input   {...numberInput} addonAfter="万元"/>
@@ -649,7 +659,7 @@ class UpdateZaiHou extends React.Component {
 							      </Col>
 							       <Col span={8}>
 							        <FormItem {...formItemLayout} label='2017资金落实中央投资'>
-							        	{this.props.form.getFieldDecorator('2017资金落实中央投资', {
+							        	{this.props.form.getFieldDecorator('C2017年资金落实中央投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
 							            	<Input  {...numberInput} addonAfter="万元"/>
@@ -658,7 +668,7 @@ class UpdateZaiHou extends React.Component {
 							      </Col>
 							      <Col span={8}>
 							        <FormItem {...formItemLayout} label='2017资金落实省级投资'>
-							        	{this.props.form.getFieldDecorator('2017资金落实省级投资', {
+							        	{this.props.form.getFieldDecorator('C2017年资金落实省级投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
 							            	<Input  {...numberInput} addonAfter="万元"/>
@@ -667,7 +677,7 @@ class UpdateZaiHou extends React.Component {
 							      </Col>
 							       <Col span={8}>
 							        <FormItem {...formItemLayout} label='2017资金落实市县投资'>
-							        	{this.props.form.getFieldDecorator('2017资金落实市县投资', {
+							        	{this.props.form.getFieldDecorator('C2017年资金落实市县投资', {
 								            //rules: [{ required: true, message: '不能为空！' }],
 								          	})(
 							            	<Input  {...numberInput} addonAfter="万元"/>
@@ -700,7 +710,7 @@ class UpdateZaiHou extends React.Component {
 							        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程文件'>
 					            		{
 					            			fileUrl.length>0?
-					            			fileUrl.map((src,i)=><Button><Icon type='upload' /><a href={`${src}`}>{`文件${i}`}</a></Button>)
+					            			fileUrl.map((src,i)=><Button><Icon type='upload' /><a href={`${src}`} target='_blank'>{`文件${i}`}</a></Button>)
 					            			:<Button><Icon type='frown-o' />无文件</Button>
 					            		}
 							        </FormItem>
@@ -756,8 +766,22 @@ class UpdateZaiHou extends React.Component {
 		console.log(item)
 		
 		this.initMap(item.id);
-		item['市行政区'] = [item['所在市'].trim(),item['所在县'].trim()]
-		item['流域河流'] = [item['所属流域'].trim(),item['所在河流'].trim()]
+		for(let key in item){
+          	if(key=="开工时间"||key=="治理年度"||key=="竣工时间"){
+            	if(item[key]==null||item[key]===undefined){
+              		item[key] = null
+            	}else{
+                	let a = new Date(item[key])
+                	if(a.toString()!="Invalid Date"){
+                	  	item[key] = moment(a,dateFormat)
+                	}else{
+                	  	item[key] = null
+                	}
+            	}
+          	}
+        }
+        item['市行政区'] = [item['所在市'].trim(),item['所在县'].trim()]
+        item['流域河流'] = [item['所属流域'].trim(),item['所在河流'].trim()]
 		this.props.form.setFieldsInitialValue(item)
 	}
 	componentWillUnmount(){

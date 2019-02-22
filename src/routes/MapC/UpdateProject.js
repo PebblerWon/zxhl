@@ -271,16 +271,15 @@ class UpdateProject extends React.Component {
 						          		)}
 						        	</FormItem>
 						      	</Col>
-						      
 						      	<Col span={8}>
-						        	<FormItem {...formItemLayout} label='前期工作'>
-						        		{this.props.form.getFieldDecorator('前期工作', {
-							            	//rules: [{ required: true, message: '不能为空！' }],
-							          		})(
-						            		<Input />
-						          		)}
-						        	</FormItem>
-						      	</Col>
+							        <FormItem {...formItemLayout} label='治理年度'>
+							        	{this.props.form.getFieldDecorator('治理年度', {
+								            //rules: [{ required: true, message: '不能为空！' }],
+								          	})(
+							            	<DatePicker  format={dateFormat} />
+							          	)}
+							        </FormItem>
+							    </Col>
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='规划投资'>
 						        	{this.props.form.getFieldDecorator('规划投资', {
@@ -345,7 +344,7 @@ class UpdateProject extends React.Component {
 						        	{this.props.form.getFieldDecorator('新建堤防', {
 							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
-						            	<Input />
+						            	<Input {...numberInput}/>
 						          	)}
 						        </FormItem>
 						      </Col>
@@ -354,7 +353,7 @@ class UpdateProject extends React.Component {
 						        	{this.props.form.getFieldDecorator('加固堤防', {
 							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
-						            	<Input />
+						            	<Input {...numberInput}/>
 						          	)}
 						        </FormItem>
 						      </Col>
@@ -363,16 +362,7 @@ class UpdateProject extends React.Component {
 						        	{this.props.form.getFieldDecorator('清淤河长', {
 							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='其他'>
-						        	{this.props.form.getFieldDecorator('其他', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
+						            	<Input {...numberInput}/>
 						          	)}
 						        </FormItem>
 						      </Col>
@@ -399,36 +389,10 @@ class UpdateProject extends React.Component {
 				      	<fieldset>
 				      		<legend>治理效果</legend>
 				      		<Row>
-				      			<Col span={8}>
-						        <FormItem {...formItemLayout} label='保护城镇'>
-						        	{this.props.form.getFieldDecorator('保护城镇', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='保护人口'>
-						        	{this.props.form.getFieldDecorator('保护人口', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput}  addonAfter="万人"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='保护耕地'>
-						        	{this.props.form.getFieldDecorator('保护耕地', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput}  addonAfter="万亩"/>
-						          	)}
-						        </FormItem>
-						      </Col>
+				      			
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='排涝收益'>
-						        	{this.props.form.getFieldDecorator('排涝收益', {
+						        	{this.props.form.getFieldDecorator('排涝收益面积', {
 							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input {...numberInput}   addonAfter="万亩"/>
@@ -440,60 +404,6 @@ class UpdateProject extends React.Component {
 				      	<fieldset>
 				      		<legend>资金情况</legend>
 				      		<Row>
-				      			<Col span={8}>
-						        <FormItem {...formItemLayout} label='批复资金'>
-						        	{this.props.form.getFieldDecorator('批复资金', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput}  addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='总投资'>
-						        	{this.props.form.getFieldDecorator('总投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='移民征地'>
-						        	{this.props.form.getFieldDecorator('移民征地', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='拆迁补偿'>
-						        	{this.props.form.getFieldDecorator('拆迁补偿', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='省级投资'>
-						        	{this.props.form.getFieldDecorator('省级投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
-						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='市县投资'>
-						        	{this.props.form.getFieldDecorator('市县投资', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input {...numberInput} addonAfter="万元"/>
-						          	)}
-						        </FormItem>
-						      </Col>
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='中央投资'>
 						        	{this.props.form.getFieldDecorator('中央投资', {
@@ -508,15 +418,7 @@ class UpdateProject extends React.Component {
 				      	<fieldset>
 				      		<legend>工程验收</legend>
 				      		<Row>
-				      			<Col span={8}>
-						        <FormItem {...formItemLayout} label='绩效评分'>
-						        	{this.props.form.getFieldDecorator('绩效评分', {
-							            //rules: [{ required: true, message: '不能为空！' }],
-							          	})(
-						            	<Input />
-						          	)}
-						        </FormItem>
-						      </Col>
+				      			
 						      <Col span={8}>
 						        <FormItem {...formItemLayout} label='竣工时间'>
 						        	{this.props.form.getFieldDecorator('竣工时间', {
@@ -536,8 +438,8 @@ class UpdateProject extends React.Component {
 						        </FormItem>
 						      </Col>
 						      <Col span={8}>
-						        <FormItem {...formItemLayout} label='验收文号'>
-						        	{this.props.form.getFieldDecorator('中央投资', {
+						        <FormItem {...formItemLayout} label='验收文件号'>
+						        	{this.props.form.getFieldDecorator('验收文件号', {
 							            //rules: [{ required: true, message: '不能为空！' }],
 							          	})(
 						            	<Input />
@@ -562,6 +464,51 @@ class UpdateProject extends React.Component {
 						      		<Col span={12}>
 								        <FormItem {...formItemLayout} label='项目分类'>
 								        	{this.props.form.getFieldDecorator('项目分类', {
+									            //rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input/>
+								          	)}
+								        </FormItem>
+						      		</Col>
+						      		<Col span={12}>
+								        <FormItem {...formItemLayout} label='项目保护城镇名称'>
+								        	{this.props.form.getFieldDecorator('项目保护城镇名称', {
+									            //rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input/>
+								          	)}
+								        </FormItem>
+						      		</Col>
+						      		<Col span={12}>
+								        <FormItem {...formItemLayout} label='项目保护人口'>
+								        	{this.props.form.getFieldDecorator('项目保护人口', {
+									            //rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input {...numberInput}/>
+								          	)}
+								        </FormItem>
+						      		</Col>
+						      		<Col span={12}>
+								        <FormItem {...formItemLayout} label='项目保护耕地面积'>
+								        	{this.props.form.getFieldDecorator('项目保护耕地面积', {
+									            //rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input {...numberInput}/>
+								          	)}
+								        </FormItem>
+						      		</Col>
+						      		<Col span={12}>
+								        <FormItem {...formItemLayout} label='移民人口'>
+								        	{this.props.form.getFieldDecorator('移民人口', {
+									            //rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input {...numberInput}/>
+								          	)}
+								        </FormItem>
+						      		</Col>
+						      		<Col span={12}>
+								        <FormItem {...formItemLayout} label='工程任务'>
+								        	{this.props.form.getFieldDecorator('工程任务', {
 									            //rules: [{ required: true, message: '不能为空！' }],
 									          	})(
 								            	<Input/>
@@ -704,15 +651,6 @@ class UpdateProject extends React.Component {
 								        </FormItem>
 						      		</Col>
 						      		<Col span={12}>
-								        <FormItem {...formItemLayout} label='中央投资'>
-								        	{this.props.form.getFieldDecorator('中央投资', {
-									            //rules: [{ required: true, message: '不能为空！' }],
-									          	})(
-								            	<Input  {...numberInput}  addonAfter="万元"/>
-								          	)}
-								        </FormItem>
-						      		</Col>
-						      		<Col span={12}>
 								        <FormItem {...formItemLayout} label='批复投资'>
 								        	{this.props.form.getFieldDecorator('批复投资', {
 									            //rules: [{ required: true, message: '不能为空！' }],
@@ -802,6 +740,15 @@ class UpdateProject extends React.Component {
 								          	)}
 								        </FormItem>
 						      		</Col>
+						      		<Col span={12}>
+								        <FormItem {...formItemLayout} label='备注'>
+								        	{this.props.form.getFieldDecorator('备注', {
+									            //rules: [{ required: true, message: '不能为空！' }],
+									          	})(
+								            	<Input/>
+								          	)}
+								        </FormItem>
+						      		</Col>
 					      		</Row>
 					      	</fieldset>
 
@@ -829,7 +776,7 @@ class UpdateProject extends React.Component {
 						        <FormItem labelCol={{span:6}} wrapperCol={{span:18}} label='工程文件'>
 				            		{
 				            			fileUrl.length>0?
-				            			fileUrl.map((src,i)=><Button><Icon type='upload' /><a href={`${src}`}>{`文件${i}`}</a></Button>)
+				            			fileUrl.map((src,i)=><Button><Icon type='upload' /><a href={`${src}`} target="_blank">{`文件${i}`}</a></Button>)
 				            			:<Button><Icon type='frown-o' />无文件</Button>
 					            	}
 						        </FormItem>
@@ -894,12 +841,22 @@ class UpdateProject extends React.Component {
 		//如果item !=null表示是编辑一个项目
 		
 		this.initMap(item['id'])
-		item['市行政区'] = [item['地级行政区'].trim(),item['县级行政区'].trim()]
-		item['流域河流'] = [item['所在水资源一级区'].trim(),item['所在河流名称'].trim()]
-		
-		item['开工时间'] = moment(item['开工时间'],dateFormat);
-		//item['治理年度'] = moment(item['治理年度'],dateFormat);
-		item['竣工时间'] = moment(item['竣工时间'],dateFormat);
+		for(let key in item){
+          	if(key=="开工时间"||key=="治理年度"||key=="竣工时间"){
+            	if(item[key]==null||item[key]===undefined){
+              		item[key] = null
+            	}else{
+                	let a = new Date(item[key])
+                	if(a.toString()!="Invalid Date"){
+                	  	item[key] = moment(a,dateFormat)
+                	}else{
+                	  	item[key] = null
+                	}
+            	}
+          	}
+        }
+        item['市行政区'] = [item['地级行政区'].trim(),item['县级行政区'].trim()]
+        item['流域河流'] = [item['所在水资源一级区'].trim(),item['所在河流名称'].trim()]
 		this.props.form.setFieldsInitialValue(item)
 	}
 	componentWillUnmount(){

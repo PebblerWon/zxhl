@@ -19,8 +19,12 @@ export default {
   },
 
   effects: {
-    *query({ payload }, { call, put }) {  // eslint-disable-line
-      
+    *query(b, a) {  // eslint-disable-line
+      console.log(a)
+      console.log(b)
+      const {payload} = b;
+      const {put,call} = a;
+      console.log(location)
       yield put({ type: 'showLoginLoading'})
       const data = yield call(query,{
         userName:payload.userName,

@@ -58,11 +58,9 @@ export async function query(params) {
 export async function update(params) {
   console.log(params.data)
   if(params['项目类型']==PROJECTTYPE.ZaiHouProjectType){
-   return await request2(`${dataCenter.updateZaiHou}`,{
+    return await withFileRequest(`${dataCenter.updateZaiHou}`,{
       method:'POST',
-      data:{
-        json:JSON.stringify(params.data)
-      }
+      data:params.data,
     })
   }else if(params['项目类型']==PROJECTTYPE.ShiErWuProjectType){
     return await withFileRequest(`${api.dataCenter.updateShiErWu}`,{

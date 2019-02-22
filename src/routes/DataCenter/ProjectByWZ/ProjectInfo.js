@@ -4,11 +4,14 @@ import classnames from 'classnames'
 import coStyle from '../../common.less'
 import styles from './index.less'
 
+const paginationProp={
+	pageSize:8
+}
 const HuaiHeTable=({ds,loading,onRowDoubleClick,columns})=>{
 	const tableProps={
 		columns:columns, 
 		dataSource:ds,
-		pagination:false,
+		pagination:paginationProp,
 		loading,
 		bordered:true,
 		size:'small',
@@ -29,7 +32,7 @@ const ChangJiangTable=({ds,loading,onRowDoubleClick,columns})=>{
 	const tableProps={
 		columns:columns, 
 		dataSource:ds,
-		pagination:false,
+		pagination:paginationProp,
 		loading,
 		bordered:true,
 		size:'small',
@@ -51,7 +54,7 @@ const HuangHeTable=({ds,loading,onRowDoubleClick,columns})=>{
 	const tableProps={
 		columns:columns, 
 		dataSource:ds,
-		pagination:false,
+		pagination:paginationProp,
 		loading,
 		bordered:true,
 		size:'small',
@@ -72,7 +75,7 @@ const HaiHeTable=({ds,loading,onRowDoubleClick,columns})=>{
 	const tableProps={
 		columns:columns, 
 		dataSource:ds,
-		pagination:false,
+		pagination:paginationProp,
 		loading,
 		bordered:true,
 		size:'small',
@@ -94,7 +97,7 @@ const AllTable=({ds,loading,onRowDoubleClick,columns})=>{
 	const tableProps={
 		columns:columns, 
 		dataSource:ds,
-		pagination:false,
+		pagination:paginationProp,
 		loading,
 		bordered:true,
 		size:'small',

@@ -71,7 +71,7 @@ const BaseSituation = ({baseSituation,dispatch})=>{
 								<TabPane tab='十二五治理情况统计' key='2'>
 									<Table2 {...table2Props}/>
 								</TabPane>
-								<TabPane tab='十二五已治理项目' key='3'>
+								<TabPane tab='十二五已批复项目' key='3'>
 									<Table3 {...table3Props}/>
 								</TabPane>
 							</Tabs>
